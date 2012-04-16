@@ -1,0 +1,128 @@
+package com.redhat.topicindex.rest.entities;
+
+/**
+ * A REST representation of the PropertyTag database entity
+ */
+public class PropertyTagV1 extends BaseRESTEntityV1<PropertyTagV1>
+{
+	public static String NAME_NAME = "name";
+	public static String DESCRIPTION_NAME = "description";
+	public static String VALUE_NAME = "value";
+	public static String REGEX_NAME = "regex";
+	public static String CANBENULL_NAME = "canbenull";
+	public static String ISUNIQUE_NAME = "isunique";
+	
+	private String name;
+	private String description;
+	private String value;
+	private boolean valid;
+	private String regex;
+	private boolean canBeNull;
+	private boolean isUnique;
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(final String name)
+	{
+		this.name = name;
+	}
+	
+	public void setNameExplicit(final String name)
+	{
+		this.name = name;
+		this.setParamaterToConfigured(NAME_NAME);
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public void setDescription(final String description)
+	{
+		this.description = description;
+	}
+	
+	public void setDescriptionExplicit(final String description)
+	{
+		this.description = description;
+		this.setParamaterToConfigured(DESCRIPTION_NAME);
+	}
+
+	public String getValue()
+	{
+		return value;
+	}
+
+	public void setValue(final String value)
+	{
+		this.value = value;
+	}
+	
+	public void setValueExplicit(final String value)
+	{
+		this.value = value;
+		this.setParamaterToConfigured(VALUE_NAME);
+	}
+
+	public boolean isValid()
+	{
+		return valid;
+	}
+
+	public void setValid(final boolean valid)
+	{
+		this.valid = valid;
+	}
+
+	public String getRegex()
+	{
+		return regex;
+	}
+
+	public void setRegex(final String regex)
+	{
+		this.regex = regex;
+	}
+	
+	public void setRegexExplicit(final String regex)
+	{
+		this.regex = regex;
+		this.setParamaterToConfigured(REGEX_NAME);
+	}
+
+	public boolean isCanBeNull()
+	{
+		return canBeNull;
+	}
+
+	public void setCanBeNull(final boolean canBeNull)
+	{
+		this.canBeNull = canBeNull;
+	}
+	
+	public void setCanBeNullExplicit(final boolean canBeNull)
+	{
+		this.canBeNull = canBeNull;
+		this.setParamaterToConfigured(CANBENULL_NAME);
+	}
+
+	public boolean isUnique()
+	{
+		return isUnique;
+	}
+
+	public void setUnique(boolean isUnique)
+	{
+		this.isUnique = isUnique;
+	}
+	
+	public void setUniqueExplicit(boolean isUnique)
+	{
+		this.isUnique = isUnique;
+		this.setParamaterToConfigured(ISUNIQUE_NAME);
+	}
+}
