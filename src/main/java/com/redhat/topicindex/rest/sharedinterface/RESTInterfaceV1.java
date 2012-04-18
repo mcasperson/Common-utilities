@@ -21,17 +21,13 @@ import com.redhat.topicindex.rest.entities.ImageV1;
 import com.redhat.topicindex.rest.entities.ProjectV1;
 import com.redhat.topicindex.rest.entities.PropertyTagV1;
 import com.redhat.topicindex.rest.entities.RoleV1;
-import com.redhat.topicindex.rest.entities.SnapshotRevisionV1;
-import com.redhat.topicindex.rest.entities.SnapshotTopicV1;
-import com.redhat.topicindex.rest.entities.SnapshotTranslatedDataV1;
-import com.redhat.topicindex.rest.entities.SnapshotTranslatedStringV1;
-import com.redhat.topicindex.rest.entities.SnapshotV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.StringConstantV1;
 import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.TopicV1;
 import com.redhat.topicindex.rest.entities.UserV1;
-import com.redhat.topicindex.rest.entities.WorkingSnapshotTranslatedDataV1;
-import com.redhat.topicindex.rest.entities.WorkingSnapshotTranslatedStringV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicDataV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicStringV1;
 import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
 import com.redhat.topicindex.rest.exceptions.InvalidParameterException;
 import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
@@ -64,218 +60,218 @@ public interface RESTInterfaceV1
 	@Consumes({ "*" })
 	public ExpandDataTrunk getJSONExpandTrunkExample() throws InvalidParameterException, InternalProcessingException;
 
-	/* WORKINGSNAPSHOTTRANSLATEDSTING FUNCTIONS */
+	/* TRANSLATEDTOPICSTING FUNCTIONS */
 	/**
 	 * @param id
-	 *            The WorkingSnapshotTranslatedStringV1 ID
+	 *            The TranslatedTopicStringV1 ID
 	 * @param expand
 	 *            The expansion options
 	 * @return A JSON representation of the requested
-	 *         WorkingSnapshotTranslatedStringV1 object
+	 *         TranslatedTopicStringV1 object
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
 	@GET
-	@Path("/workingsnapshottranslatedstring/get/json/{id}")
+	@Path("/translatedtopicstring/get/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public WorkingSnapshotTranslatedStringV1 getJSONWorkingSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicStringV1 getJSONTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
 	@GET
-	@Path("/workingsnapshottranslatedstring/get/jsonp/{id}")
+	@Path("/translatedtopicstring/get/jsonp/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String getJSONPWorkingSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String getJSONPTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
 	 * @param expand
-	 * @return JSON representations of all the WorkingSnapshotTranslatedStringV1
+	 * @return JSON representations of all the TranslatedTopicStringV1
 	 *         entities that could be found in the database
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
 	@GET
-	@Path("/workingsnapshottranslatedstrings/get/json/all")
+	@Path("/translatedtopicstrings/get/json/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public BaseRestCollectionV1<WorkingSnapshotTranslatedStringV1> getJSONWorkingSnapshotTranslatedStrings(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicStringV1> getJSONTranslatedTopicStrings(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
 	@GET
-	@Path("/workingsnapshottranslatedstrings/get/jsonp/all")
+	@Path("/translatedtopicstrings/get/jsonp/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String getJSONPWorkingSnapshotTranslatedStrings(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String getJSONPTranslatedTopicStrings(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Updates a single WorkingSnapshotTranslatedStringV1 entity.
+	 * Updates a single TranslatedTopicStringV1 entity.
 	 * 
 	 * @param expand
 	 *            The expansion options
 	 * @param dataObject
-	 *            The new details of the WorkingSnapshotTranslatedStringV1
+	 *            The new details of the TranslatedTopicStringV1
 	 *            entity. The id property of the entity needs to be set. In
 	 *            addition to setting the properties of the
-	 *            WorkingSnapshotTranslatedStringV1 entity, the
+	 *            TranslatedTopicStringV1 entity, the
 	 *            configuredParameters variable needs to also needs to reflect
 	 *            those properties that are to be updated. This is to
 	 *            distinguish between an unset property (which is ignored), and
 	 *            a property that might specifically be set to null.
-	 * @return A JSON representation of the WorkingSnapshotTranslatedStringV1
+	 * @return A JSON representation of the TranslatedTopicStringV1
 	 *         after is updated
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
 	@PUT
-	@Path("/workingsnapshottranslatedstring/put/json")
+	@Path("/translatedtopicstring/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public WorkingSnapshotTranslatedStringV1 updateJSONWorkingSnapshotTranslatedString(@QueryParam("expand") final String expand, final WorkingSnapshotTranslatedStringV1 dataObject) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicStringV1 updateJSONTranslatedTopicString(@QueryParam("expand") final String expand, final TranslatedTopicStringV1 dataObject) throws InvalidParameterException, InternalProcessingException;
 	
 	@PUT
-	@Path("/workingsnapshottranslatedstring/put/jsonp")
+	@Path("/translatedtopicstring/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPWorkingSnapshotTranslatedString(@QueryParam("expand") final String expand, final WorkingSnapshotTranslatedStringV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopicString(@QueryParam("expand") final String expand, final TranslatedTopicStringV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Updates a collection of WorkingSnapshotTranslatedStringV1 entities.
+	 * Updates a collection of TranslatedTopicStringV1 entities.
 	 * 
 	 * @param expand
 	 *            The expansion options
 	 * @param dataObjects
-	 *            A collection of WorkingSnapshotTranslatedStringV1 entities,
+	 *            A collection of TranslatedTopicStringV1 entities,
 	 *            each with their id property set, each with the new properties
 	 *            to be saved, and each with their configuredParameters property
 	 *            set.
-	 * @return The details of the WorkingSnapshotTranslatedStringV1 entities after they have been updated.
+	 * @return The details of the TranslatedTopicStringV1 entities after they have been updated.
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
 	@PUT
-	@Path("/workingsnapshottranslatedstrings/put/json")
+	@Path("/translatedtopicstrings/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<WorkingSnapshotTranslatedStringV1> updateJSONWorkingSnapshotTranslatedStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<WorkingSnapshotTranslatedStringV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicStringV1> updateJSONTranslatedTopicStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicStringV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
 	
 	@PUT
-	@Path("/workingsnapshottranslatedstrings/put/jsonp")
+	@Path("/translatedtopicstrings/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPWorkingSnapshotTranslatedStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<WorkingSnapshotTranslatedStringV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopicStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicStringV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Deletes a single WorkingSnapshotTranslatedStringV1 entity. 
+	 * Deletes a single TranslatedTopicStringV1 entity. 
 	 * @param id The id of the entity to be deleted.
 	 * @param expand The expansion options.
-	 * @return The details of the deleted WorkingSnapshotTranslatedStringV1 entity.
+	 * @return The details of the deleted TranslatedTopicStringV1 entity.
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
 	@DELETE
-	@Path("/workingsnapshottranslatedstring/delete/json/{id}")
+	@Path("/translatedtopicstring/delete/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public WorkingSnapshotTranslatedStringV1 deleteJSONWorkingSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicStringV1 deleteJSONTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
 	@DELETE
-	@Path("/workingsnapshottranslatedstring/delete/jsonp/{id}")
+	@Path("/translatedtopicstring/delete/jsonp/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String deleteJSONPWorkingSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String deleteJSONPTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Deletes a collection of WorkingSnapshotTranslatedStringV1 entities. 
+	 * Deletes a collection of TranslatedTopicStringV1 entities. 
 	 * @param ids A semicolon separated list of ids to be deleted, starting with the prefix "ids;" e.g. ids;1;13;652
 	 * @param expand The expansion options
-	 * @return The details of the deleted WorkingSnapshotTranslatedStringV1 entities. 
+	 * @return The details of the deleted TranslatedTopicStringV1 entities. 
 	 * @HTTP 400 if any of the ids are not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
 	@DELETE
-	@Path("/workingsnapshottranslatedstrings/delete/json/{ids}")
+	@Path("/translatedtopicstrings/delete/json/{ids}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public BaseRestCollectionV1<WorkingSnapshotTranslatedStringV1> deleteJSONWorkingSnapshotTranslatedStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicStringV1> deleteJSONTranslatedTopicStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
 	@DELETE
-	@Path("/workingsnapshottranslatedstrings/delete/jsonp/{ids}")
+	@Path("/translatedtopicstrings/delete/jsonp/{ids}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String deleteJSONPWorkingSnapshotTranslatedStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String deleteJSONPTranslatedTopicStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
-	/* WORKINGSNAPSHOTTRANSLATEDDATA FUNCTIONS */
+	/* TRANSLATEDTOPICDATA FUNCTIONS */
 	/*		JSONP FUNCTIONS */
 	@GET
-	@Path("/workingsnapshottranslateddata/get/jsonp/{id}")
+	@Path("/translatedtopicdata/get/jsonp/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String getJSONPWorkingSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String getJSONPTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@GET
-	@Path("/workingsnapshottranslateddatas/get/jsonp/all")
+	@Path("/translatedtopicdatas/get/jsonp/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String getJSONPWorkingSnapshotTranslatedDatas(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String getJSONPTranslatedTopicDatas(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/workingsnapshottranslateddata/put/jsonp")
+	@Path("/translatedtopicdata/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPWorkingSnapshotTranslatedData(@QueryParam("expand") final String expand, final WorkingSnapshotTranslatedDataV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopicData(@QueryParam("expand") final String expand, final TranslatedTopicDataV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/workingsnapshottranslateddatas/put/jsonp")
+	@Path("/translatedtopicdatas/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPWorkingSnapshotTranslatedDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<WorkingSnapshotTranslatedDataV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopicDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicDataV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/workingsnapshottranslateddata/delete/jsonp/{id}")
+	@Path("/translatedtopicdata/delete/jsonp/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String deleteJSONPWorkingSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String deleteJSONPTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/workingsnapshottranslateddatas/delete/jsonp/{ids}")
+	@Path("/translatedtopicdatas/delete/jsonp/{ids}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String deleteJSONPWorkingSnapshotTranslatedDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String deleteJSONPTranslatedTopicDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 	
 	/*		JSON FUNCTIONS */
 	@GET
-	@Path("/workingsnapshottranslateddata/get/json/{id}")
+	@Path("/translatedtopicdata/get/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public WorkingSnapshotTranslatedDataV1 getJSONWorkingSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicDataV1 getJSONTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@GET
-	@Path("/workingsnapshottranslateddatas/get/json/all")
+	@Path("/translatedtopicdatas/get/json/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public BaseRestCollectionV1<WorkingSnapshotTranslatedDataV1> getJSONWorkingSnapshotTranslatedDatas(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicDataV1> getJSONTranslatedTopicDatas(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/workingsnapshottranslateddata/put/json")
+	@Path("/translatedtopicdata/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public WorkingSnapshotTranslatedDataV1 updateJSONWorkingSnapshotTranslatedData(@QueryParam("expand") final String expand, final WorkingSnapshotTranslatedDataV1 dataObject) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicDataV1 updateJSONTranslatedTopicData(@QueryParam("expand") final String expand, final TranslatedTopicDataV1 dataObject) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/workingsnapshottranslateddatas/put/json")
+	@Path("/translatedtopicdatas/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<WorkingSnapshotTranslatedDataV1> updateJSONWorkingSnapshotTranslatedDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<WorkingSnapshotTranslatedDataV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicDataV1> updateJSONTranslatedTopicDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicDataV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/workingsnapshottranslateddata/delete/json/{id}")
+	@Path("/translatedtopicdata/delete/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public WorkingSnapshotTranslatedDataV1 deleteJSONWorkingSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicDataV1 deleteJSONTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/workingsnapshottranslateddatas/delete/json/{ids}")
+	@Path("/translatedtopicdatas/delete/json/{ids}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public BaseRestCollectionV1<WorkingSnapshotTranslatedDataV1> deleteJSONWorkingSnapshotTranslatedDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicDataV1> deleteJSONTranslatedTopicDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	/* USER FUNCTIONS */
 	/*		JSONP FUNCTIONS */
@@ -475,435 +471,105 @@ public interface RESTInterfaceV1
 	@Consumes({ "*" })
 	public BaseRestCollectionV1<StringConstantV1> deleteJSONStringConstants(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
-	/* SNAPSHOT FUNCTIONS */
-	/*		JSONP FUNCTIONS */
-	@GET
-	@Path("/snapshot/get/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshot(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshots/get/jsonp/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshots(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshot/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshot(@QueryParam("expand") final String expand, final SnapshotV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshots/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshots(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@POST
-	@Path("/snapshot/post/jsonp")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public String createJSONPSnapshot(@QueryParam("expand") final String expand, final SnapshotV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@POST
-	@Path("/snapshots/post/jsonp")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public String createJSONPSnapshots(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshot/delete/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshot(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshots/delete/jsonp/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshots(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-	
-	/*		JSON FUNCTIONS */
-	@GET
-	@Path("/snapshottranslationdata/get/html/{id}/xmlRendered")
-	@Produces(MediaType.TEXT_HTML)
-	@Consumes({ "*" })
-	public String getHTMLSnapshotTranslationDataXMLRendered(@PathParam("id") final Integer id);
-
-	@GET
-	@Path("/snapshot/get/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotV1 getJSONSnapshot(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshots/get/json/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotV1> getJSONSnapshots(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshot/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public SnapshotV1 updateJSONSnapshot(@QueryParam("expand") final String expand, final SnapshotV1 dataObject) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshots/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<SnapshotV1> updateJSONSnapshots(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
-
-	@POST
-	@Path("/snapshot/post/json")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public SnapshotV1 createJSONSnapshot(@QueryParam("expand") final String expand, final SnapshotV1 dataObject) throws InvalidParameterException, InternalProcessingException;
-
-	@POST
-	@Path("/snapshots/post/json")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseRestCollectionV1<SnapshotV1> createJSONSnapshots(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshot/delete/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotV1 deleteJSONSnapshot(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshots/delete/json/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotV1> deleteJSONSnapshots(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	/* SNAPSHOTTRANSLATEDSTRING FUNCTIONS */
-	/*		JSONP FUNCTIONS */
-	@GET
-	@Path("/snapshottranslatedstring/get/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshottranslatedstrings/get/jsonp/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshotTranslatedStrings(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslatedstring/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotTranslatedString(@QueryParam("expand") final String expand, final SnapshotTranslatedStringV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslatedstrings/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotTranslatedStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTranslatedStringV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslatedstring/delete/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslatedstrings/delete/jsonp/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshotTranslatedStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-	
-	/*		JSON FUNCTIONS */
-	@GET
-	@Path("/snapshottranslatedstring/get/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotTranslatedStringV1 getJSONSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshottranslatedstrings/get/json/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotTranslatedStringV1> getJSONSnapshotTranslatedStrings(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslatedstring/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public SnapshotTranslatedStringV1 updateJSONSnapshotTranslatedString(@QueryParam("expand") final String expand, final SnapshotTranslatedStringV1 dataObject) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslatedstrings/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<SnapshotTranslatedStringV1> updateJSONSnapshotTranslatedStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTranslatedStringV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslatedstring/delete/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotTranslatedStringV1 deleteJSONSnapshotTranslatedString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslatedstrings/delete/json/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotTranslatedStringV1> deleteJSONSnapshotTranslatedStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	/* SNAPSHOTTRANSLATEDDATA FUNCTIONS */
-	/*		JSONP FUNCTIONS */
-	@GET
-	@Path("/snapshottranslateddata/get/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshottranslateddatas/get/jsonp/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshotTranslatedDatas(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslateddata/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotTranslatedData(@QueryParam("expand") final String expand, final SnapshotTranslatedDataV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslateddatas/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotTranslatedDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTranslatedDataV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslateddata/delete/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslateddatas/delete/jsonp/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshotTranslatedDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-	
-	/*		JSON FUNCTIONS */	
-	@GET
-	@Path("/snapshottranslateddata/get/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotTranslatedDataV1 getJSONSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshottranslateddatas/get/json/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotTranslatedDataV1> getJSONSnapshotTranslatedDatas(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslateddata/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public SnapshotTranslatedDataV1 updateJSONSnapshotTranslatedData(@QueryParam("expand") final String expand, final SnapshotTranslatedDataV1 dataObject) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshottranslateddatas/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<SnapshotTranslatedDataV1> updateJSONSnapshotTranslatedDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTranslatedDataV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslateddata/delete/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotTranslatedDataV1 deleteJSONSnapshotTranslatedData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshottranslateddatas/delete/json/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotTranslatedDataV1> deleteJSONSnapshotTranslatedDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	/* SNAPSHOTTOPIC FUNCTIONS */
+	/* TRANSLATEDTOPIC FUNCTIONS */
 	/*		JSONP FUNCTIONS */	
 	@GET
-	@Path("/snapshottopic/get/jsonp/{id}")
+	@Path("/translatedtopic/get/jsonp/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String getJSONPSnapshotTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String getJSONPTranslatedTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@GET
-	@Path("/snapshottopics/get/jsonp/all")
+	@Path("/translatedtopics/get/jsonp/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String getJSONPSnapshotTopics(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String getJSONPTranslatedTopics(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/snapshottopic/put/jsonp")
+	@Path("/translatedtopic/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotTopic(@QueryParam("expand") final String expand, final SnapshotTopicV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopic(@QueryParam("expand") final String expand, final TranslatedTopicV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/snapshottopics/put/jsonp")
+	@Path("/translatedtopics/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTopicV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@POST
-	@Path("/snapshottopic/post/jsonp")
+	@Path("/translatedtopic/post/jsonp")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public String createJSONPSnapshotTopic(@QueryParam("expand") final String expand, final SnapshotTopicV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String createJSONPTranslatedTopic(@QueryParam("expand") final String expand, final TranslatedTopicV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@POST
-	@Path("/snapshottopics/post/jsonp")
+	@Path("/translatedtopics/post/jsonp")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public String createJSONPSnapshotTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTopicV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String createJSONPTranslatedTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/snapshottopic/delete/jsonp/{id}")
+	@Path("/translatedtopic/delete/jsonp/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String deleteJSONPSnapshotTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String deleteJSONPTranslatedTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/snapshottopics/delete/jsonp/{ids}")
+	@Path("/translatedtopics/delete/jsonp/{ids}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public String deleteJSONPSnapshotTopics(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String deleteJSONPTranslatedTopics(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 	
 	/*		JSON FUNCTIONS */	
 	@GET
-	@Path("/snapshottopic/get/json/{id}")
+	@Path("/translatedtopic/get/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public SnapshotTopicV1 getJSONSnapshotTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicV1 getJSONTranslatedTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@GET
-	@Path("/snapshottopics/get/json/all")
+	@Path("/translatedtopics/get/json/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotTopicV1> getJSONSnapshotTopics(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicV1> getJSONTranslatedTopics(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/snapshottopic/put/json")
+	@Path("/translatedtopic/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public SnapshotTopicV1 updateJSONSnapshotTopic(@QueryParam("expand") final String expand, final SnapshotTopicV1 dataObject) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicV1 updateJSONTranslatedTopic(@QueryParam("expand") final String expand, final TranslatedTopicV1 dataObject) throws InvalidParameterException, InternalProcessingException;
 
 	@PUT
-	@Path("/snapshottopics/put/json")
+	@Path("/translatedtopics/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<SnapshotTopicV1> updateJSONSnapshotTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTopicV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicV1> updateJSONTranslatedTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
 
 	@POST
-	@Path("/snapshottopic/post/json")
+	@Path("/translatedtopic/post/json")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public SnapshotTopicV1 createJSONSnapshotTopic(@QueryParam("expand") final String expand, final SnapshotTopicV1 dataObject) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicV1 createJSONTranslatedTopic(@QueryParam("expand") final String expand, final TranslatedTopicV1 dataObject) throws InvalidParameterException, InternalProcessingException;
 
 	@POST
-	@Path("/snapshottopics/post/json")
+	@Path("/translatedtopics/post/json")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ MediaType.APPLICATION_JSON })
-	public BaseRestCollectionV1<SnapshotTopicV1> createJSONSnapshotTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotTopicV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicV1> createJSONTranslatedTopics(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/snapshottopic/delete/json/{id}")
+	@Path("/translatedtopic/delete/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public SnapshotTopicV1 deleteJSONSnapshotTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public TranslatedTopicV1 deleteJSONTranslatedTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@DELETE
-	@Path("/snapshottopics/delete/json/{ids}")
+	@Path("/translatedtopics/delete/json/{ids}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotTopicV1> deleteJSONSnapshotTopics(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	/* SNAPSHOTREVISION FUNCTIONS */
-	/*		JSON FUNCTIONS */	
-	@GET
-	@Path("/snapshotrevision/get/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshotRevision(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshotrevisions/get/jsonp/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPSnapshotRevisions(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshotrevision/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotRevision(@QueryParam("expand") final String expand, final SnapshotRevisionV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshotrevisions/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPSnapshotRevisions(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotRevisionV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshotrevision/delete/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshotRevision(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshotrevisions/delete/jsonp/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPSnapshotRevisions(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public BaseRestCollectionV1<TranslatedTopicV1> deleteJSONTranslatedTopics(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
-	/*		JSON FUNCTIONS */	
-	@GET
-	@Path("/snapshotrevision/get/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotRevisionV1 getJSONSnapshotRevision(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/snapshotrevisions/get/json/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotRevisionV1> getJSONSnapshotRevisions(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshotrevision/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public SnapshotRevisionV1 updateJSONSnapshotRevision(@QueryParam("expand") final String expand, final SnapshotRevisionV1 dataObject) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/snapshotrevisions/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<SnapshotRevisionV1> updateJSONSnapshotRevisions(@QueryParam("expand") final String expand, final BaseRestCollectionV1<SnapshotRevisionV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshotrevision/delete/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public SnapshotRevisionV1 deleteJSONSnapshotRevision(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/snapshotrevisions/delete/json/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<SnapshotRevisionV1> deleteJSONSnapshotRevisions(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
 	/* ROLE FUNCTIONS */
 	/*		JSONP FUNCTIONS */	
 	@GET
@@ -1685,11 +1351,23 @@ public interface RESTInterfaceV1
 	public TopicV1 getJSONTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@GET
+	@Path("/topic/get/json/{id}/r/{rev}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes({ "*" })
+	public TopicV1 getJSONTopicRevision(@PathParam("id") final Integer id, @PathParam("rev") final Integer revision, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	
+	@GET
 	@Path("/topic/get/xml/{id}")
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes({ "*" })
 	public TopicV1 getXMLTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
+	@GET
+	@Path("/topic/get/xml/{id}/r/{rev}")
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes({ "*" })
+	public TopicV1 getXMLTopicRevision(@PathParam("id") final Integer id, @PathParam("rev") final Integer revision, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	
 	@GET
 	@Path("/topic/get/xml/{id}/xml")
 	@Produces(MediaType.APPLICATION_XML)

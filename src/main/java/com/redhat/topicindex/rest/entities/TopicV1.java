@@ -41,6 +41,7 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	public static final String SOURCE_URLS_NAME = "sourceUrls_OTM";
 	public static final String BUGZILLABUGS_NAME = "bugzillabugs_OTM";
 	public static final String PROPERTIES_NAME = "properties";
+	public static final String TRANSLATEDTOPCIS_NAME = "translatedtopics_OTM";
 
 	private String title = null;
 	private String description = null;
@@ -56,6 +57,7 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	private BaseRestCollectionV1<TopicV1> incomingRelationships = null;
 	private BaseRestCollectionV1<TopicSourceUrlV1> sourceUrls = null;
 	private BaseRestCollectionV1<BugzillaBugV1> bugzillaBugs = null;
+	private BaseRestCollectionV1<TranslatedTopicV1> translatedTopics = null;
 	
 	@Override
 	public TopicV1 clone(final boolean deepCopy)
@@ -570,5 +572,15 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	{
 		this.bugzillaBugs = bugzillaBugs;
 		setParamaterToConfigured(BUGZILLABUGS_NAME);
+	}
+	
+	public BaseRestCollectionV1<TranslatedTopicV1> getTranslatedTopics_OTM()
+	{
+		return translatedTopics;
+	}
+
+	public void setTranslatedTopics_OTM(final BaseRestCollectionV1<TranslatedTopicV1> translatedTopics)
+	{
+		this.translatedTopics = translatedTopics;
 	}
 }

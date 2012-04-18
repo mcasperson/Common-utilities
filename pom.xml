@@ -13,6 +13,10 @@
 			<id>Apache</id>
 			<url>http://repository.apache.org</url>
 		</repository>
+		<repository>
+			<id>Zanata</id>
+			<url>http://repository-zanata.forge.cloudbees.com/release/</url>
+		</repository>
 	</repositories>
   	<dependencies>
   	<dependency>
@@ -73,6 +77,21 @@
   			<groupId>javax.ws.rs</groupId>
   			<artifactId>javax.ws.rs-api</artifactId>
   			<version>2.0-m04</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.zanata</groupId>
+  			<artifactId>zanata-common-api</artifactId>
+  			<version>1.5.0</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.zanata</groupId>
+  			<artifactId>zanata-common-util</artifactId>
+  			<version>1.5.0</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>org.zanata</groupId>
+  			<artifactId>zanata-rest-client</artifactId>
+  			<version>1.5.0</version>
   		</dependency>
   	</dependencies>
 </project>

@@ -6,6 +6,6 @@ package com.redhat.topicindex.messaging;
 public final class TopicRendererType
 {
 	public static final int TOPIC = 0;
-	public static final int SNAPSHOTTOPIC = 1;
-	public static final int WORKINGSNAPSHOTTOPIC = 2;
+	public static final int TRANSLATEDTOPIC = 1;
+	public static final int CONTENTSPECIFICATON = 2;
 }

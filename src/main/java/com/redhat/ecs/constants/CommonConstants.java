@@ -1,5 +1,10 @@
 package com.redhat.ecs.constants;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import com.redhat.ecs.commonutils.CollectionUtilities;
+
 /**
  * This class defines the constants that are used between Skynet and its various
  * components
@@ -83,9 +88,44 @@ public class CommonConstants
 	 */
 	public static final String SKYNET_SERVER_SYSTEM_PROPERTY = "topicIndex.skynetServer";
 	/**
+	 * The system property that identifies the zanata server to send files to
+	 * for translation
+	 */
+	public static final String ZANATA_SERVER_PROPERTY = "topicIndex.zanataServer";
+
+	/**
+	 * The system property that identifies the zanata project name
+	 */
+	public static final String ZANATA_PROJECT_PROPERTY = "topicIndex.zanataProject";
+
+	/**
+	 * The system property that identifies the zanata user name
+	 */
+	public static final String ZANATA_USERNAME_PROPERTY = "topicIndex.zanataUsername";
+
+	/**
+	 * The system property that identifies the zanata project version
+	 */
+	public static final String ZANATA_PROJECT_VERSION_PROPERTY = "topicIndex.zanataProjectVersion";
+
+	/**
+	 * The system property that identifies the zanata API token
+	 */
+	public static final String ZANATA_TOKEN_PROPERTY = "topicIndex.zanataToken";
+	/**
 	 * The ZIP file MIME type
 	 */
 	public static final String ZIP_MIME_TYPE = "application/zip";
+	
+	/** The encoding of the XML, used when converting a DOM object to a string */
+	public static final String XML_ENCODING = "UTF-8";
+	
+	/**
+	 * A collection of the all the locales supported by Java.
+	 * Replace all the Underscores (_) to match the normal locale
+	 * representation.
+	 */
+	public static final List<String> LOCALES = CollectionUtilities.replaceStrings(CollectionUtilities.sortAndReturn(CollectionUtilities.toStringArrayList((Object[]) SimpleDateFormat.getAvailableLocales())), "_", "-");
 
 	/**
 	 * The URL of the main web Skynet instance. This is used when generating

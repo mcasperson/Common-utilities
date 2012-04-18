@@ -48,38 +48,38 @@ public class XMLPreProcessor
 	 * Used to identify that an <orderedlist> should be generated for the
 	 * injection point
 	 */
-	private static final int ORDEREDLIST_INJECTION_POINT = 1;
+	protected static final int ORDEREDLIST_INJECTION_POINT = 1;
 	/**
 	 * Used to identify that an <itemizedlist> should be generated for the
 	 * injection point
 	 */
-	private static final int ITEMIZEDLIST_INJECTION_POINT = 2;
+	protected static final int ITEMIZEDLIST_INJECTION_POINT = 2;
 	/**
 	 * Used to identify that an <xref> should be generated for the injection
 	 * point
 	 */
-	private static final int XREF_INJECTION_POINT = 3;
+	protected static final int XREF_INJECTION_POINT = 3;
 	/**
 	 * Used to identify that an <xref> should be generated for the injection
 	 * point
 	 */
-	private static final int LIST_INJECTION_POINT = 4;
+	protected static final int LIST_INJECTION_POINT = 4;
 	/** Identifies a named regular expression group */
-	private static final String TOPICIDS_RE_NAMED_GROUP = "TopicIDs";
+	protected static final String TOPICIDS_RE_NAMED_GROUP = "TopicIDs";
 	/** This text identifies an option task in a list */
-	private static final String OPTIONAL_MARKER = "OPT:";
+	protected static final String OPTIONAL_MARKER = "OPT:";
 	/** The text to be prefixed to a list item if a topic is optional */
-	private static final String OPTIONAL_LIST_PREFIX = "Optional: ";
+	protected static final String OPTIONAL_LIST_PREFIX = "Optional: ";
 	/** A regular expression that identifies a topic id */
-	private static final String OPTIONAL_TOPIC_ID_RE = "(" + OPTIONAL_MARKER + "\\s*)?\\d+";
+	protected static final String OPTIONAL_TOPIC_ID_RE = "(" + OPTIONAL_MARKER + "\\s*)?\\d+";
 	/** A regular expression that identifies a topic id */
-	private static final String TOPIC_ID_RE = "\\d+";
+	protected static final String TOPIC_ID_RE = "\\d+";
 
 	/**
 	 * A regular expression that matches an InjectSequence custom injection
 	 * point
 	 */
-	private static final String CUSTOM_INJECTION_SEQUENCE_RE =
+	protected static final String CUSTOM_INJECTION_SEQUENCE_RE =
 	/*
 	 * start xml comment and 'InjectSequence:' surrounded by optional white
 	 * space
@@ -94,7 +94,7 @@ public class XMLPreProcessor
 	"\\s*";
 
 	/** A regular expression that matches an InjectList custom injection point */
-	private static final String CUSTOM_INJECTION_LIST_RE =
+	protected static final String CUSTOM_INJECTION_LIST_RE =
 	/* start xml comment and 'InjectList:' surrounded by optional white space */
 	"\\s*InjectList:\\s*" +
 	/*
@@ -105,7 +105,7 @@ public class XMLPreProcessor
 	/* xml comment end */
 	"\\s*";
 
-	private static final String CUSTOM_INJECTION_LISTITEMS_RE =
+	protected static final String CUSTOM_INJECTION_LISTITEMS_RE =
 	/* start xml comment and 'InjectList:' surrounded by optional white space */
 	"\\s*InjectListItems:\\s*" +
 	/*
@@ -116,7 +116,7 @@ public class XMLPreProcessor
 	/* xml comment end */
 	"\\s*";
 
-	private static final String CUSTOM_ALPHA_SORT_INJECTION_LIST_RE =
+	protected static final String CUSTOM_ALPHA_SORT_INJECTION_LIST_RE =
 	/*
 	 * start xml comment and 'InjectListAlphaSort:' surrounded by optional white
 	 * space
@@ -131,7 +131,7 @@ public class XMLPreProcessor
 	"\\s*";
 
 	/** A regular expression that matches an Inject custom injection point */
-	private static final String CUSTOM_INJECTION_SINGLE_RE =
+	protected static final String CUSTOM_INJECTION_SINGLE_RE =
 	/* start xml comment and 'Inject:' surrounded by optional white space */
 	"\\s*Inject:\\s*" +
 	/* one digit block */
@@ -140,7 +140,7 @@ public class XMLPreProcessor
 	"\\s*";
 
 	/** A regular expression that matches an Inject Content Fragment */
-	private static final String INJECT_CONTENT_FRAGMENT_RE =
+	protected static final String INJECT_CONTENT_FRAGMENT_RE =
 	/* start xml comment and 'Inject:' surrounded by optional white space */
 	"\\s*InjectText:\\s*" +
 	/* one digit block */
@@ -149,7 +149,7 @@ public class XMLPreProcessor
 	"\\s*";
 
 	/** A regular expression that matches an Inject Content Fragment */
-	private static final String INJECT_TITLE_FRAGMENT_RE =
+	protected static final String INJECT_TITLE_FRAGMENT_RE =
 	/* start xml comment and 'Inject:' surrounded by optional white space */
 	"\\s*InjectTitle:\\s*" +
 	/* one digit block */
@@ -161,7 +161,7 @@ public class XMLPreProcessor
 	 * The noinject value for the role attribute indicates that an element
 	 * should not be included in the Topic Fragment
 	 */
-	private static final String NO_INJECT_ROLE = "noinject";
+	protected static final String NO_INJECT_ROLE = "noinject";
 
 	static public void processTopicBugzillaLink(final TopicV1 topic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl)
 	{
@@ -885,7 +885,7 @@ public class XMLPreProcessor
 		return retValue;
 	}
 
-	private static void removeNoInjectElements(final Node parent)
+	protected static void removeNoInjectElements(final Node parent)
 	{
 		final NodeList childrenNodes = parent.getChildNodes();
 		final ArrayList<Node> removeNodes = new ArrayList<Node>();

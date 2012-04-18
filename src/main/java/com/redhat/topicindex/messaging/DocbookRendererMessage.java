@@ -10,7 +10,11 @@ public class DocbookRendererMessage
 	public int entityType;
 	public int entityId;
 	
-	public DocbookRendererMessage(final int entityType, final int entityId)
+	public DocbookRendererMessage()
+	{
+	}
+	
+	public DocbookRendererMessage(final int entityId, final int entityType)
 	{
 		this.entityType = entityType;
 		this.entityId = entityId;
