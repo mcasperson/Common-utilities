@@ -18,7 +18,7 @@
 			<url>http://repository-zanata.forge.cloudbees.com/release/</url>
 		</repository>
 	</repositories>
-  	<dependencies>
+  <dependencies>
   	<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
@@ -92,6 +92,11 @@
   			<groupId>org.zanata</groupId>
   			<artifactId>zanata-rest-client</artifactId>
   			<version>1.5.0</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>com.redhat</groupId>
+  			<artifactId>gozirra-ext</artifactId>
+  			<version>0.0.1-SNAPSHOT</version>
   		</dependency>
   	</dependencies>
 </project>
