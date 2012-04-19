@@ -8,6 +8,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.client.ClientResponse;
+import org.jboss.resteasy.client.ProxyFactory;
+
 import org.zanata.common.LocaleId;
 import org.zanata.rest.client.ITranslationResources;
 import org.zanata.rest.client.ZanataProxyFactory;
@@ -28,7 +30,7 @@ public class ZanataInterface
 	static {
 		URI URI = null;
 		try {
-			URI = new URI(details.getUrl());
+			URI = new URI(details.getServer());
 		} catch (URISyntaxException e) {
 		}
 		final VersionInfo versionInfo = VersionUtility.getVersionInfo(ZanataProxyFactory.class);
@@ -136,6 +138,26 @@ public class ZanataInterface
 		{
 			ExceptionUtilities.handleException(ex);
 		}
+	}
+	
+	public static boolean getTranslationsExists(final String id, final LocaleId locale)
+	{
+		try
+		{
+			final ZanataDetails details = new ZanataDetails();
+			final String URI = details.getUrl();
+
+			final ITranslationResources client = ProxyFactory.create(ITranslationResources.class, URI);
+			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
+
+			return Response.Status.fromStatusCode(response.getStatus()) == Response.Status.OK;
+		}
+		catch (final Exception ex)
+		{
+			ExceptionUtilities.handleException(ex);
+		}
+
+		return false;
 	}
 
 	public static TranslationsResource getTranslations(final String id, final LocaleId locale)
