@@ -8,8 +8,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.client.ClientResponse;
-import org.jboss.resteasy.client.ProxyFactory;
-
 import org.zanata.common.LocaleId;
 import org.zanata.rest.client.ITranslationResources;
 import org.zanata.rest.client.ZanataProxyFactory;
@@ -144,13 +142,13 @@ public class ZanataInterface
 	{
 		try
 		{
-			final ZanataDetails details = new ZanataDetails();
-			final String URI = details.getUrl();
-
-			final ITranslationResources client = ProxyFactory.create(ITranslationResources.class, URI);
+			final ITranslationResources client = proxyFactory.getTranslationResources(details.getProject(), details.getVersion());
 			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
 
-			return Response.Status.fromStatusCode(response.getStatus()) == Response.Status.OK;
+			final Status status = Response.Status.fromStatusCode(response.getStatus());
+			
+			return status == Response.Status.OK;
+
 		}
 		catch (final Exception ex)
 		{
