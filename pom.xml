@@ -109,9 +109,9 @@
   	
   	<!-- Gozirra Libraries -->
   	<dependency>
-  		<groupId>com.redhat</groupId>
-  		<artifactId>gozirra-ext</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<groupId>germane-software</groupId>
+  		<artifactId>gozirra-extended</artifactId>
+  		<version>0.5-SNAPSHOT</version>
   		<scope>provided</scope>
   	</dependency>
   </dependencies>
