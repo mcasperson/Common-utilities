@@ -35,17 +35,34 @@ public class TopicErrorDatabase
 	{
 		addItem(topic, error, WARNING);
 	}
+	
+	/**
+	 * Add a error for a topic that was included in the TOC
+	 * @param topic
+	 * @param error
+	 */
+	public void addTocError(final TopicV1 topic, final String error)
+	{
+		addItem(topic, error, ERROR);
+	}
+
+	public void addTocWarning(final TopicV1 topic, final String error)
+	{
+		addItem(topic, error, WARNING);
+	}
 
 	private void addItem(final TopicV1 topic, final String item, final Integer level)
 	{
 		final TopicErrorData topicErrorData = addOrGetTopicErrorData(topic);
-		topicErrorData.addError(item, level);
+		/* don't add duplicates */
+		if (!(topicErrorData.getErrors().containsKey(level) && topicErrorData.getErrors().get(level).contains(item)))
+			topicErrorData.addError(item, level);
 	}
 
 	private TopicErrorData getErrorData(final TopicV1 topic)
 	{
 		for (final TopicErrorData topicErrorData : errors)
-			if (topicErrorData.getTopic().equals(topic))
+			if (topicErrorData.getTopic().getId().equals(topic.getId()))
 				return topicErrorData;
 		return null;
 	}
