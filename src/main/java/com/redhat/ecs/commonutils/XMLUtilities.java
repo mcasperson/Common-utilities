@@ -70,7 +70,7 @@ public class XMLUtilities
 	public static final Pattern TRAILING_WHITESPACE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_RE, Pattern.MULTILINE | Pattern.DOTALL);
 	public static final Pattern TRAILING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(TRAILING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
 	public static final Pattern PRECEEDING_WHITESPACE_SIMPLE_RE_PATTERN = Pattern.compile(PRECEEDING_WHITESPACE_SIMPLE_RE, Pattern.MULTILINE | Pattern.DOTALL);
-
+	
 	public static String findEncoding(final String xml)
 	{
 		final int encodingIndexStart = xml.indexOf(ENCODING_START);
@@ -431,13 +431,20 @@ public class XMLUtilities
 		return retValue;
 	}
 	
-	public static String convertDocumentToString(final Document doc, final String encoding, final String preamble)
+	/**
+	 * Convert an XML document to a string.
+	 * @param doc The Document to be converted
+	 * @param encoding The encoding of the XML
+	 * @param entityDec Any additional XML entity declarations
+	 * @return The String representation of the XML Document
+	 */
+	public static String convertDocumentToString(final Document doc, final String encoding, final String entityDec)
 	{
 		String retValue = convertDocumentToString(doc, encoding);
 		
-		final String docEncoding = findEncoding(retValue);
+		final String docEncoding = findPreamble(retValue);
 		if (docEncoding != null)
-			retValue = retValue.replace(docEncoding, docEncoding + "\n" + preamble);
+			retValue = retValue.replace(docEncoding, docEncoding + "\n" + entityDec);
 		
 		return retValue;
 	}
