@@ -181,7 +181,7 @@ public class TocFormatBranch
 
 	public int getTopicCount()
 	{
-		int retValue = this.children.size();
+		int retValue = this.topics.size();
 
 		for (final TocFormatBranch child : children)
 			retValue += child.getTopicCount();
