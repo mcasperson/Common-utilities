@@ -345,11 +345,33 @@ public class TocFormatBranch
 				final String idAttibuteValue = idAttribute.getNodeValue();
 				final String fixedIdAttribute = idAttibuteValue + this.getTOCBranchID();
 				idAttribute.setNodeValue(fixedIdAttribute);
+				
+				fixNodeIdReferences(node.getOwnerDocument(), idAttibuteValue, fixedIdAttribute);
 			}
 		}
 
 		final NodeList elements = node.getChildNodes();
 		for (int i = 0; i < elements.getLength(); ++i)
 			fixNodeId(elements.item(i));
+	}
+	
+	private void fixNodeIdReferences(final Node node, final String id, final String fixedId)
+	{
+		final NamedNodeMap attributes = node.getAttributes();
+		if (attributes != null)
+		{
+			for (int i = 0; i < attributes.getLength(); ++i)
+			{
+				final String attibuteValue = attributes.item(i).getNodeValue();
+				if (attibuteValue.equals(id))
+				{
+					attributes.item(i).setNodeValue(fixedId);
+				}
+			}
+		}
+
+		final NodeList elements = node.getChildNodes();
+		for (int i = 0; i < elements.getLength(); ++i)
+			fixNodeIdReferences(elements.item(i), id, fixedId);
 	}
 }
