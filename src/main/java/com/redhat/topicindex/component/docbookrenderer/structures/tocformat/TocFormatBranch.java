@@ -238,7 +238,13 @@ public class TocFormatBranch
 			/* Search that branch first */
 			final TopicV1 topicInBranch = branch.getTopicInBranchAndChildren(topicId);
 			if (topicInBranch != null)
-				return branch.getTOCBranchID();
+			{
+				final TocFormatBranch branchThatContainsTopic = branch.getBranchThatContainsTopic(referenceTopic);
+				if (branchThatContainsTopic != null)
+					return branchThatContainsTopic.getTOCBranchID();
+				else
+					return null;
+			}
 
 			/* go up to the parent and try again */
 			branch = branch.getParent();
