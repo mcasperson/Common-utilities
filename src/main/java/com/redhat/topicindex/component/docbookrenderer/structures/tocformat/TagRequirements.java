@@ -3,6 +3,7 @@ package com.redhat.topicindex.component.docbookrenderer.structures.tocformat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.topicindex.rest.entities.TagV1;
 
 /**
@@ -12,11 +13,11 @@ import com.redhat.topicindex.rest.entities.TagV1;
 public class TagRequirements
 {
 	/** One of these tags needs to be present */
-	private final List<TagV1> matchOneOf = new ArrayList<TagV1>();
+	private final List<ArrayList<TagV1>> matchOneOf = new ArrayList<ArrayList<TagV1>>();
 	/** All of these tags needs to be present */
 	private final List<TagV1> matchAllOf = new ArrayList<TagV1>();
 
-	public List<TagV1> getMatchOneOf()
+	public List<ArrayList<TagV1>> getMatchOneOf()
 	{
 		return matchOneOf;
 	}
@@ -26,26 +27,27 @@ public class TagRequirements
 		return matchAllOf;
 	}
 
-	public TagRequirements(final List<TagV1> matchAllOf, final List<TagV1> matchOneOf)
-	{
-		if (matchOneOf != null)
-			this.matchOneOf.addAll(matchOneOf);
-		if (matchAllOf != null)
-			this.matchAllOf.addAll(matchAllOf);
-	}
-
-	public TagRequirements(final List<TagV1> matchAllOf, final TagV1 matchOneOf)
+	public TagRequirements(final ArrayList<TagV1> matchAllOf, final ArrayList<TagV1> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);
+		
 		if (matchAllOf != null)
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final TagV1 matchAllOf, final List<TagV1> matchOneOf)
+	public TagRequirements(final ArrayList<TagV1> matchAllOf, final TagV1 matchOneOf)
 	{
 		if (matchOneOf != null)
-			this.matchOneOf.addAll(matchOneOf);
+			this.matchOneOf.add(CollectionUtilities.toArrayList(matchOneOf));
+		if (matchAllOf != null)
+			this.matchAllOf.addAll(matchAllOf);
+	}
+
+	public TagRequirements(final TagV1 matchAllOf, final ArrayList<TagV1> matchOneOf)
+	{
+		if (matchOneOf != null)
+			this.matchOneOf.add(matchOneOf);
 		if (matchAllOf != null)
 			this.matchAllOf.add(matchAllOf);
 	}
@@ -53,7 +55,7 @@ public class TagRequirements
 	public TagRequirements(final TagV1 matchAllOf, final TagV1 matchOneOf)
 	{
 		if (matchOneOf != null)
-			this.matchOneOf.add(matchOneOf);
+			this.matchOneOf.add(CollectionUtilities.toArrayList(matchOneOf));
 		if (matchAllOf != null)
 			this.matchAllOf.add(matchAllOf);
 	}
@@ -81,6 +83,6 @@ public class TagRequirements
 	
 	public boolean hasRequirements()
 	{
-		return this.matchAllOf.size() != 0 && this.matchOneOf.size() != 0;
+		return this.matchAllOf.size() != 0 || this.matchOneOf.size() != 0;
 	}
 }

@@ -135,7 +135,7 @@ public class TocFormatBranch
 				docbook.append("</title>");
 				docbook.append("<para>");
 				docbook.append("No Content");
-				docbook.append("<para>");
+				docbook.append("</para>");
 				docbook.append("</section>");
 			}
 			
