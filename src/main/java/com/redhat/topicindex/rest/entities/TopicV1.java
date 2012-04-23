@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import com.redhat.ecs.commonstructures.NameIDSortMap;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
+import com.redhat.ecs.services.docbookcompiling.DocbookUtils;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.sort.TagV1NameComparator;
 
@@ -57,6 +58,7 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	private BaseRestCollectionV1<TopicSourceUrlV1> sourceUrls = null;
 	private BaseRestCollectionV1<BugzillaBugV1> bugzillaBugs = null;
 	
+	@Override
 	public TopicV1 clone(final boolean deepCopy)
 	{
 		final TopicV1 retValue = new TopicV1();
@@ -305,6 +307,21 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	public String getXRefID()
 	{
 		return "TopicID" + this.getId();
+	}
+	
+	@XmlTransient
+	@JsonIgnore
+	public String getXrefPropertyOrId(final Integer propertyTagId)
+	{
+		final PropertyTagV1 propTag = this.getProperty(propertyTagId);
+		if (propTag != null)
+		{
+			return propTag.getValue();
+		}
+		else
+		{
+			return this.getXRefID();
+		}
 	}
 	
 

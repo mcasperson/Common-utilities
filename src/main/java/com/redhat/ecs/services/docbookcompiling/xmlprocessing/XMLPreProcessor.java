@@ -561,15 +561,7 @@ public class XMLPreProcessor
 								{
 									if (usedFixedUrls)
 									{
-										final PropertyTagV1 propTag = relatedTopic.getProperty(CommonConstants.FIXED_URL_PROP_TAG_ID);
-										if (propTag != null)
-										{
-											list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, propTag.getValue()));
-										}
-										else
-										{
-											list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXRefID()));
-										}
+										list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID)));
 									}
 									else
 									{
@@ -587,15 +579,7 @@ public class XMLPreProcessor
 								{
 									if (usedFixedUrls)
 									{
-										final PropertyTagV1 propTag = relatedTopic.getProperty(CommonConstants.FIXED_URL_PROP_TAG_ID);
-										if (propTag != null)
-										{
-											list.add(DocbookUtils.buildXRef(xmlDocument, propTag.getValue()));
-										}
-										else
-										{
-											list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXRefID()));
-										}
+										list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID)));										
 									}
 									else
 									{
@@ -727,15 +711,8 @@ public class XMLPreProcessor
 							{
 								if (usedFixedUrls)
 								{
-									final PropertyTagV1 propTag = relatedTopic.getProperty(CommonConstants.FIXED_URL_PROP_TAG_ID);
-									if (propTag != null)
-									{
-										DocbookUtils.createRelatedTopicXRef(xmlDoc, propTag.getValue(), itemizedlist);
-									}
-									else
-									{
-										DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXRefID(), itemizedlist);
-									}
+									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID), itemizedlist);
+									
 								}
 								else
 								{
