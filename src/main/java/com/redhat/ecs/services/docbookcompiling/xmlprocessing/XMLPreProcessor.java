@@ -630,7 +630,7 @@ public class XMLPreProcessor
 			for (final TopicV1 relatedTopic : topic.getOutgoingRelationships().getItems())
 			{
 				/* make sure the topic is available to be linked to */
-				if (toc != null && toc.isInToc(relatedTopic.getId()))
+				if (toc != null && !toc.isInToc(relatedTopic.getId()))
 				{
 					if ((docbookBuildingOptions != null && !docbookBuildingOptions.getIgnoreMissingCustomInjections()))
 						errors.add(relatedTopic.getId());
