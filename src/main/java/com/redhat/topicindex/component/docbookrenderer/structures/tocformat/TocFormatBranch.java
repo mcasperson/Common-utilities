@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
@@ -232,6 +235,9 @@ public class TocFormatBranch
 				files.put("Book/en-US/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic)).getBytes());
 			}
 		}
+		
+		for (final TocFormatBranch child : children)
+			child.addTopicsToZIPFile(files, useFixedUrls);
 	}
 	
 	public Document getXMLDocument(final TopicV1 topic)
@@ -247,5 +253,33 @@ public class TocFormatBranch
 		}
 		
 		return null;
+	}
+	
+	public void setUniqueIds()
+	{
+		for (final Document doc : this.topics.values())
+			fixNodeId(doc);
+		
+		for (final TocFormatBranch child : children)
+			child.setUniqueIds();
+	}
+	
+	private void fixNodeId(final Node node)
+	{
+		final NamedNodeMap attributes = node.getAttributes();
+		if (attributes != null)
+		{
+			final Node idAttribute = attributes.getNamedItem("id");
+			if (idAttribute != null)
+			{
+				final String idAttibuteValue = idAttribute.getNodeValue();
+				final String fixedIdAttribute = idAttribute + this.getTOCBranchID();
+				idAttribute.setNodeValue(fixedIdAttribute);
+			}
+		}
+
+		final NodeList elements = node.getChildNodes();
+		for (int i = 0; i < elements.getLength(); ++i)
+			fixNodeId(elements.item(i));
 	}
 }
