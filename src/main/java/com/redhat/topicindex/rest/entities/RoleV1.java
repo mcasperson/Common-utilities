@@ -17,6 +17,31 @@ public class RoleV1 extends BaseRESTEntityV1<RoleV1>
 	private BaseRestCollectionV1<UserV1> users;
 	private BaseRestCollectionV1<RoleV1> childRoles;
 	private BaseRestCollectionV1<RoleV1> parentRoles;
+	
+	@Override
+	public RoleV1 clone(boolean deepCopy)
+	{
+		final RoleV1 retValue = new RoleV1();
+		retValue.name = this.name;
+		retValue.description = description;
+		retValue.relationshipId = new Integer(this.relationshipId);
+		retValue.relationshipDescription = this.relationshipDescription;
+		
+		if (deepCopy)
+		{
+			retValue.users = this.users.clone(deepCopy);
+			retValue.childRoles = this.childRoles.clone(deepCopy);
+			retValue.parentRoles = this.parentRoles.clone(deepCopy);
+		}
+		else
+		{
+			retValue.users = this.users;
+			retValue.childRoles = this.childRoles;
+			retValue.parentRoles = this.parentRoles;
+		}
+		
+		return retValue;
+	}
 
 	public String getName()
 	{

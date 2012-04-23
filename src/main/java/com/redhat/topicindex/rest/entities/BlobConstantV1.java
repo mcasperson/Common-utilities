@@ -10,6 +10,15 @@ public class BlobConstantV1 extends BaseRESTEntityV1<BlobConstantV1>
 	
 	private String name;
 	private byte[] value;
+	
+	@Override
+	public BlobConstantV1 clone(boolean deepCopy)
+	{
+		final BlobConstantV1 retValue = new BlobConstantV1();
+		retValue.name = this.name;
+		retValue.value = value.clone();
+		return retValue;
+	}
 
 	public String getName()
 	{
@@ -42,4 +51,6 @@ public class BlobConstantV1 extends BaseRESTEntityV1<BlobConstantV1>
 		this.value = value;
 		this.setParamaterToConfigured(VALUE_NAME);
 	}
+
+	
 }

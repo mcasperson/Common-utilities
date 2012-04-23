@@ -25,6 +25,31 @@ public class SnapshotTranslatedDataV1 extends BaseRESTEntityV1<SnapshotTranslate
 	private Date updated;
 	private BaseRestCollectionV1<SnapshotTranslatedStringV1> translatedStrings;
 	
+	@Override
+	public SnapshotTranslatedDataV1 clone(boolean deepCopy)
+	{
+		final SnapshotTranslatedDataV1 retValue = new SnapshotTranslatedDataV1();
+		retValue.xml = this.xml;
+		retValue.renderedXml = renderedXml;
+		retValue.locale = this.locale;
+		retValue.updated = (Date)this.updated.clone();
+		
+		if (deepCopy)
+		{
+			retValue.translatedStrings = this.translatedStrings.clone(deepCopy);
+			retValue.snapshotTopic = this.snapshotTopic.clone(deepCopy);
+			retValue.snapshotRevision = this.snapshotRevision.clone(deepCopy);
+		}
+		else
+		{
+			retValue.translatedStrings = this.translatedStrings;
+			retValue.snapshotTopic = this.snapshotTopic;
+			retValue.snapshotRevision = this.snapshotRevision;
+		}
+		
+		return retValue;
+	}
+	
 	public String getXml()
 	{
 		return xml;

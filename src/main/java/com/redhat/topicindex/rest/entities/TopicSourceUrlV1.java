@@ -9,6 +9,16 @@ public class TopicSourceUrlV1 extends BaseRESTEntityV1<TopicSourceUrlV1>
 	private String url;
 	private String title;
 	private String description;
+	
+	@Override
+	public TopicSourceUrlV1 clone(boolean deepCopy)
+	{
+		final TopicSourceUrlV1 retValue = new TopicSourceUrlV1();
+		retValue.url = this.url;
+		retValue.description = description;
+		retValue.title = this.title;
+		return retValue;
+	}
 
 	public String getUrl()
 	{

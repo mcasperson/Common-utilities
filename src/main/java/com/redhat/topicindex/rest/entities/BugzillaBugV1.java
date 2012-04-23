@@ -10,6 +10,17 @@ public class BugzillaBugV1 extends BaseRESTEntityV1<BugzillaBugV1>
 	private Integer bugId;
 	private Boolean isOpen;
 	private String summary;
+	
+	@Override
+	public BugzillaBugV1 clone(boolean deepCopy)
+	{
+		final BugzillaBugV1 retValue = new BugzillaBugV1();
+		retValue.id = new Integer(this.id);
+		retValue.bugId = new Integer(this.bugId);
+		retValue.isOpen = new Boolean(this.isOpen);
+		retValue.summary = summary;
+		return retValue;
+	}
 
 	public Integer getId()
 	{

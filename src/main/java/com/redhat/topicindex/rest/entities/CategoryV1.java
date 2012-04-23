@@ -18,6 +18,27 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 	private boolean mutuallyExclusive = false;
 	private Integer sort = null;
 	private BaseRestCollectionV1<TagV1> tags = null;
+	
+	@Override
+	public CategoryV1 clone(boolean deepCopy)
+	{
+		final CategoryV1 retValue = new CategoryV1();
+		retValue.name = this.name;
+		retValue.description = description;
+		retValue.mutuallyExclusive = this.mutuallyExclusive;
+		retValue.sort = new Integer(this.sort);
+		
+		if (deepCopy)
+		{
+			retValue.tags = this.tags.clone(deepCopy);
+		}
+		else
+		{
+			retValue.tags = this.tags;
+		}
+		
+		return retValue;
+	}
 
 	public String getName()
 	{

@@ -8,7 +8,7 @@ import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 /**
  * This is the base class for all entities that have Property Tags
  */
-public class BaseRESTEntityWithPropertiesV1<T extends BaseRESTEntityV1<T>> extends BaseRESTEntityV1<T>
+public abstract class BaseRESTEntityWithPropertiesV1<T extends BaseRESTEntityV1<T>> extends BaseRESTEntityV1<T>
 {
 	public static final String PROPERTIES_NAME = "properties";
 	private BaseRestCollectionV1<PropertyTagV1> properties = null;

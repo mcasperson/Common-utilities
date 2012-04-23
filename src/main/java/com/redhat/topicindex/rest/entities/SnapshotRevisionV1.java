@@ -15,6 +15,27 @@ public class SnapshotRevisionV1 extends BaseRESTEntityV1<SnapshotRevisionV1>
 	private String name;
 	private Date date;
 	private BaseRestCollectionV1<SnapshotTranslatedDataV1> snapshotTranslatedDataEntities;
+	
+	@Override
+	public SnapshotRevisionV1 clone(boolean deepCopy)
+	{
+		final SnapshotRevisionV1 retValue = new SnapshotRevisionV1();
+		retValue.name = this.name;
+		retValue.date = (Date)this.date.clone();
+		
+		if (deepCopy)
+		{
+			retValue.snapshot = this.snapshot.clone(deepCopy);
+			retValue.snapshotTranslatedDataEntities = this.snapshotTranslatedDataEntities.clone(deepCopy);
+		}
+		else
+		{
+			retValue.snapshot = this.snapshot;
+			retValue.snapshotTranslatedDataEntities = this.snapshotTranslatedDataEntities;
+		}
+		
+		return retValue;
+	}
 
 	public SnapshotV1 getSnapshot()
 	{

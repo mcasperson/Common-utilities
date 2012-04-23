@@ -11,6 +11,25 @@ public class UserV1 extends BaseRESTEntityV1<UserV1>
 	private String name;
 	private String description;
 	private BaseRestCollectionV1<RoleV1> roles = null;
+	
+	@Override
+	public UserV1 clone(boolean deepCopy)
+	{
+		final UserV1 retValue = new UserV1();
+		retValue.name = this.name;
+		retValue.description = description;
+		
+		if (deepCopy)
+		{
+			retValue.roles = this.roles.clone(deepCopy);
+		}
+		else
+		{
+			retValue.roles = this.roles;
+		}
+		
+		return retValue;
+	}
 
 	public String getName()
 	{

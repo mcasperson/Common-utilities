@@ -2,6 +2,7 @@ package com.redhat.topicindex.rest.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +57,38 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	private BaseRestCollectionV1<TopicV1> incomingRelationships = null;
 	private BaseRestCollectionV1<TopicSourceUrlV1> sourceUrls = null;
 	private BaseRestCollectionV1<BugzillaBugV1> bugzillaBugs = null;
+	
+	public TopicV1 clone(final boolean deepCopy)
+	{
+		final TopicV1 retValue = new TopicV1();
+		retValue.title = this.title;
+		retValue.description = this.description;
+		retValue.xml = this.xml;
+		retValue.xmlErrors = this.xmlErrors;
+		retValue.html = this.html;
+		retValue.lastModified = (Date)lastModified.clone();
+		retValue.created = (Date)this.created.clone();
+		retValue.revision = this.revision;
+		
+		if (deepCopy)
+		{
+			retValue.tags = this.tags.clone(deepCopy);
+			retValue.outgoingRelationships = this.outgoingRelationships.clone(deepCopy);
+			retValue.incomingRelationships = this.incomingRelationships.clone(deepCopy);
+			retValue.sourceUrls = this.sourceUrls.clone(deepCopy);
+			retValue.bugzillaBugs = this.bugzillaBugs.clone(deepCopy);				
+		}
+		else
+		{
+			retValue.tags = this.tags;
+			retValue.outgoingRelationships = this.outgoingRelationships;
+			retValue.incomingRelationships = this.incomingRelationships;
+			retValue.sourceUrls = this.sourceUrls;
+			retValue.bugzillaBugs = this.bugzillaBugs;
+		}
+		return retValue;
+		
+	}
 
 	@XmlElement
 	public Number getRevision()

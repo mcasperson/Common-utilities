@@ -18,6 +18,30 @@ public class BaseRestCollectionV1<T extends BaseRESTEntityV1<T>>
 	private Integer endExpandIndex = null;
 	private List<T> items = null;
 	
+	public BaseRestCollectionV1<T> clone(final boolean deepCopy)
+	{
+		final BaseRestCollectionV1<T> retValue  = new BaseRestCollectionV1<T>();
+		retValue.size = this.size;
+		retValue.expand = this.expand;
+		retValue.startExpandIndex = this.startExpandIndex;
+		retValue.endExpandIndex = this.endExpandIndex;
+		
+		if (this.items != null)
+		{
+			retValue.items = new ArrayList<T>();
+			if (deepCopy)
+			{
+				for (final T item : this.items)
+					retValue.items.add(item.clone(deepCopy));
+			}
+			else
+			{
+				retValue.items.addAll(this.items);
+			}
+		}
+		return retValue;
+	}
+	
 	@XmlElement
 	public Integer getSize()
 	{

@@ -20,6 +20,31 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 	private BaseRestCollectionV1<TagV1> parentTags = new BaseRestCollectionV1<TagV1>();
 	private BaseRestCollectionV1<TagV1> childTags = new BaseRestCollectionV1<TagV1>();
 	private BaseRestCollectionV1<ProjectV1> projects = new BaseRestCollectionV1<ProjectV1>();
+	
+	@Override
+	public TagV1 clone(boolean deepCopy)
+	{
+		final TagV1 retValue = new TagV1();
+		retValue.name = this.name;
+		retValue.description = description;
+		
+		if (deepCopy)
+		{
+			retValue.categories = this.categories.clone(deepCopy);
+			retValue.parentTags = this.parentTags.clone(deepCopy);
+			retValue.childTags = this.childTags.clone(deepCopy);
+			retValue.projects = this.projects.clone(deepCopy);
+		}
+		else
+		{
+			retValue.categories = this.categories;
+			retValue.parentTags = this.parentTags;
+			retValue.childTags = this.childTags;
+			retValue.projects = this.projects;
+		}
+		
+		return retValue;
+	}
 
 	public String getName()
 	{

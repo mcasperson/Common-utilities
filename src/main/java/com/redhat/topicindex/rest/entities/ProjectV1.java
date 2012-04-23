@@ -14,6 +14,25 @@ public class ProjectV1 extends BaseRESTEntityV1<ProjectV1>
 	private String name = null;
 	private String description = null;
 	private BaseRestCollectionV1<TagV1> tags = null;
+	
+	@Override
+	public ProjectV1 clone(boolean deepCopy)
+	{
+		final ProjectV1 retValue = new ProjectV1();
+		retValue.name = this.name;
+		retValue.description = description;
+
+		if (deepCopy)
+		{
+			retValue.tags = this.tags.clone(deepCopy);
+		}
+		else
+		{
+			retValue.tags = this.tags;
+		}
+		
+		return retValue;
+	}
 
 	public String getName()
 	{

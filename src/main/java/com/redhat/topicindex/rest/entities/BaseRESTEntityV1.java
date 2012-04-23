@@ -37,6 +37,8 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 	/** A list of the Envers revision numbers */
 	private BaseRestCollectionV1<T> revisions = null;
 	
+	public abstract T clone(final boolean deepCopy);
+	
 	/**
 	 * This is a convenience method that adds a value to the configuredParameters collection
 	 * @param paramater The parameter to specify as configured

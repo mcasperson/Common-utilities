@@ -14,6 +14,20 @@ public class ImageV1 extends BaseRESTEntityV1<ImageV1>
 	private byte[] thumbnail;
 	private byte[] imageDataBase64;
 	private String description;
+	
+	@Override
+	public ImageV1 clone(boolean deepCopy)
+	{
+		final ImageV1 retValue = new ImageV1();
+		
+		retValue.filename = this.filename;
+		retValue.imageData = imageData.clone();
+		retValue.thumbnail = this.thumbnail.clone();
+		retValue.imageDataBase64 = this.imageDataBase64.clone();
+		retValue.description = this.description;
+		
+		return retValue;
+	}
 
 	public String getFilename()
 	{

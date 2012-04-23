@@ -9,6 +9,25 @@ public class WorkingSnapshotTranslatedStringV1 extends BaseRESTEntityV1<WorkingS
 	private WorkingSnapshotTranslatedDataV1 workingSnapshotTranslatedData;
 	private String originalString;
 	private String translatedString;
+	
+	@Override
+	public WorkingSnapshotTranslatedStringV1 clone(boolean deepCopy)
+	{
+		final WorkingSnapshotTranslatedStringV1 retValue = new WorkingSnapshotTranslatedStringV1();
+		retValue.originalString = this.originalString;
+		retValue.translatedString = translatedString;
+		
+		if (deepCopy)
+		{
+			retValue.workingSnapshotTranslatedData = this.workingSnapshotTranslatedData.clone(deepCopy);
+		}
+		else
+		{
+			retValue.workingSnapshotTranslatedData = this.workingSnapshotTranslatedData;
+		}
+		
+		return retValue;
+	}
 
 	public WorkingSnapshotTranslatedDataV1 getWorkingSnapshotTranslatedData()
 	{

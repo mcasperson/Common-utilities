@@ -19,6 +19,21 @@ public class PropertyTagV1 extends BaseRESTEntityV1<PropertyTagV1>
 	private String regex;
 	private boolean canBeNull;
 	private boolean isUnique;
+	
+	@Override
+	public PropertyTagV1 clone(boolean deepCopy)
+	{
+		final PropertyTagV1 retValue = new PropertyTagV1();
+		retValue.name = this.name;
+		retValue.description = description;
+		retValue.value = this.value;
+		retValue.valid = this.valid;
+		retValue.regex = this.regex;
+		retValue.canBeNull = this.canBeNull;
+		retValue.isUnique = this.isUnique;
+		
+		return retValue;
+	}
 
 	public String getName()
 	{

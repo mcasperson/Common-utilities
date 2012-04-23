@@ -11,6 +11,25 @@ public class SnapshotTopicV1 extends BaseRESTEntityV1<SnapshotTopicV1>
 	private Integer topicId;
 	private Integer topicRevision;
 	private BaseRestCollectionV1<WorkingSnapshotTranslatedDataV1> workingTranslatedData;
+	
+	@Override
+	public SnapshotTopicV1 clone(boolean deepCopy)
+	{
+		final SnapshotTopicV1 retValue = new SnapshotTopicV1();
+		retValue.topicId = new Integer(this.topicId);
+		retValue.topicRevision = new Integer(this.topicRevision);
+		
+		if (deepCopy)
+		{
+			retValue.workingTranslatedData = this.workingTranslatedData.clone(deepCopy);
+		}
+		else
+		{
+			retValue.workingTranslatedData = this.workingTranslatedData;
+		}
+		
+		return retValue;
+	}
 
 	public Integer getTopicId()
 	{

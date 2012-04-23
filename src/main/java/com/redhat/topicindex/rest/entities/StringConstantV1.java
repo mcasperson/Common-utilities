@@ -11,6 +11,15 @@ public class StringConstantV1 extends BaseRESTEntityV1<StringConstantV1>
 	
 	private String name;
 	private String value;
+	
+	@Override
+	public StringConstantV1 clone(boolean deepCopy)
+	{
+		final StringConstantV1 retValue = new StringConstantV1();
+		retValue.name = this.name;
+		retValue.value = value;
+		return retValue;
+	}
 
 
 	public String getName()

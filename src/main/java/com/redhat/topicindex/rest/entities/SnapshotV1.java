@@ -15,6 +15,27 @@ public class SnapshotV1 extends BaseRESTEntityV1<SnapshotV1>
 	private Date date;
 	private BaseRestCollectionV1<SnapshotTopicV1> snaphotTopics;
 	private BaseRestCollectionV1<SnapshotRevisionV1> snapshotRevisions;
+	
+	@Override
+	public SnapshotV1 clone(boolean deepCopy)
+	{
+		final SnapshotV1 retValue = new SnapshotV1();
+		retValue.name = this.name;
+		retValue.date = (Date)date.clone();
+		
+		if (deepCopy)
+		{
+			retValue.snaphotTopics = this.snaphotTopics.clone(deepCopy);
+			retValue.snapshotRevisions = this.snapshotRevisions.clone(deepCopy);
+		}
+		else
+		{
+			retValue.snaphotTopics = this.snaphotTopics;
+			retValue.snapshotRevisions = this.snapshotRevisions;
+		}
+		
+		return retValue;
+	}
 
 	public String getName()
 	{
