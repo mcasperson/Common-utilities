@@ -31,6 +31,7 @@ import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.Injecti
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.TocTopicDatabase;
 import com.redhat.ecs.sort.ExternalListSort;
 
+import com.redhat.topicindex.component.docbookrenderer.structures.tocformat.TocFormatBranch;
 import com.redhat.topicindex.rest.entities.PropertyTagV1;
 import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.TopicV1;
@@ -383,7 +384,7 @@ public class XMLPreProcessor
 		return retValue;
 	}
 
-	public static List<Integer> processInjections(final boolean internal, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final TocTopicDatabase database, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	public static List<Integer> processInjections(final TocFormatBranch toc, final boolean internal, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/*
 		 * this collection keeps a track of the injection point markers and the
@@ -393,11 +394,11 @@ public class XMLPreProcessor
 
 		final List<Integer> errorTopics = new ArrayList<Integer>();
 
-		errorTopics.addAll(processInjections(internal, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, database, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(internal, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, database, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(internal, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, database, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(internal, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), database, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(internal, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, database, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, usedFixedUrls));
 
 		/*
 		 * If we are not ignoring errors, return the list of topics that could
@@ -449,8 +450,8 @@ public class XMLPreProcessor
 		return errorTopics;
 	}
 
-	public static List<Integer> processInjections(final boolean internal, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
-			final ExternalListSort<Integer, TopicV1, InjectionTopicData> sortComparator, final TocTopicDatabase database, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	public static List<Integer> processInjections(final TocFormatBranch toc, final boolean internal, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
+			final ExternalListSort<Integer, TopicV1, InjectionTopicData> sortComparator, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
 
@@ -522,7 +523,7 @@ public class XMLPreProcessor
 						 * See if the topic is also available in the main
 						 * database (if the main database is available)
 						 */
-						final boolean isInDatabase = database == null ? true : database.getTopic(sequenceID.topicId) != null;
+						final boolean isInDatabase = toc == null ? true : toc.isInToc(sequenceID.topicId);
 
 						/*
 						 * It is possible that the topic id referenced in the
@@ -550,43 +551,47 @@ public class XMLPreProcessor
 								list = customInjections.get(comment).listItems;
 
 							/* wrap the xref up in a listitem */
-							final String url = getURLToInternalTopic(relatedTopic.getId());
-							if (sequenceID.optional)
+							if (internal)
 							{
-								if (internal)
+								final String url = getURLToInternalTopic(relatedTopic.getId());
+								if (sequenceID.optional)
 								{
 									list.add(DocbookUtils.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX, url, relatedTopic.getTitle()));
 								}
 								else
 								{
-									if (usedFixedUrls)
-									{
-										list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID)));
-									}
-									else
-									{
-										list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXRefID()));
-									}
+									list.add(DocbookUtils.buildULink(xmlDocument, url, relatedTopic.getTitle()));
 								}
 							}
 							else
 							{
-								if (internal)
-								{
-									list.add(DocbookUtils.buildULink(xmlDocument, url, relatedTopic.getTitle()));
-								}
-								else
-								{
-									if (usedFixedUrls)
+								final String xrefPostfix = toc.getClosestTopicXrefPostfix(relatedTopic.getId(), topic);
+								if (xrefPostfix != null)
+								{								
+									if (sequenceID.optional)
 									{
-										list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID)));										
+										if (usedFixedUrls)
+										{
+											list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + xrefPostfix));
+										}
+										else
+										{
+											list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXRefID() + xrefPostfix));
+										}
 									}
 									else
 									{
-										list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXRefID()));
+										if (usedFixedUrls)
+										{
+											list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + xrefPostfix));										
+										}
+										else
+										{
+											list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXRefID() + xrefPostfix));
+										}
 									}
 								}
-							}
+							}						
 
 							/*
 							 * save the changes back into the customInjections
@@ -606,7 +611,7 @@ public class XMLPreProcessor
 		return retValue;
 	}
 
-	public static List<Integer> processGenericInjections(final boolean internal, final TopicV1 topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final TocTopicDatabase database, final DocbookBuildingOptions docbookBuildingOptions,
+	public static List<Integer> processGenericInjections(final TocFormatBranch toc, final TopicV1 topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions,
 			final boolean usedFixedUrls)
 	{
 		final List<Integer> errors = new ArrayList<Integer>();
@@ -625,7 +630,7 @@ public class XMLPreProcessor
 			for (final TopicV1 relatedTopic : topic.getOutgoingRelationships().getItems())
 			{
 				/* make sure the topic is available to be linked to */
-				if (database != null && database.getTopic(relatedTopic.getId()) == null)
+				if (toc != null && toc.isInToc(relatedTopic.getId()))
 				{
 					if ((docbookBuildingOptions != null && !docbookBuildingOptions.getIgnoreMissingCustomInjections()))
 						errors.add(relatedTopic.getId());
@@ -658,7 +663,7 @@ public class XMLPreProcessor
 			}
 		}
 
-		insertGenericInjectionLinks(internal, xmlDocument, relatedLists, database, docbookBuildingOptions, usedFixedUrls);
+		insertGenericInjectionLinks(toc, topic, xmlDocument, relatedLists, docbookBuildingOptions, usedFixedUrls);
 
 		return errors;
 	}
@@ -669,7 +674,7 @@ public class XMLPreProcessor
 	 * and the topic type tags that are associated with them and injects them
 	 * into the xml document.
 	 */
-	private static void insertGenericInjectionLinks(final boolean internal, final Document xmlDoc, final GenericInjectionPointDatabase relatedLists, final TocTopicDatabase database, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	private static void insertGenericInjectionLinks(final TocFormatBranch toc, final TopicV1 topic, final Document xmlDoc, final GenericInjectionPointDatabase relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/* all related topics are placed before the first simplesect */
 		final NodeList nodes = xmlDoc.getDocumentElement().getChildNodes();
@@ -705,18 +710,21 @@ public class XMLPreProcessor
 
 						for (final TopicV1 relatedTopic : relatedTopics)
 						{
-							if (internal)
+							if (toc == null)
+							{
 								DocbookUtils.createRelatedTopicULink(xmlDoc, getURLToInternalTopic(relatedTopic.getId()), relatedTopic.getTitle(), itemizedlist);
+							}
 							else
 							{
+								final String xrefPostfix = toc.getClosestTopicXrefPostfix(relatedTopic.getId(), topic);
 								if (usedFixedUrls)
 								{
-									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID), itemizedlist);
+									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + xrefPostfix, itemizedlist);
 									
 								}
 								else
 								{
-									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXRefID(), itemizedlist);
+									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXRefID() + xrefPostfix, itemizedlist);
 								}
 							}
 
