@@ -29,6 +29,9 @@ public class SnapshotTranslatedDataV1 extends BaseRESTEntityV1<SnapshotTranslate
 	public SnapshotTranslatedDataV1 clone(boolean deepCopy)
 	{
 		final SnapshotTranslatedDataV1 retValue = new SnapshotTranslatedDataV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.xml = this.xml;
 		retValue.renderedXml = renderedXml;
 		retValue.locale = this.locale;

@@ -26,7 +26,7 @@ public class TagRequirements
 		return matchAllOf;
 	}
 
-	public TagRequirements(final List<TagV1> matchOneOf, final List<TagV1> matchAllOf)
+	public TagRequirements(final List<TagV1> matchAllOf, final List<TagV1> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.addAll(matchOneOf);
@@ -34,7 +34,7 @@ public class TagRequirements
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final TagV1 matchOneOf, final List<TagV1> matchAllOf)
+	public TagRequirements(final List<TagV1> matchAllOf, final TagV1 matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);
@@ -42,7 +42,7 @@ public class TagRequirements
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final List<TagV1> matchOneOf, final TagV1 matchAllOf)
+	public TagRequirements(final TagV1 matchAllOf, final List<TagV1> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.addAll(matchOneOf);
@@ -50,7 +50,7 @@ public class TagRequirements
 			this.matchAllOf.add(matchAllOf);
 	}
 
-	public TagRequirements(final TagV1 matchOneOf, final TagV1 matchAllOf)
+	public TagRequirements(final TagV1 matchAllOf, final TagV1 matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);

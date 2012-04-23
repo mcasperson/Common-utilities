@@ -16,6 +16,9 @@ public class UserV1 extends BaseRESTEntityV1<UserV1>
 	public UserV1 clone(boolean deepCopy)
 	{
 		final UserV1 retValue = new UserV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.description = description;
 		

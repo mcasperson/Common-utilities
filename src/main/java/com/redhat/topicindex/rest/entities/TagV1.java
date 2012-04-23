@@ -25,6 +25,9 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 	public TagV1 clone(boolean deepCopy)
 	{
 		final TagV1 retValue = new TagV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.description = description;
 		

@@ -19,6 +19,9 @@ public class ProjectV1 extends BaseRESTEntityV1<ProjectV1>
 	public ProjectV1 clone(boolean deepCopy)
 	{
 		final ProjectV1 retValue = new ProjectV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.description = description;
 

@@ -20,6 +20,8 @@ public class ImageV1 extends BaseRESTEntityV1<ImageV1>
 	{
 		final ImageV1 retValue = new ImageV1();
 		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.filename = this.filename;
 		retValue.imageData = imageData.clone();
 		retValue.thumbnail = this.thumbnail.clone();

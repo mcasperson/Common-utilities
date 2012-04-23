@@ -16,6 +16,9 @@ public class StringConstantV1 extends BaseRESTEntityV1<StringConstantV1>
 	public StringConstantV1 clone(boolean deepCopy)
 	{
 		final StringConstantV1 retValue = new StringConstantV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.value = value;
 		return retValue;

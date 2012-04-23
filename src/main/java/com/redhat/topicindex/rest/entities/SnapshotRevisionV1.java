@@ -20,6 +20,9 @@ public class SnapshotRevisionV1 extends BaseRESTEntityV1<SnapshotRevisionV1>
 	public SnapshotRevisionV1 clone(boolean deepCopy)
 	{
 		final SnapshotRevisionV1 retValue = new SnapshotRevisionV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.date = (Date)this.date.clone();
 		

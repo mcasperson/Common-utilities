@@ -14,6 +14,9 @@ public class TopicSourceUrlV1 extends BaseRESTEntityV1<TopicSourceUrlV1>
 	public TopicSourceUrlV1 clone(boolean deepCopy)
 	{
 		final TopicSourceUrlV1 retValue = new TopicSourceUrlV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.url = this.url;
 		retValue.description = description;
 		retValue.title = this.title;

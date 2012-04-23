@@ -13,6 +13,20 @@ public abstract class BaseRESTEntityWithPropertiesV1<T extends BaseRESTEntityV1<
 	public static final String PROPERTIES_NAME = "properties";
 	private BaseRestCollectionV1<PropertyTagV1> properties = null;
 	
+	public void cloneInto(final BaseRESTEntityWithPropertiesV1<T> clone, final boolean deepCopy)
+	{
+		super.cloneInto(clone, deepCopy);
+		
+		if (deepCopy)
+		{
+			clone.properties = this.properties.clone(deepCopy);
+		}
+		else
+		{
+			clone.properties = this.properties;
+		}
+	}
+	
 	@XmlElement
 	public BaseRestCollectionV1<PropertyTagV1> getProperties()
 	{

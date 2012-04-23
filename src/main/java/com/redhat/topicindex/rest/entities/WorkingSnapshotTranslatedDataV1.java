@@ -24,6 +24,9 @@ public class WorkingSnapshotTranslatedDataV1 extends BaseRESTEntityV1<WorkingSna
 	public WorkingSnapshotTranslatedDataV1 clone(boolean deepCopy)
 	{
 		final WorkingSnapshotTranslatedDataV1 retValue = new WorkingSnapshotTranslatedDataV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.translatedXml = this.translatedXml;
 		retValue.translatedXmlRendered = this.translatedXmlRendered;
 		retValue.translationLocale = this.translationLocale;

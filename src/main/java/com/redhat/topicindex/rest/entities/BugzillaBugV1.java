@@ -15,6 +15,9 @@ public class BugzillaBugV1 extends BaseRESTEntityV1<BugzillaBugV1>
 	public BugzillaBugV1 clone(boolean deepCopy)
 	{
 		final BugzillaBugV1 retValue = new BugzillaBugV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.id = new Integer(this.id);
 		retValue.bugId = new Integer(this.bugId);
 		retValue.isOpen = new Boolean(this.isOpen);

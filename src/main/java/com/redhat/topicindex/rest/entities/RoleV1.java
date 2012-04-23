@@ -22,6 +22,9 @@ public class RoleV1 extends BaseRESTEntityV1<RoleV1>
 	public RoleV1 clone(boolean deepCopy)
 	{
 		final RoleV1 retValue = new RoleV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.description = description;
 		retValue.relationshipId = new Integer(this.relationshipId);

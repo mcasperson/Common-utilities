@@ -23,6 +23,9 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 	public CategoryV1 clone(boolean deepCopy)
 	{
 		final CategoryV1 retValue = new CategoryV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.description = description;
 		retValue.mutuallyExclusive = this.mutuallyExclusive;

@@ -14,6 +14,9 @@ public class SnapshotTranslatedStringV1 extends BaseRESTEntityV1<SnapshotTransla
 	public SnapshotTranslatedStringV1 clone(boolean deepCopy)
 	{
 		final SnapshotTranslatedStringV1 retValue = new SnapshotTranslatedStringV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.originalString = this.originalString;
 		retValue.translatedString = translatedString;
 		

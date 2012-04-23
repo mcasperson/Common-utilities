@@ -15,6 +15,9 @@ public class BlobConstantV1 extends BaseRESTEntityV1<BlobConstantV1>
 	public BlobConstantV1 clone(boolean deepCopy)
 	{
 		final BlobConstantV1 retValue = new BlobConstantV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.name = this.name;
 		retValue.value = value.clone();
 		return retValue;

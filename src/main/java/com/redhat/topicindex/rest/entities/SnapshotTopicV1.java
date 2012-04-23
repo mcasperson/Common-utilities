@@ -16,6 +16,9 @@ public class SnapshotTopicV1 extends BaseRESTEntityV1<SnapshotTopicV1>
 	public SnapshotTopicV1 clone(boolean deepCopy)
 	{
 		final SnapshotTopicV1 retValue = new SnapshotTopicV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.topicId = new Integer(this.topicId);
 		retValue.topicRevision = new Integer(this.topicRevision);
 		

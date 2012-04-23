@@ -37,6 +37,28 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 	/** A list of the Envers revision numbers */
 	private BaseRestCollectionV1<T> revisions = null;
 	
+	public void cloneInto(final BaseRESTEntityV1<T> clone, final boolean deepCopy)
+	{
+		clone.id = new Integer(this.id);
+		clone.revision = this.revision;
+		clone.selfLink = this.selfLink;
+		clone.editLink = this.editLink;
+		clone.deleteLink = this.deleteLink;
+		clone.addItem = this.addItem;
+		clone.expand = this.expand;
+		clone.addItem = this.addItem;
+		clone.removeItem = this.removeItem;
+		
+		if (deepCopy)
+		{
+			clone.revisions = this.revisions.clone(deepCopy);
+		}
+		else
+		{
+			clone.revisions = this.revisions;
+		}
+	}
+	
 	public abstract T clone(final boolean deepCopy);
 	
 	/**

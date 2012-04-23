@@ -99,10 +99,16 @@ public class TocFormatBranch
 	public String getTOCBranchID()
 	{
 		final StringBuilder retValue = new StringBuilder();
+		
 		if (parent != null)
 			retValue.append(parent.getTOCBranchID());
-		retValue.append("-");
-		retValue.append(this.tag.getId());
+		
+		if (this.tag != null)
+		{
+			retValue.append("-");
+			retValue.append(this.tag.getId());
+		}
+		
 		return retValue.toString();
 	}
 
@@ -119,10 +125,6 @@ public class TocFormatBranch
 			
 			if (this.getTopicCount() != 0)
 			{
-				/* append any child branches */
-				for (final TocFormatBranch child : children)
-					docbook.append(child.buildDocbook(useFixedUrls, errorDatabase));
-				
 				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
 			}
 			else
@@ -145,10 +147,6 @@ public class TocFormatBranch
 			docbook.append("<title>");
 			docbook.append(this.getTag() == null ? "" : this.getTag().getName());
 			docbook.append("</title>");
-			
-			/* append any child branches */
-			for (final TocFormatBranch child : children)
-				docbook.append(child.buildDocbook(useFixedUrls, errorDatabase));
 			
 			buildDocbookContents(docbook, useFixedUrls, errorDatabase);
 			
@@ -245,9 +243,15 @@ public class TocFormatBranch
 	{
 		if (this.children.contains(topic))
 			return this;
+		
 		for (final TocFormatBranch child : children)
+		{
 			if (child.getBranchThatContainsTopic(topic) != null)
+			{
 				return child;
+			}
+		}
+		
 		return null;
 	}
 

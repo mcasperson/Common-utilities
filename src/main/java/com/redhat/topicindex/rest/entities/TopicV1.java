@@ -62,6 +62,9 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 	public TopicV1 clone(final boolean deepCopy)
 	{
 		final TopicV1 retValue = new TopicV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
 		retValue.title = this.title;
 		retValue.description = this.description;
 		retValue.xml = this.xml;
@@ -77,7 +80,7 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 			retValue.outgoingRelationships = this.outgoingRelationships.clone(deepCopy);
 			retValue.incomingRelationships = this.incomingRelationships.clone(deepCopy);
 			retValue.sourceUrls = this.sourceUrls.clone(deepCopy);
-			retValue.bugzillaBugs = this.bugzillaBugs.clone(deepCopy);				
+			retValue.bugzillaBugs = this.bugzillaBugs.clone(deepCopy);	
 		}
 		else
 		{
