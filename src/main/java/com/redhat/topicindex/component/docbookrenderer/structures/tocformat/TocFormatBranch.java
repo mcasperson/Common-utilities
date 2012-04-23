@@ -309,6 +309,23 @@ public class TocFormatBranch
 		return null;
 	}
 	
+	public boolean setXMLDocument(final TopicV1 topic, final Document doc)
+	{
+		if (this.topics.containsKey(topic))
+		{
+			this.topics.put(topic, doc);
+			return true;
+		}
+		
+		for (final TocFormatBranch child : children)
+		{
+			if (child.setXMLDocument(topic, doc))
+				return true;
+		}
+		
+		return false;
+	}
+	
 	public void setUniqueIds()
 	{
 		for (final Document doc : this.topics.values())
