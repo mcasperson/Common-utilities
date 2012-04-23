@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
+import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.component.docbookrenderer.structures.TopicErrorDatabase;
 import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.TopicV1;
@@ -285,7 +286,7 @@ public class TocFormatBranch
 		{
 			if (useFixedUrls)
 			{				
-				files.put("Book/en-US/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic), "UTF-8").getBytes());
+				files.put("Book/en-US/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic), "UTF-8", DocbookBuilderConstants.DOCBOOK_XML_PREAMBLE).getBytes());
 			}
 		}
 		

@@ -430,6 +430,17 @@ public class XMLUtilities
 
 		return retValue;
 	}
+	
+	public static String convertDocumentToString(final Document doc, final String encoding, final String preamble)
+	{
+		String retValue = convertDocumentToString(doc, encoding);
+		
+		final String docEncoding = findEncoding(retValue);
+		if (docEncoding != null)
+			retValue = retValue.replace(docEncoding, docEncoding + "\n" + preamble);
+		
+		return retValue;
+	}
 
 	/**
 	 * Converts a Document to a String
