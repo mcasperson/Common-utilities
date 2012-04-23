@@ -83,8 +83,8 @@ public class TocFormatBranch
 	public TocFormatBranch(final TagV1 tag, final TocFormatBranch parent, final TagRequirements childTags, final TagRequirements displayTags)
 	{
 		this.tag = tag;
-		this.childTags = childTags;
-		this.displayTags = displayTags;
+		this.childTags = childTags == null ? new TagRequirements() : childTags;
+		this.displayTags = displayTags == null ? new TagRequirements() : displayTags;
 		this.parent = parent;
 	}
 
