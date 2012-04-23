@@ -255,10 +255,9 @@ public class TocFormatBranch
 		
 		for (final TocFormatBranch child : children)
 		{
-			if (child.getBranchThatContainsTopic(topic) != null)
-			{
-				return child;
-			}
+			final TocFormatBranch branch = child.getBranchThatContainsTopic(topic);
+			if (branch != null)
+				return branch;
 		}
 		
 		return null;
