@@ -10,6 +10,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.topicindex.component.docbookrenderer.structures.TopicErrorDatabase;
@@ -235,16 +236,10 @@ public class TocFormatBranch
 
 		while (branch != null)
 		{
-			/* Search that branch first */
-			final TopicV1 topicInBranch = branch.getTopicInBranchAndChildren(topicId);
+			/* Search the reference branch */
+			final Pair<TopicV1, TocFormatBranch> topicInBranch = branch.getTopicInBranchAndChildren(topicId);
 			if (topicInBranch != null)
-			{
-				final TocFormatBranch branchThatContainsTopic = branch.getBranchThatContainsTopic(referenceTopic);
-				if (branchThatContainsTopic != null)
-					return branchThatContainsTopic.getTOCBranchID();
-				else
-					return null;
-			}
+				return topicInBranch.getSecond().getTOCBranchID();
 
 			/* go up to the parent and try again */
 			branch = branch.getParent();
@@ -255,7 +250,7 @@ public class TocFormatBranch
 
 	public TocFormatBranch getBranchThatContainsTopic(final TopicV1 topic)
 	{
-		if (this.children.contains(topic))
+		if (this.topics.containsKey(topic))
 			return this;
 		
 		for (final TocFormatBranch child : children)
@@ -269,15 +264,15 @@ public class TocFormatBranch
 		return null;
 	}
 
-	public TopicV1 getTopicInBranchAndChildren(final Integer topicId)
+	public Pair<TopicV1, TocFormatBranch> getTopicInBranchAndChildren(final Integer topicId)
 	{
 		for (final TopicV1 topic : this.topics.keySet())
 			if (topicId.equals(topic.getId()))
-				return topic;
+				return new Pair<TopicV1, TocFormatBranch>(topic, this);
 
 		for (final TocFormatBranch child : children)
 		{
-			final TopicV1 retValue = child.getTopicInBranchAndChildren(topicId);
+			final Pair<TopicV1, TocFormatBranch> retValue = child.getTopicInBranchAndChildren(topicId);
 			if (retValue != null)
 				return retValue;
 		}
