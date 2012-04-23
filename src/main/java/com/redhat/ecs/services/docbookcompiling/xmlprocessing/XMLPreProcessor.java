@@ -384,7 +384,7 @@ public class XMLPreProcessor
 		return retValue;
 	}
 
-	public static List<Integer> processInjections(final TocFormatBranch toc, final boolean internal, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	public static List<Integer> processInjections(final TocFormatBranch toc, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/*
 		 * this collection keeps a track of the injection point markers and the
@@ -394,11 +394,11 @@ public class XMLPreProcessor
 
 		final List<Integer> errorTopics = new ArrayList<Integer>();
 
-		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, internal, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, usedFixedUrls));
 
 		/*
 		 * If we are not ignoring errors, return the list of topics that could
@@ -450,7 +450,7 @@ public class XMLPreProcessor
 		return errorTopics;
 	}
 
-	public static List<Integer> processInjections(final TocFormatBranch toc, final boolean internal, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
+	public static List<Integer> processInjections(final TocFormatBranch toc, final TopicV1 topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
 			final ExternalListSort<Integer, TopicV1, InjectionTopicData> sortComparator, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
@@ -550,8 +550,8 @@ public class XMLPreProcessor
 							if (customInjections.containsKey(comment))
 								list = customInjections.get(comment).listItems;
 
-							/* wrap the xref up in a listitem */
-							if (internal)
+							/* if the toc is null, we are building an internal page */
+							if (toc == null)
 							{
 								final String url = getURLToInternalTopic(relatedTopic.getId());
 								if (sequenceID.optional)
