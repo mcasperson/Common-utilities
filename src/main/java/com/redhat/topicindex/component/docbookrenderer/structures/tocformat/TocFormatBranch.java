@@ -233,4 +233,19 @@ public class TocFormatBranch
 			}
 		}
 	}
+	
+	public Document getXMLDocument(final TopicV1 topic)
+	{
+		if (this.topics.containsKey(topic))
+			return this.topics.get(topic);
+		
+		for (final TocFormatBranch child : children)
+		{
+			final Document doc = child.getXMLDocument(topic);
+			if (doc != null)
+				return doc;
+		}
+		
+		return null;
+	}
 }
