@@ -118,39 +118,47 @@ public class TocFormatBranch
 		
 		if (this.parent == null)
 		{
-			docbook.append("<chapter>");
-			docbook.append("<title>");
-			docbook.append("");
-			docbook.append("</title>");
-			
 			if (this.getTopicCount() != 0)
 			{
 				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
 			}
 			else
 			{
-				docbook.append("<section>");
+				docbook.append("<chapter>");
 				docbook.append("<title>");
 				docbook.append("Error");
 				docbook.append("</title>");
 				docbook.append("<para>");
 				docbook.append("No Content");
 				docbook.append("</para>");
-				docbook.append("</section>");
+				docbook.append("</chapter>");
 			}
-			
-			docbook.append("</chapter>");
 		}
 		else if (this.getTopicCount() != 0)
 		{
-			docbook.append("<section>");
-			docbook.append("<title>");
-			docbook.append(this.getTag() == null ? "" : this.getTag().getName());
-			docbook.append("</title>");
-			
-			buildDocbookContents(docbook, useFixedUrls, errorDatabase);
-			
-			docbook.append("</section>");
+			/* If this is a top level toc element (i.e. its parent has no parent) then build it as a chapter */
+			if (this.parent.parent == null)
+			{
+				docbook.append("<chapter>");
+				docbook.append("<title>");
+				docbook.append(this.getTag() == null ? "" : this.getTag().getName());
+				docbook.append("</title>");
+				
+				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
+				
+				docbook.append("</chapter>");
+			}
+			else
+			{
+				docbook.append("<section>");
+				docbook.append("<title>");
+				docbook.append(this.getTag() == null ? "" : this.getTag().getName());
+				docbook.append("</title>");
+				
+				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
+				
+				docbook.append("</section>");
+			}
 		}
 
 		return docbook.toString();
