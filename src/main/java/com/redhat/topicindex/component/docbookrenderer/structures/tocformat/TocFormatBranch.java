@@ -67,7 +67,7 @@ public class TocFormatBranch
 		return childTags;
 	}
 
-	public TagV1 getTagId()
+	public TagV1 getTag()
 	{
 		return tag;
 	}
@@ -109,16 +109,61 @@ public class TocFormatBranch
 	public String buildDocbook(final boolean useFixedUrls, final TopicErrorDatabase errorDatabase)
 	{
 		final StringBuilder docbook = new StringBuilder();
+		
+		if (this.parent == null)
+		{
+			docbook.append("<chapter>");
+			docbook.append("<title>");
+			docbook.append("");
+			docbook.append("</title>");
+			
+			if (this.getTopicCount() != 0)
+			{
+				/* append any child branches */
+				for (final TocFormatBranch child : children)
+					docbook.append(child.buildDocbook(useFixedUrls, errorDatabase));
+				
+				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
+			}
+			else
+			{
+				docbook.append("<section>");
+				docbook.append("<title>");
+				docbook.append("Error");
+				docbook.append("</title>");
+				docbook.append("<para>");
+				docbook.append("No Content");
+				docbook.append("<para>");
+				docbook.append("</section>");
+			}
+			
+			docbook.append("</chapter>");
+		}
+		else if (this.getTopicCount() != 0)
+		{
+			docbook.append("<section>");
+			docbook.append("<title>");
+			docbook.append(this.getTag() == null ? "" : this.getTag().getName());
+			docbook.append("</title>");
+			
+			/* append any child branches */
+			for (final TocFormatBranch child : children)
+				docbook.append(child.buildDocbook(useFixedUrls, errorDatabase));
+			
+			buildDocbookContents(docbook, useFixedUrls, errorDatabase);
+			
+			docbook.append("</section>");
+		}
 
-		docbook.append(this.parent == null ? "<chapter>" : "<section>");
-		docbook.append("<title>");
-		docbook.append(this.getTagId().getName());
-		docbook.append("</title>");
+		return docbook.toString();
+	}
 
+	private void buildDocbookContents(final StringBuilder docbook, final boolean useFixedUrls, final TopicErrorDatabase errorDatabase)
+	{
 		/* append any child branches */
 		for (final TocFormatBranch child : children)
 			docbook.append(child.buildDocbook(useFixedUrls, errorDatabase));
-
+	
 		/* Add an xref to each topic that appears under this branch */
 		for (final TopicV1 topic : topics.keySet())
 		{
@@ -131,13 +176,9 @@ public class TocFormatBranch
 			{
 				fileName = "Topic" + topic.getId() + this.getTOCBranchID() + ".xml";
 			}
-
-			docbook.append("<xi:include href=\"" + fileName + "\" xmlns:xi=\"http://www.w3.org/2001/XInclude\" />\n");
+	
+			docbook.append("<xi:include href=\"" + fileName + "\" xmlns:xi=\"http://www.w3.org/2001/XInclude\" />\n");	
 		}
-
-		docbook.append(this.parent == null ? "</chapter>" : "</section>");
-
-		return docbook.toString();
 	}
 
 	public int getTopicCount()
@@ -273,7 +314,7 @@ public class TocFormatBranch
 			if (idAttribute != null)
 			{
 				final String idAttibuteValue = idAttribute.getNodeValue();
-				final String fixedIdAttribute = idAttribute + this.getTOCBranchID();
+				final String fixedIdAttribute = idAttibuteValue + this.getTOCBranchID();
 				idAttribute.setNodeValue(fixedIdAttribute);
 			}
 		}
