@@ -58,6 +58,19 @@ public class DocbookUtils
 		return "<chapter" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</chapter>";
 	}
 	
+	public static String buildCleanSection(final String contents, final String title)
+	{
+		return buildCleanSection(contents, title, null);
+	}
+	
+	public static String buildCleanSection(final String contents, final String title, final String id)
+	{
+		final String titleContents = title==null||title.length()==0?"":title;
+		final String chapterContents = contents==null||contents.length()==0?"":contents;
+		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
+		return "<section" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</section>";
+	}
+	
 	public static String addXMLBoilerplate(final String xml)
 	{
 		return "<?xml version='1.0' encoding='UTF-8' ?>\n" +

@@ -99,65 +99,58 @@ public class TocFormatBranch
 	public String getTOCBranchID()
 	{
 		final StringBuilder retValue = new StringBuilder();
-
+		
 		if (parent != null)
 			retValue.append(parent.getTOCBranchID());
-
+		
 		if (this.tag != null)
 		{
 			retValue.append("-");
 			retValue.append(this.tag.getId());
 		}
-
+		
 		return retValue.toString();
 	}
 
 	public String buildDocbook(final boolean useFixedUrls, final TopicErrorDatabase errorDatabase)
 	{
 		final StringBuilder docbook = new StringBuilder();
-
+		
 		if (this.parent == null)
 		{
-			if (this.getTopicCount() == 0)
+			docbook.append("<chapter>");
+			docbook.append("<title>");
+			docbook.append("");
+			docbook.append("</title>");
+			
+			if (this.getTopicCount() != 0)
 			{
-				docbook.append("<chapter>");
+				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
+			}
+			else
+			{
+				docbook.append("<section>");
 				docbook.append("<title>");
 				docbook.append("Error");
 				docbook.append("</title>");
 				docbook.append("<para>");
 				docbook.append("No Content");
 				docbook.append("</para>");
-				docbook.append("</chapter>");
+				docbook.append("</section>");
 			}
-			else
-			{
-				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
-			}
+			
+			docbook.append("</chapter>");
 		}
 		else if (this.getTopicCount() != 0)
 		{
-			if (this.parent.parent == null)
-			{
-				docbook.append("<chapter>");
-				docbook.append("<title>");
-				docbook.append(this.getTag() == null ? "" : this.getTag().getName());
-				docbook.append("</title>");
-
-				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
-
-				docbook.append("</chapter>");
-			}
-			else
-			{
-				docbook.append("<section>");
-				docbook.append("<title>");
-				docbook.append(this.getTag() == null ? "" : this.getTag().getName());
-				docbook.append("</title>");
-
-				buildDocbookContents(docbook, useFixedUrls, errorDatabase);
-
-				docbook.append("</section>");
-			}
+			docbook.append("<section>");
+			docbook.append("<title>");
+			docbook.append(this.getTag() == null ? "" : this.getTag().getName());
+			docbook.append("</title>");
+			
+			buildDocbookContents(docbook, useFixedUrls, errorDatabase);
+			
+			docbook.append("</section>");
 		}
 
 		return docbook.toString();
@@ -168,7 +161,7 @@ public class TocFormatBranch
 		/* append any child branches */
 		for (final TocFormatBranch child : children)
 			docbook.append(child.buildDocbook(useFixedUrls, errorDatabase));
-
+	
 		/* Add an xref to each topic that appears under this branch */
 		for (final TopicV1 topic : topics.keySet())
 		{
@@ -181,8 +174,8 @@ public class TocFormatBranch
 			{
 				fileName = "Topic" + topic.getId() + this.getTOCBranchID() + ".xml";
 			}
-
-			docbook.append("<xi:include href=\"" + fileName + "\" xmlns:xi=\"http://www.w3.org/2001/XInclude\" />\n");
+	
+			docbook.append("<xi:include href=\"" + fileName + "\" xmlns:xi=\"http://www.w3.org/2001/XInclude\" />\n");	
 		}
 	}
 
@@ -250,7 +243,7 @@ public class TocFormatBranch
 	{
 		if (this.children.contains(topic))
 			return this;
-
+		
 		for (final TocFormatBranch child : children)
 		{
 			if (child.getBranchThatContainsTopic(topic) != null)
@@ -258,7 +251,7 @@ public class TocFormatBranch
 				return child;
 			}
 		}
-
+		
 		return null;
 	}
 
@@ -283,39 +276,39 @@ public class TocFormatBranch
 		for (final TopicV1 topic : this.topics.keySet())
 		{
 			if (useFixedUrls)
-			{
-				files.put("Book/en-US/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic)).getBytes());
+			{				
+				files.put("Book/en-US/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic), "UTF-8").getBytes());
 			}
 		}
-
+		
 		for (final TocFormatBranch child : children)
 			child.addTopicsToZIPFile(files, useFixedUrls);
 	}
-
+	
 	public Document getXMLDocument(final TopicV1 topic)
 	{
 		if (this.topics.containsKey(topic))
 			return this.topics.get(topic);
-
+		
 		for (final TocFormatBranch child : children)
 		{
 			final Document doc = child.getXMLDocument(topic);
 			if (doc != null)
 				return doc;
 		}
-
+		
 		return null;
 	}
-
+	
 	public void setUniqueIds()
 	{
 		for (final Document doc : this.topics.values())
 			fixNodeId(doc);
-
+		
 		for (final TocFormatBranch child : children)
 			child.setUniqueIds();
 	}
-
+	
 	private void fixNodeId(final Node node)
 	{
 		final NamedNodeMap attributes = node.getAttributes();
