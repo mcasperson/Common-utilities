@@ -30,6 +30,34 @@ public class TranslatedTopicDataV1 extends BaseRESTEntityV1<TranslatedTopicDataV
 	private BaseRestCollectionV1<TranslatedTopicDataV1> incomingRelatedTranslatedTopicDatas;
 	private Date updated;
 	private Integer translationPercentage;
+	
+	@Override
+	public TranslatedTopicDataV1 clone(final boolean deepCopy)
+	{
+		final TranslatedTopicDataV1 retValue = new TranslatedTopicDataV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
+		retValue.translatedXml = this.translatedXml;
+		retValue.translatedXmlRendered = this.translatedXmlRendered;
+		retValue.translationLocale = this.translationLocale;
+		
+		if (deepCopy)
+		{
+			retValue.translatedStrings = this.translatedStrings != null ? this.translatedStrings.clone(deepCopy) : null;
+			retValue.translatedTopic = this.translatedTopic != null ? this.translatedTopic.clone(deepCopy) : null;
+			retValue.incomingRelatedTranslatedTopicDatas = this.incomingRelatedTranslatedTopicDatas != null ? this.incomingRelatedTranslatedTopicDatas.clone(deepCopy) : null;
+			retValue.outgoingRelatedTranslatedTopicDatas = this.outgoingRelatedTranslatedTopicDatas != null ? this.outgoingRelatedTranslatedTopicDatas.clone(deepCopy) : null;
+		}
+		else
+		{
+			retValue.translatedStrings = this.translatedStrings;
+			retValue.translatedTopic = this.translatedTopic;
+			retValue.incomingRelatedTranslatedTopicDatas = this.incomingRelatedTranslatedTopicDatas;
+			retValue.outgoingRelatedTranslatedTopicDatas = this.outgoingRelatedTranslatedTopicDatas;
+		}
+		return retValue;
+	}
 
 	public TranslatedTopicV1 getTranslatedTopic()
 	{

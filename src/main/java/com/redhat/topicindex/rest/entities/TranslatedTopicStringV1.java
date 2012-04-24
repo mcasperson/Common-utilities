@@ -9,6 +9,27 @@ public class TranslatedTopicStringV1 extends BaseRESTEntityV1<TranslatedTopicStr
 	private TranslatedTopicDataV1 translatedTopicData;
 	private String originalString;
 	private String translatedString;
+	
+	@Override
+	public TranslatedTopicStringV1 clone(final boolean deepCopy)
+	{
+		final TranslatedTopicStringV1 retValue = new TranslatedTopicStringV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
+		retValue.originalString = this.originalString;
+		retValue.translatedString = this.translatedString;
+		
+		if (deepCopy)
+		{
+			retValue.translatedTopicData = translatedTopicData != null ? this.translatedTopicData.clone(deepCopy) : null;
+		}
+		else
+		{
+			retValue.translatedTopicData = this.translatedTopicData;
+		}
+		return retValue;
+	}
 
 	public TranslatedTopicDataV1 getTranslatedTopicData()
 	{

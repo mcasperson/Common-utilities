@@ -16,6 +16,27 @@ public class TranslatedTopicV1 extends BaseRESTEntityV1<TranslatedTopicV1>
 	private Integer topicRevision;
 	private BaseRestCollectionV1<TranslatedTopicDataV1> translatedTopicData;
 
+	@Override
+	public TranslatedTopicV1 clone(final boolean deepCopy)
+	{
+		final TranslatedTopicV1 retValue = new TranslatedTopicV1();
+		
+		this.cloneInto(retValue, deepCopy);
+		
+		retValue.topicId = this.topicId;
+		retValue.topicRevision = this.topicRevision;
+		
+		if (deepCopy)
+		{
+			retValue.translatedTopicData = this.translatedTopicData != null ? this.translatedTopicData.clone(deepCopy) : null;
+		}
+		else
+		{
+			retValue.translatedTopicData = this.translatedTopicData;
+		}
+		return retValue;
+	}
+	
 	public Integer getTopicId()
 	{
 		return topicId;
