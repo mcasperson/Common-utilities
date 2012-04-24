@@ -96,6 +96,9 @@ public class TocFormatBranch
 		this.childTags = childTags == null ? new TagRequirements() : childTags;
 		this.displayTags = displayTags == null ? new TagRequirements() : displayTags;
 		this.parent = parent;
+		
+		if (parent != null)
+			parent.getChildren().add(this);
 	}
 
 	public void getTagsWithParent(final TagRequirements requirements)
