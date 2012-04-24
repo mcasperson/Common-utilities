@@ -17,6 +17,10 @@
 			<id>Zanata</id>
 			<url>http://repository-zanata.forge.cloudbees.com/release/</url>
 		</repository>
+		<repository>
+			<id>ECS Maven</id>
+			<url>http://ecsmaven.usersys.redhat.com/nexus/</url>
+		</repository>
 	</repositories>
   <dependencies>
   
