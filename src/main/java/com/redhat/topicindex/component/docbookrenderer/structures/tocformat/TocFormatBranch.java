@@ -14,7 +14,6 @@ import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
-import com.redhat.topicindex.component.docbookrenderer.structures.TopicErrorDatabase;
 import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.TopicV1;
 

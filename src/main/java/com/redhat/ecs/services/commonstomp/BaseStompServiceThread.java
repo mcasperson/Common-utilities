@@ -66,6 +66,7 @@ abstract public class BaseStompServiceThread extends BaseServiceThread implement
 	 * HornetQ bug that currently prevents this from being done - see
 	 * https://issues.jboss.org/browse/HORNETQ-727
 	 */
+	@Override
 	public void run()
 	{
 		lastTime = System.currentTimeMillis();

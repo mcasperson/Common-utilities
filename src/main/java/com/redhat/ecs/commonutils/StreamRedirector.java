@@ -46,6 +46,7 @@ class StreamRedirector extends Thread
 		this.doNotPrintStrings = doNotPrintStrings;
 	}
 
+	@Override
 	public void run()
 	{
 		try

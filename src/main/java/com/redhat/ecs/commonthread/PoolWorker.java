@@ -25,6 +25,7 @@ public class PoolWorker<T extends Runnable> extends Thread
 		this.workQueue = workQueue;
 	}
 	
+	@Override
 	public void run()
 	{
 		while (true)

@@ -20,7 +20,6 @@ import org.w3c.dom.NodeList;
 import com.redhat.ecs.commonstructures.NameIDSortMap;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
-import com.redhat.ecs.services.docbookcompiling.DocbookUtils;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.sort.TagV1NameComparator;
 
@@ -94,12 +93,14 @@ public class TopicV1 extends BaseRESTEntityWithPropertiesV1<TopicV1>
 		
 	}
 
+	@Override
 	@XmlElement
 	public Number getRevision()
 	{
 		return revision;
 	}
 
+	@Override
 	public void setRevision(final Number revision)
 	{
 		this.revision = revision;

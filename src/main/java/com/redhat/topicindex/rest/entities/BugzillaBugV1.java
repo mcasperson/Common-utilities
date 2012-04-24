@@ -25,11 +25,13 @@ public class BugzillaBugV1 extends BaseRESTEntityV1<BugzillaBugV1>
 		return retValue;
 	}
 
+	@Override
 	public Integer getId()
 	{
 		return id;
 	}
 
+	@Override
 	public void setId(final Integer id)
 	{
 		this.id = id;

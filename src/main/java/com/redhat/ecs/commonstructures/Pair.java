@@ -41,6 +41,7 @@ public class Pair<X, Y>
 		second = arg;
 	}
 
+	@Override
 	public boolean equals(final Object other)
 	{
 		if (other == null)
