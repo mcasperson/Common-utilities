@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.resteasy.client.ClientResponse;
 import org.zanata.common.LocaleId;
 import org.zanata.rest.client.ITranslationResources;
-import org.zanata.rest.client.ZanataProxyFactory;
 import org.zanata.rest.dto.VersionInfo;
 import org.zanata.rest.dto.resource.Resource;
 import org.zanata.rest.dto.resource.ResourceMeta;
@@ -32,8 +31,12 @@ public class ZanataInterface
 		} catch (URISyntaxException e) {
 		}
 		final VersionInfo versionInfo = VersionUtility.getVersionInfo(ZanataProxyFactory.class);
+		if (versionInfo.getBuildTimeStamp() == null || versionInfo.getBuildTimeStamp().isEmpty() || versionInfo.getBuildTimeStamp().equals("unknown"))
+			versionInfo.setBuildTimeStamp("20120301-0949");
+		if (versionInfo.getVersionNo() == null || versionInfo.getVersionNo().isEmpty() || versionInfo.getVersionNo().equals("unknown"))
+			versionInfo.setVersionNo("1.5.0");
 		
-		proxyFactory = new ZanataProxyFactory(URI, details.getUsername(), details.getUsername(), versionInfo);
+		proxyFactory = new ZanataProxyFactory(URI, details.getUsername(), details.getToken(), versionInfo);
 	}
 	
 	public static boolean getZanataResourceExists(final String id)
@@ -114,8 +117,8 @@ public class ZanataInterface
 	{
 		try
 		{
-			final ITranslationResources client = proxyFactory.getTranslationResources(details.getProject(), details.getVersion());
-			final ClientResponse<String> response = client.post(resource, null, true);
+			final IFixedTranslationResources client = proxyFactory.getFixedTranslationResources(details.getProject(), details.getVersion());
+			final ClientResponse<String> response = client.post(details.getUsername(), details.getToken(), resource, null, true);
 			
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
 			
@@ -183,8 +186,8 @@ public class ZanataInterface
 	{
 		try
 		{
-			final ITranslationResources client = proxyFactory.getTranslationResources(details.getProject(), details.getVersion());
-			final ClientResponse<String> response = client.deleteResource(id);
+			final IFixedTranslationResources client = proxyFactory.getFixedTranslationResources(details.getProject(), details.getVersion());
+			final ClientResponse<String> response = client.deleteResource(details.getUsername(), details.getToken(), id);
 			
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
 			

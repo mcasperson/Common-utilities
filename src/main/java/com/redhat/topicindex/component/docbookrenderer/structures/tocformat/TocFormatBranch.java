@@ -14,8 +14,9 @@ import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
+import com.redhat.topicindex.rest.entities.BaseTopicV1;
 import com.redhat.topicindex.rest.entities.TagV1;
-import com.redhat.topicindex.rest.entities.TopicV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
 
 /**
  * This class holds the details that allow a branch of a table of contents to be
@@ -26,10 +27,10 @@ import com.redhat.topicindex.rest.entities.TopicV1;
  * The purpose of this class is to provide a flexible way to define the
  * structure of a table of contents when given an unstructured group of topics.
  */
-public class TocFormatBranch
+public class TocFormatBranch<T extends BaseTopicV1<T>>
 {
 	/** defines the parent of this branch */
-	private final TocFormatBranch parent;
+	private final TocFormatBranch<T> parent;
 
 	/**
 	 * Defines the tag that this branch represents. Will be null for a top level
@@ -47,22 +48,22 @@ public class TocFormatBranch
 	private final TagRequirements displayTags;
 
 	/** Holds any sub branches */
-	private final List<TocFormatBranch> children = new ArrayList<TocFormatBranch>();
+	private final List<TocFormatBranch<T>> children = new ArrayList<TocFormatBranch<T>>();
 
 	/** Holds any topics that should be listed under this branch */
-	private final Map<TopicV1, Document> topics = new HashMap<TopicV1, Document>();
+	private final Map<T, Document> topics = new HashMap<T, Document>();
 
-	public Map<TopicV1, Document> getTopics()
+	public Map<T, Document> getTopics()
 	{
 		return topics;
 	}
 
-	public TocFormatBranch getParent()
+	public TocFormatBranch<T> getParent()
 	{
 		return parent;
 	}
 
-	public List<TocFormatBranch> getChildren()
+	public List<TocFormatBranch<T>> getChildren()
 	{
 		return children;
 	}
@@ -90,7 +91,7 @@ public class TocFormatBranch
 		this.displayTags = new TagRequirements();
 	}
 
-	public TocFormatBranch(final TagV1 tag, final TocFormatBranch parent, final TagRequirements childTags, final TagRequirements displayTags)
+	public TocFormatBranch(final TagV1 tag, final TocFormatBranch<T> parent, final TagRequirements childTags, final TagRequirements displayTags)
 	{
 		this.tag = tag;
 		this.childTags = childTags == null ? new TagRequirements() : childTags;
@@ -192,11 +193,11 @@ public class TocFormatBranch
 	private void buildDocbookContents(final StringBuilder docbook, final boolean useFixedUrls)
 	{
 		/* append any child branches */
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 			docbook.append(child.buildDocbook(useFixedUrls));
 
 		/* Add an xref to each topic that appears under this branch */
-		for (final TopicV1 topic : topics.keySet())
+		for (final T topic : topics.keySet())
 		{
 			String fileName = "";
 			if (useFixedUrls)
@@ -219,7 +220,7 @@ public class TocFormatBranch
 	{
 		int retValue = this.topics.size();
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 			retValue += child.getTopicCount();
 
 		return retValue;
@@ -230,13 +231,13 @@ public class TocFormatBranch
 	 *         might be represented by multiple TopicV1 objects in the returned
 	 *         collection.
 	 */
-	public List<TopicV1> getAllTopics()
+	public List<T> getAllTopics()
 	{
-		final List<TopicV1> retValue = new ArrayList<TopicV1>();
+		final List<T> retValue = new ArrayList<T>();
 
 		retValue.addAll(this.topics.keySet());
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 			retValue.addAll(child.getAllTopics());
 
 		return retValue;
@@ -250,10 +251,18 @@ public class TocFormatBranch
 	 */
 	public boolean isInToc(final Integer topicId)
 	{
-		final List<TopicV1> topics = getAllTopics();
-		for (final TopicV1 topic : topics)
-			if (topic.getId().equals(topicId))
-				return true;
+		final List<T> topics = getAllTopics();
+		for (final T topic : topics)
+			if (topic instanceof TranslatedTopicV1)
+			{
+				if (((TranslatedTopicV1) topic).getTopicId().equals(topicId))
+					return true;
+			}
+			else
+			{
+				if (topic.getId().equals(topicId))
+					return true;
+			}
 		return false;
 	}
 
@@ -271,14 +280,14 @@ public class TocFormatBranch
 	 *            The topic to use a search reference point
 	 * @return the xref postfix of the toc that is applied to the topic
 	 */
-	public String getClosestTopicXrefPostfix(final Integer topicId, final TopicV1 referenceTopic)
+	public String getClosestTopicXrefPostfix(final Integer topicId, final T referenceTopic)
 	{
-		TocFormatBranch branch = this.getBranchThatContainsTopic(referenceTopic);
+		TocFormatBranch<T> branch = this.getBranchThatContainsTopic(referenceTopic);
 
 		while (branch != null)
 		{
 			/* Search the reference branch */
-			final Pair<TopicV1, TocFormatBranch> topicInBranch = branch.getTopicInBranchAndChildren(topicId);
+			final Pair<T, TocFormatBranch<T>> topicInBranch = branch.getTopicInBranchAndChildren(topicId);
 			if (topicInBranch != null)
 				return topicInBranch.getSecond().getTOCBranchID();
 
@@ -294,14 +303,14 @@ public class TocFormatBranch
 	 *            The topic to find
 	 * @return The TOC Branch the contains the specific TopicV1 object
 	 */
-	public TocFormatBranch getBranchThatContainsTopic(final TopicV1 topic)
+	public TocFormatBranch<T> getBranchThatContainsTopic(final T topic)
 	{
 		if (this.topics.containsKey(topic))
 			return this;
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 		{
-			final TocFormatBranch branch = child.getBranchThatContainsTopic(topic);
+			final TocFormatBranch<T> branch = child.getBranchThatContainsTopic(topic);
 			if (branch != null)
 				return branch;
 		}
@@ -317,15 +326,15 @@ public class TocFormatBranch
 	 * @return A mapping of the TopicV1 object and the TOC branch it was found
 	 *         in, or null if the topic was not found
 	 */
-	public Pair<TopicV1, TocFormatBranch> getTopicInBranchAndChildren(final Integer topicId)
+	public Pair<T, TocFormatBranch<T>> getTopicInBranchAndChildren(final Integer topicId)
 	{
-		for (final TopicV1 topic : this.topics.keySet())
+		for (final T topic : this.topics.keySet())
 			if (topicId.equals(topic.getId()))
-				return new Pair<TopicV1, TocFormatBranch>(topic, this);
+				return new Pair<T, TocFormatBranch<T>>(topic, this);
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 		{
-			final Pair<TopicV1, TocFormatBranch> retValue = child.getTopicInBranchAndChildren(topicId);
+			final Pair<T, TocFormatBranch<T>> retValue = child.getTopicInBranchAndChildren(topicId);
 			if (retValue != null)
 				return retValue;
 		}
@@ -346,15 +355,15 @@ public class TocFormatBranch
 	 */
 	public void addTopicsToZIPFile(final HashMap<String, byte[]> files, final boolean useFixedUrls)
 	{
-		for (final TopicV1 topic : this.topics.keySet())
+		for (final T topic : this.topics.keySet())
 		{
 			if (useFixedUrls)
 			{
-				files.put("Book/en-US/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic), "UTF-8", DocbookBuilderConstants.DOCBOOK_XML_PREAMBLE).getBytes());
+				files.put("Book/" + topic.getLocale() + "/" + topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + this.getTOCBranchID() + ".xml", XMLUtilities.convertDocumentToString(this.topics.get(topic), "UTF-8", DocbookBuilderConstants.DOCBOOK_XML_PREAMBLE).getBytes());
 			}
 		}
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 			child.addTopicsToZIPFile(files, useFixedUrls);
 	}
 
@@ -363,12 +372,12 @@ public class TocFormatBranch
 	 *            The topic that the XML Document is associated with
 	 * @return the XML Document object that relates to a topic
 	 */
-	public Document getXMLDocument(final TopicV1 topic)
+	public Document getXMLDocument(final T topic)
 	{
 		if (this.topics.containsKey(topic))
 			return this.topics.get(topic);
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 		{
 			final Document doc = child.getXMLDocument(topic);
 			if (doc != null)
@@ -389,7 +398,7 @@ public class TocFormatBranch
 	 *            The XML Document
 	 * @return true if the XML document has been assoicated with the topic
 	 */
-	public boolean setXMLDocument(final TopicV1 topic, final Document doc)
+	public boolean setXMLDocument(final T topic, final Document doc)
 	{
 		if (this.topics.containsKey(topic))
 		{
@@ -397,7 +406,7 @@ public class TocFormatBranch
 			return true;
 		}
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 		{
 			if (child.setXMLDocument(topic, doc))
 				return true;
@@ -414,11 +423,11 @@ public class TocFormatBranch
 	 * level of the TOC, and then recursivly calls the funtion for each child.
 	 */
 	public void setUniqueIds()
-	{
+	{		
 		for (final Document doc : this.topics.values())
 			fixNodeId(doc);
 
-		for (final TocFormatBranch child : children)
+		for (final TocFormatBranch<T> child : children)
 			child.setUniqueIds();
 	}
 

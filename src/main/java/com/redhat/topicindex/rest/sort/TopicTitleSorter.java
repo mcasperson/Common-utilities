@@ -7,11 +7,11 @@ import java.util.List;
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.InjectionTopicData;
 import com.redhat.ecs.sort.ExternalListSort;
 
-import com.redhat.topicindex.rest.entities.TopicV1;
+import com.redhat.topicindex.rest.entities.BaseTopicV1;
 
-public class TopicTitleSorter implements ExternalListSort<Integer, TopicV1, InjectionTopicData>
+public class TopicTitleSorter<T extends BaseTopicV1<T>> implements ExternalListSort<Integer, T, InjectionTopicData>
 {
-	public void sort(final List<TopicV1> topics, final List<InjectionTopicData> list) 
+	public void sort(final List<T> topics, final List<InjectionTopicData> list) 
 	    {
 	        if (topics == null || list == null)
 	        	return;
@@ -20,10 +20,10 @@ public class TopicTitleSorter implements ExternalListSort<Integer, TopicV1, Inje
 	        {
 				public int compare(final InjectionTopicData o1, final InjectionTopicData o2)
 	            {
-	            	TopicV1 topic1 = null;
-	            	TopicV1 topic2 = null;
+	            	T topic1 = null;
+	            	T topic2 = null;
 	            	
-	            	for (final TopicV1 topic : topics)
+	            	for (final T topic : topics)
 	            	{
 	            		if (topic.getId().equals(o1.topicId))
 	            			topic1 = topic;
@@ -44,8 +44,8 @@ public class TopicTitleSorter implements ExternalListSort<Integer, TopicV1, Inje
 	            	if (!v2Exists)
 	            		return 1;
 	            	
-	            	final TopicV1 v1 = topic1;
-	            	final TopicV1 v2 = topic2;
+	            	final T v1 = topic1;
+	            	final T v2 = topic2;
 	            	
 	            	if (v1 == null && v2 == null)
 	            		return 0;

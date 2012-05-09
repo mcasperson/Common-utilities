@@ -2,11 +2,11 @@ package com.redhat.topicindex.rest.sort;
 
 import java.util.Comparator;
 
-import com.redhat.topicindex.rest.entities.TopicV1;
+import com.redhat.topicindex.rest.entities.BaseTopicV1;
 
-public class TopicV1TitleComparator implements Comparator<TopicV1>
+public class BaseTopicV1TitleComparator<T extends BaseTopicV1<T>> implements Comparator<T>
 {
-	public int compare(final TopicV1 o1, final TopicV1 o2)
+	public int compare(final T o1, final T o2)
 	{
 		if (o1 == null && o2 == null)
 			return 0;

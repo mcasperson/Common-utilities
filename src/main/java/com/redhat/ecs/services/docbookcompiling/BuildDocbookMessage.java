@@ -7,6 +7,7 @@ public class BuildDocbookMessage
 {
 	private String query;
 	private DocbookBuildingOptions docbookOptions;
+	private int entityType;
 
 	public String getQuery()
 	{
@@ -26,5 +27,13 @@ public class BuildDocbookMessage
 	public void setDocbookOptions(final DocbookBuildingOptions docbookOptions)
 	{
 		this.docbookOptions = docbookOptions;
+	}
+
+	public int getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(int entityType) {
+		this.entityType = entityType;
 	}
 }

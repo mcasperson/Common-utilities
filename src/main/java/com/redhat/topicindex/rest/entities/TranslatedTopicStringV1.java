@@ -4,9 +4,9 @@ public class TranslatedTopicStringV1 extends BaseRESTEntityV1<TranslatedTopicStr
 {
 	public static final String ORIGINALSTRING_NAME = "originalstring";
 	public static final String TRANSLATEDSTRING_NAME = "translatedstring";
-	public static final String TRANSLATEDTOPICDATA_NAME = "translatedtopicdata";
+	public static final String TRANSLATEDTOPIC_NAME = "translatedtopic";
 	
-	private TranslatedTopicDataV1 translatedTopicData;
+	private TranslatedTopicV1 translatedTopic;
 	private String originalString;
 	private String translatedString;
 	
@@ -22,23 +22,23 @@ public class TranslatedTopicStringV1 extends BaseRESTEntityV1<TranslatedTopicStr
 		
 		if (deepCopy)
 		{
-			retValue.translatedTopicData = translatedTopicData != null ? this.translatedTopicData.clone(deepCopy) : null;
+			retValue.translatedTopic = translatedTopic != null ? this.translatedTopic.clone(deepCopy) : null;
 		}
 		else
 		{
-			retValue.translatedTopicData = this.translatedTopicData;
+			retValue.translatedTopic = this.translatedTopic;
 		}
 		return retValue;
 	}
 
-	public TranslatedTopicDataV1 getTranslatedTopicData()
+	public TranslatedTopicV1 getTranslatedTopic()
 	{
-		return translatedTopicData;
+		return translatedTopic;
 	}
 
-	public void setTranslatedTopicData(final TranslatedTopicDataV1 translatedTopicData)
+	public void setTranslatedTopic(final TranslatedTopicV1 translatedTopic)
 	{
-		this.translatedTopicData = translatedTopicData;
+		this.translatedTopic = translatedTopic;
 	}
 
 	public String getOriginalString()

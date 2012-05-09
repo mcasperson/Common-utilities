@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.ecs.commonstructures.Pair;
-import com.redhat.topicindex.rest.entities.TopicV1;
+import com.redhat.topicindex.rest.entities.BaseTopicV1;
 
 /**
  * This class represents the topics that will be injected into a topic for a
@@ -21,12 +21,12 @@ import com.redhat.topicindex.rest.entities.TopicV1;
  * already has the listed of related topics available to it in a child
  * collection.
  */
-public class GenericInjectionPoint
+public class GenericInjectionPoint<T extends BaseTopicV1<T>>
 {
 	/** The details of the topic type tag */
 	private Pair<Integer, String> categoryIDAndName;
 	/** The topics to be linked to */
-	private List<TopicV1> topics;
+	private List<T> topics;
 
 	public Pair<Integer, String> getCategoryIDAndName()
 	{
@@ -38,17 +38,17 @@ public class GenericInjectionPoint
 		this.categoryIDAndName = categoryIDAndName;
 	}
 
-	public List<TopicV1> getTopics()
+	public List<T> getTopics()
 	{
 		return topics;
 	}
 
-	public void setTopics(List<TopicV1> topics)
+	public void setTopics(List<T> topics)
 	{
 		this.topics = topics;
 	}
 
-	public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName, final List<TopicV1> topics)
+	public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName, final List<T> topics)
 	{
 		this.categoryIDAndName = categoryIDAndName;
 		this.topics = topics;
@@ -57,10 +57,10 @@ public class GenericInjectionPoint
 	public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName)
 	{
 		this.categoryIDAndName = categoryIDAndName;
-		this.topics = new ArrayList<TopicV1>();
+		this.topics = new ArrayList<T>();
 	}
 	
-	public void addTopic(final TopicV1 topic)
+	public void addTopic(final T topic)
 	{
 		this.topics.add(topic);
 	}

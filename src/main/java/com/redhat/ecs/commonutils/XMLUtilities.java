@@ -1101,6 +1101,7 @@ public class XMLUtilities
 	/** Cleans a string for of insignificant whitespace */
 	private static String cleanText(final String input)
 	{
+		if (input == null) return "";
 		/* get rid of line breaks */
 		String retValue = input.replaceAll("\\r\\n|\\r|\\n|\\t", " ");
 		/* get rid of double spaces */

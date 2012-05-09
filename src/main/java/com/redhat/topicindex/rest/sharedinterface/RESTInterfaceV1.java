@@ -26,7 +26,6 @@ import com.redhat.topicindex.rest.entities.StringConstantV1;
 import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.TopicV1;
 import com.redhat.topicindex.rest.entities.UserV1;
-import com.redhat.topicindex.rest.entities.TranslatedTopicDataV1;
 import com.redhat.topicindex.rest.entities.TranslatedTopicStringV1;
 import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
 import com.redhat.topicindex.rest.exceptions.InvalidParameterException;
@@ -197,82 +196,7 @@ public interface RESTInterfaceV1
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
 	public String deleteJSONPTranslatedTopicStrings(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	/* TRANSLATEDTOPICDATA FUNCTIONS */
-	/*		JSONP FUNCTIONS */
-	@GET
-	@Path("/translatedtopicdata/get/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/translatedtopicdatas/get/jsonp/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String getJSONPTranslatedTopicDatas(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/translatedtopicdata/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPTranslatedTopicData(@QueryParam("expand") final String expand, final TranslatedTopicDataV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/translatedtopicdatas/put/jsonp")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPTranslatedTopicDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicDataV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/translatedtopicdata/delete/jsonp/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/translatedtopicdatas/delete/jsonp/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public String deleteJSONPTranslatedTopicDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 	
-	/*		JSON FUNCTIONS */
-	@GET
-	@Path("/translatedtopicdata/get/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public TranslatedTopicDataV1 getJSONTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/translatedtopicdatas/get/json/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<TranslatedTopicDataV1> getJSONTranslatedTopicDatas(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/translatedtopicdata/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public TranslatedTopicDataV1 updateJSONTranslatedTopicData(@QueryParam("expand") final String expand, final TranslatedTopicDataV1 dataObject) throws InvalidParameterException, InternalProcessingException;
-
-	@PUT
-	@Path("/translatedtopicdatas/put/json")
-	@Consumes({ MediaType.APPLICATION_JSON })
-	@Produces(MediaType.APPLICATION_JSON)
-	public BaseRestCollectionV1<TranslatedTopicDataV1> updateJSONTranslatedTopicDatas(@QueryParam("expand") final String expand, final BaseRestCollectionV1<TranslatedTopicDataV1> dataObjects) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/translatedtopicdata/delete/json/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public TranslatedTopicDataV1 deleteJSONTranslatedTopicData(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@DELETE
-	@Path("/translatedtopicdatas/delete/json/{ids}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes({ "*" })
-	public BaseRestCollectionV1<TranslatedTopicDataV1> deleteJSONTranslatedTopicDatas(@PathParam("ids") final PathSegment ids, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
 	/* USER FUNCTIONS */
 	/*		JSONP FUNCTIONS */
 	@GET
@@ -528,6 +452,13 @@ public interface RESTInterfaceV1
 	@Consumes({ "*" })
 	public TranslatedTopicV1 getJSONTranslatedTopic(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
+	@GET
+	@Path("/translatedtopics/get/json/{query}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes({ "*" })
+	public BaseRestCollectionV1<TranslatedTopicV1> getJSONTranslatedTopicsWithQuery(@PathParam("query") PathSegment query, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	
+	
 	@GET
 	@Path("/translatedtopics/get/json/all")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -1386,6 +1317,18 @@ public interface RESTInterfaceV1
 	@Consumes({ "*" })
 	public String getXMLTopicXMLNoContainer(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("includeTitle") final Boolean includeTitle) throws InvalidParameterException, InternalProcessingException;
 
+	@GET
+	@Path("/topic/get/html/{id}/html")
+	@Produces(MediaType.APPLICATION_XHTML_XML)
+	@Consumes({ "*" })
+	public String getHTMLTopicHTML(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+
+	@GET
+	@Path("/topic/get/html/{id}/r/{rev}/html")
+	@Produces(MediaType.APPLICATION_XHTML_XML)
+	@Consumes({ "*" })
+	public String getHTMLTopicRevisionHTML(@PathParam("id") final Integer id, @PathParam("rev") final Integer revision, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	
 	@PUT
 	@Path("/topic/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })

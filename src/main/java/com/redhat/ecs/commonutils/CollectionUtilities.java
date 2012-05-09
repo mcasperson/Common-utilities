@@ -168,4 +168,12 @@ public class CollectionUtilities
 
 		return first.equals(second);
 	}
+	
+	public static List<Integer> toAbsIntegerList(final List<Integer> array)
+	{
+		final ArrayList<Integer> retValue = new ArrayList<Integer>();
+		for (final Integer item : array)
+			retValue.add(Math.abs(item));
+		return retValue;
+	}
 }

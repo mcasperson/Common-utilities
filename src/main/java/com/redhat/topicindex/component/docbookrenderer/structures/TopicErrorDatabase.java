@@ -1,37 +1,46 @@
 package com.redhat.topicindex.component.docbookrenderer.structures;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.redhat.topicindex.rest.entities.TopicV1;
+import com.redhat.ecs.commonutils.CollectionUtilities;
+import com.redhat.topicindex.rest.entities.BaseTopicV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
 
 /**
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase
+public class TopicErrorDatabase<T extends BaseTopicV1<T>>
 {
 	public static final Integer ERROR = 1;
 	public static final Integer WARNING = 5;
 
-	private List<TopicErrorData> errors = new ArrayList<TopicErrorData>();
+	private Map<String, List<TopicErrorData<T>>> errors = new HashMap<String, List<TopicErrorData<T>>>();
 
-	public int getErrorCount()
+	public int getErrorCount(final String locale)
 	{
-		return errors.size();
+		return errors.containsKey(locale) ? errors.get(locale).size() : 0;
 	}
 
 	public boolean hasItems()
 	{
 		return errors.size() != 0;
 	}
+	
+	public boolean hasItems(final String locale)
+	{
+		return errors.containsKey(locale) ? errors.get(locale).size() != 0 : false;
+	}
 
-	public void addError(final TopicV1 topic, final String error)
+	public void addError(final T topic, final String error)
 	{
 		addItem(topic, error, ERROR);
 	}
 
-	public void addWarning(final TopicV1 topic, final String error)
+	public void addWarning(final T topic, final String error)
 	{
 		addItem(topic, error, WARNING);
 	}
@@ -41,51 +50,72 @@ public class TopicErrorDatabase
 	 * @param topic
 	 * @param error
 	 */
-	public void addTocError(final TopicV1 topic, final String error)
+	public void addTocError(final T topic, final String error)
 	{
 		addItem(topic, error, ERROR);
 	}
 
-	public void addTocWarning(final TopicV1 topic, final String error)
+	public void addTocWarning(final T topic, final String error)
 	{
 		addItem(topic, error, WARNING);
 	}
 
-	private void addItem(final TopicV1 topic, final String item, final Integer level)
+	private void addItem(final T topic, final String item, final Integer level)
 	{
-		final TopicErrorData topicErrorData = addOrGetTopicErrorData(topic);
+		final TopicErrorData<T> topicErrorData = addOrGetTopicErrorData(topic);
 		/* don't add duplicates */
 		if (!(topicErrorData.getErrors().containsKey(level) && topicErrorData.getErrors().get(level).contains(item)))
 			topicErrorData.addError(item, level);
 	}
 
-	private TopicErrorData getErrorData(final TopicV1 topic)
+	private TopicErrorData<T> getErrorData(final T topic)
 	{
-		for (final TopicErrorData topicErrorData : errors)
-			if (topicErrorData.getTopic().getId().equals(topic.getId()))
-				return topicErrorData;
+		for (final String locale : errors.keySet())
+			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
+			{
+				if (topic.isDummyTopic())
+				{
+					if (topic.getClass() == TranslatedTopicV1.class && topicErrorData.getTopic() instanceof TranslatedTopicV1)
+					{
+						if (((TranslatedTopicV1) topicErrorData.getTopic()).getTopicId().equals(((TranslatedTopicV1) topic).getTopicId()))
+							return topicErrorData;
+					}
+				}
+				else
+				{
+					if (topicErrorData.getTopic().getId().equals(topic.getId()))
+						return topicErrorData;
+				}
+			}
 		return null;
 	}
 
-	private TopicErrorData addOrGetTopicErrorData(final TopicV1 topic)
+	private TopicErrorData<T> addOrGetTopicErrorData(final T topic)
 	{
-		TopicErrorData topicErrorData = getErrorData(topic);
+		TopicErrorData<T> topicErrorData = getErrorData(topic);
 		if (topicErrorData == null)
 		{
-			topicErrorData = new TopicErrorData();
+			topicErrorData = new TopicErrorData<T>();
 			topicErrorData.setTopic(topic);
-			errors.add(topicErrorData);
+			if (!errors.containsKey(topic.getLocale()))
+				errors.put(topic.getLocale(), new ArrayList<TopicErrorData<T>>());
+			errors.get(topic.getLocale()).add(topicErrorData);
 		}
 		return topicErrorData;
 	}
-
-	public List<TopicErrorData> getErrors()
+	
+	public List<String> getLocales()
 	{
-		return errors;
+		return CollectionUtilities.toArrayList(errors.keySet());
 	}
 
-	public void setErrors(List<TopicErrorData> errors)
+	public List<TopicErrorData<T>> getErrors(final String locale)
 	{
-		this.errors = errors;
+		return errors.containsKey(locale) ? errors.get(locale) : null;
+	}
+
+	public void setErrors(final String locale, final List<TopicErrorData<T>> errors)
+	{
+		this.errors.put(locale, errors);
 	}
 }

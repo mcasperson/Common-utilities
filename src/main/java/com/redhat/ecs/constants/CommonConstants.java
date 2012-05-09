@@ -25,7 +25,7 @@ public class CommonConstants
 	public final static Integer BUGZILLA_PROFILE_PROPERTY = 5;
 	
 	/** The Regular Expression the defines the search format for a property tag */
-	public static String PROPERTY_TAG_SEARCH_RE = "(?<PropertyTagID>\\d+) (?<PropertyTagValue>.*)";	
+	public static String PROPERTY_TAG_SEARCH_RE = "(?<PropertyTagID>\\d+) (?<PropertyTagValue>.*)";		
 	/** The regular expression that matches the Build ID field, without the prefixed topic id */
 	public static String BUGZILLA_BUILD_ID_RE = "-[0-9]+ [0-9]{2} [A-Za-z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}";
 	/** The regular expression that matches the Build ID field, with the individual fields grouped and named */
@@ -131,8 +131,8 @@ public class CommonConstants
 	 * The URL of the main web Skynet instance. This is used when generating
 	 * links in the documentation.
 	 */
-	public static final String SERVER_URL = "http://skynet.cloud.lab.eng.bne.redhat.com:8080";
+	public static final String SERVER_URL = "http://skynet.usersys.redhat.com:8080";
 
 	/** The live Skynet URL */
-	public static final String FULL_SERVER_URL = "http://skynet.cloud.lab.eng.bne.redhat.com:8080/TopicIndex";
+	public static final String FULL_SERVER_URL = "http://skynet.usersys.redhat.com:8080/TopicIndex";
 }

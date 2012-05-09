@@ -25,6 +25,11 @@ public class DocbookBuildingOptions
 {
 	/**
 	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Include untranslated topics" option
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS = "Include untranslated topics";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
 	 * table for the "Process Related Topics" option
 	 */
 	public static String DOCBOOK_BUILDING_OPTION_PROCESS_RELATED_TOPICS = "Process Related Topics";
@@ -70,36 +75,6 @@ public class DocbookBuildingOptions
 	public static String DOCBOOK_BUILDING_OPTION_CVS_PKG = "publican.cfg cvs_pkg option";
 	/**
 	 * The value assigned to the FilterOptionName field in the FilterOption
-	 * table for the "Makefile PRODUCT" option
-	 */
-	public static String DOCBOOK_BUILDING_OPTION_MAKEFILE_PRODUCT = "Makefile PRODUCT";
-	/**
-	 * The value assigned to the FilterOptionName field in the FilterOption
-	 * table for the "Makefile PROD_VERSION" option
-	 */
-	public static String DOCBOOK_BUILDING_OPTION_MAKEFILE_PROD_VERSION = "Makefile PROD_VERSION";
-	/**
-	 * The value assigned to the FilterOptionName field in the FilterOption
-	 * table for the "Makefile PROD_VERSION" option
-	 */
-	public static String DOCBOOK_BUILDING_OPTION_MAKEFILE_LANG = "Makefile LANG";
-	/**
-	 * The value assigned to the FilterOptionName field in the FilterOption
-	 * table for the "Makefile BOOKS" option
-	 */
-	public static String DOCBOOK_BUILDING_OPTION_MAKEFILE_BOOKS = "Makefile BOOKS";
-	/**
-	 * The value assigned to the FilterOptionName field in the FilterOption
-	 * table for the "Makefile VERSION" option
-	 */
-	public static String DOCBOOK_BUILDING_OPTION_MAKEFILE_VERSION = "Makefile VERSION";
-	/**
-	 * The value assigned to the FilterOptionName field in the FilterOption
-	 * table for the "Makefile RELEASE" option
-	 */
-	public static String DOCBOOK_BUILDING_OPTION_MAKEFILE_RELEASE = "Makefile RELEASE";
-	/**
-	 * The value assigned to the FilterOptionName field in the FilterOption
 	 * table for the "Send To" option
 	 */
 	public static String DOCBOOK_BUILDING_OPTION_SEND_TO = "Send To";
@@ -108,6 +83,7 @@ public class DocbookBuildingOptions
 	 */
 	public static String DOCBOOK_BUILDING_OPTION_BUILD_NAME = "Build Name";
 
+	private Boolean includeUntranslatedTopics = true;
 	private Boolean processRelatedTopics = false;
 	private Boolean publicanShowRemarks = false;
 	private Boolean enableDynamicTreeToc = true;
@@ -120,21 +96,21 @@ public class DocbookBuildingOptions
 
 	/** The cvs_pkg option in the publican.cfg file */
 	private String cvsPkgOption = "JBoss_Enterprise_Application_Platform-6-web-__LANG__";
-
-	private String makefileProductOption = "JBoss_Enterprise_Application_Platform";
-	private String makefileProdVersionOption = "6";
-	private String makefileLangOption = "en-US";
-	private String makefileBooksOption = "Beta_Documentation";
-	private String makefileVersionOption = "1";
-	private String makefileReleaseOption = "1";
 	
 	private String buildName;
 
 	@JsonIgnore
 	public boolean isValid()
 	{
-		return makefileProductOption != null && !makefileProductOption.trim().isEmpty() && makefileProdVersionOption != null && !makefileProdVersionOption.trim().isEmpty() && makefileLangOption != null && !makefileLangOption.trim().isEmpty() && makefileBooksOption != null && !makefileBooksOption.trim().isEmpty()
-				&& makefileVersionOption != null && !makefileVersionOption.trim().isEmpty() && makefileReleaseOption != null && !makefileReleaseOption.trim().isEmpty() && emailTo != null && !emailTo.trim().isEmpty();
+		return emailTo != null && !emailTo.trim().isEmpty();
+	}
+
+	public Boolean getIncludeUntranslatedTopics() {
+		return includeUntranslatedTopics;
+	}
+
+	public void setIncludeUntranslatedTopics(Boolean includeUntranslatedTopics) {
+		this.includeUntranslatedTopics = includeUntranslatedTopics;
 	}
 
 	public void setProcessRelatedTopics(final Boolean processRelatedTopics)
@@ -234,14 +210,9 @@ public class DocbookBuildingOptions
 		retValue.add(DOCBOOK_BUILDING_OPTION_SUPPRESS_ERROR_PAGE);
 		retValue.add(DOCBOOK_BUILDING_OPTION_TASK_AND_OVERVIEW_ONLY);
 		retValue.add(DOCBOOK_BUILDING_OPTION_CVS_PKG);
-		retValue.add(DOCBOOK_BUILDING_OPTION_MAKEFILE_PRODUCT);
-		retValue.add(DOCBOOK_BUILDING_OPTION_MAKEFILE_PROD_VERSION);
-		retValue.add(DOCBOOK_BUILDING_OPTION_MAKEFILE_LANG);
-		retValue.add(DOCBOOK_BUILDING_OPTION_MAKEFILE_BOOKS);
-		retValue.add(DOCBOOK_BUILDING_OPTION_MAKEFILE_VERSION);
-		retValue.add(DOCBOOK_BUILDING_OPTION_MAKEFILE_RELEASE);
 		retValue.add(DOCBOOK_BUILDING_OPTION_SEND_TO);
 		retValue.add(DOCBOOK_BUILDING_OPTION_BUILD_NAME);
+		retValue.add(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS);
 		
 		return retValue;
 	}
@@ -280,29 +251,14 @@ public class DocbookBuildingOptions
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG))
 			return this.getCvsPkgOption() == null ? null : this.getCvsPkgOption();
 
-		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_PRODUCT))
-			return this.getMakefileProductOption() == null ? null : this.getMakefileProductOption();
-
-		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_PROD_VERSION))
-			return this.getMakefileProdVersionOption() == null ? null : this.getMakefileProdVersionOption();
-
-		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_LANG))
-			return this.getMakefileLangOption() == null ? null : this.getMakefileLangOption();
-
-		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_BOOKS))
-			return this.getMakefileBooksOption() == null ? null : this.getMakefileBooksOption();
-
-		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_VERSION))
-			return this.getMakefileVersionOption() == null ? null : this.getMakefileVersionOption();
-
-		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_RELEASE))
-			return this.getMakefileReleaseOption() == null ? null : this.getMakefileReleaseOption();
-
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO))
 			return this.getEmailTo();
 		
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME))
 			return this.getBuildName();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
+			return this.getIncludeUntranslatedTopics() == null ? null : this.getIncludeUntranslatedTopics().toString();
 
 		return null;
 	}
@@ -343,29 +299,14 @@ public class DocbookBuildingOptions
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG))
 				this.setCvsPkgOption(fieldValue);
 
-			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_PRODUCT))
-				this.setMakefileProductOption(fieldValue);
-
-			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_PROD_VERSION))
-				this.setMakefileProdVersionOption(fieldValue);
-
-			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_LANG))
-				this.setMakefileLangOption(fieldValue);
-
-			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_BOOKS))
-				this.setMakefileBooksOption(fieldValue);
-
-			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_VERSION))
-				this.setMakefileVersionOption(fieldValue);
-
-			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_MAKEFILE_RELEASE))
-				this.setMakefileReleaseOption(fieldValue);
-
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO))
 				this.setEmailTo(fieldValue);
 			
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME))
 				this.setBuildName(fieldValue);
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
+				this.setIncludeUntranslatedTopics(Boolean.parseBoolean(fieldValue));
 
 		}
 		catch (final Exception ex)
@@ -382,66 +323,6 @@ public class DocbookBuildingOptions
 	public void setCvsPkgOption(final String cvsPkgOption)
 	{
 		this.cvsPkgOption = cvsPkgOption;
-	}
-
-	public String getMakefileProductOption()
-	{
-		return makefileProductOption;
-	}
-
-	public void setMakefileProductOption(final String makefileProductOption)
-	{
-		this.makefileProductOption = makefileProductOption;
-	}
-
-	public String getMakefileProdVersionOption()
-	{
-		return makefileProdVersionOption;
-	}
-
-	public void setMakefileProdVersionOption(final String makefileProdVersionOption)
-	{
-		this.makefileProdVersionOption = makefileProdVersionOption;
-	}
-
-	public String getMakefileLangOption()
-	{
-		return makefileLangOption;
-	}
-
-	public void setMakefileLangOption(final String makefileLangOption)
-	{
-		this.makefileLangOption = makefileLangOption;
-	}
-
-	public String getMakefileBooksOption()
-	{
-		return makefileBooksOption;
-	}
-
-	public void setMakefileBooksOption(final String makefileooksOption)
-	{
-		this.makefileBooksOption = makefileooksOption;
-	}
-
-	public String getMakefileVersionOption()
-	{
-		return makefileVersionOption;
-	}
-
-	public void setMakefileVersionOption(final String makefileVersionOption)
-	{
-		this.makefileVersionOption = makefileVersionOption;
-	}
-
-	public String getMakefileReleaseOption()
-	{
-		return makefileReleaseOption;
-	}
-
-	public void setMakefileReleaseOption(final String makefileReleaseOption)
-	{
-		this.makefileReleaseOption = makefileReleaseOption;
 	}
 
 	public String getEmailTo()
