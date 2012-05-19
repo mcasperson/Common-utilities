@@ -25,6 +25,17 @@ public class DocbookBuildingOptions
 {
 	/**
 	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Suppress Content Specification Page" option
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE = "Suppress Content Specification Page";
+	
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Insert bugzilla links" option
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS = "Insert bugzilla links";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
 	 * table for the "Include untranslated topics" option
 	 */
 	public static String DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS = "Include untranslated topics";
@@ -82,7 +93,40 @@ public class DocbookBuildingOptions
 	 * A name that can be assigned to a build to identify it
 	 */
 	public static String DOCBOOK_BUILDING_OPTION_BUILD_NAME = "Build Name";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Book Title" value
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_TITLE = "Book Title";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Book Product" value
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT = "Book Product";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Book Product Version" value
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION = "Book Product Version";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Book Edition" value
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_EDITION = "Book Edition";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Book Pubsnumber" value
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER = "Book Pubsnumber";
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Book Subtitle" value
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE = "Book Subtitle";
+	
 
+	private Boolean suppressContentSpecPage = false;
+	private Boolean insertBugzillaLinks = true;
 	private Boolean includeUntranslatedTopics = true;
 	private Boolean processRelatedTopics = false;
 	private Boolean publicanShowRemarks = false;
@@ -92,12 +136,20 @@ public class DocbookBuildingOptions
 	private Boolean suppressErrorsPage = false;
 	private Boolean taskAndOverviewOnly = true;
 	private Boolean insertSurveyLink = true;
-	private String emailTo;
+	private String emailTo = null;
 
 	/** The cvs_pkg option in the publican.cfg file */
-	private String cvsPkgOption = "JBoss_Enterprise_Application_Platform-6-web-__LANG__";
+	private String cvsPkgOption = null;
 	
-	private String buildName;
+	private String buildName = null;
+	
+	// Book name options
+	private String bookTitle = "Book";
+	private String bookProduct = "Documentation 0.1";
+	private String bookProductVersion = "0.1";
+	private String bookEdition = null;
+	private Integer bookPubsnumber = null;
+	private String bookSubtitle = null;
 
 	@JsonIgnore
 	public boolean isValid()
@@ -213,6 +265,14 @@ public class DocbookBuildingOptions
 		retValue.add(DOCBOOK_BUILDING_OPTION_SEND_TO);
 		retValue.add(DOCBOOK_BUILDING_OPTION_BUILD_NAME);
 		retValue.add(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS);
+		retValue.add(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS);
+		retValue.add(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE);
+		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_EDITION);
+		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION);
+		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER);
+		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_TITLE);
+		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT);
+		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE);
 		
 		return retValue;
 	}
@@ -259,7 +319,31 @@ public class DocbookBuildingOptions
 		
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
 			return this.getIncludeUntranslatedTopics() == null ? null : this.getIncludeUntranslatedTopics().toString();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
+			return this.getInsertBugzillaLinks() == null ? null : this.getInsertBugzillaLinks().toString();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
+			return this.getSuppressContentSpecPage() == null ? null : this.getSuppressContentSpecPage().toString();
 
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE))
+			return this.getBookTitle();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT))
+			return this.getBookProduct();
+
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION))
+			return this.getBookProductVersion();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION))
+			return this.getBookEdition();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
+			return this.getBookPubsnumber() == null ? null : this.getBookPubsnumber().toString();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
+			return this.getBookSubtitle();
+		
 		return null;
 	}
 
@@ -307,6 +391,30 @@ public class DocbookBuildingOptions
 			
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
 				this.setIncludeUntranslatedTopics(Boolean.parseBoolean(fieldValue));
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
+				this.setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
+				this.setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE))
+				this.setBookTitle(fieldValue);
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT))
+				this.setBookProduct(fieldValue);
+
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION))
+				this.setBookProductVersion(fieldValue);
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION))
+				this.setBookEdition(fieldValue);
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
+				this.setBookPubsnumber(Integer.parseInt(fieldValue));
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
+				this.setBookSubtitle(fieldValue);
 
 		}
 		catch (final Exception ex)
@@ -343,5 +451,69 @@ public class DocbookBuildingOptions
 	public void setBuildName(final String buildName)
 	{
 		this.buildName = buildName;
+	}
+
+	public Boolean getInsertBugzillaLinks() {
+		return insertBugzillaLinks;
+	}
+
+	public void setInsertBugzillaLinks(Boolean insertBugzillaLinks) {
+		this.insertBugzillaLinks = insertBugzillaLinks;
+	}
+
+	public Boolean getSuppressContentSpecPage() {
+		return suppressContentSpecPage;
+	}
+
+	public void setSuppressContentSpecPage(Boolean suppressContentSpecPage) {
+		this.suppressContentSpecPage = suppressContentSpecPage;
+	}
+
+	public String getBookTitle() {
+		return bookTitle;
+	}
+
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
+
+	public String getBookProduct() {
+		return bookProduct;
+	}
+
+	public void setBookProduct(String bookProduct) {
+		this.bookProduct = bookProduct;
+	}
+
+	public String getBookProductVersion() {
+		return bookProductVersion;
+	}
+
+	public void setBookProductVersion(String bookProductVersion) {
+		this.bookProductVersion = bookProductVersion;
+	}
+
+	public String getBookEdition() {
+		return bookEdition;
+	}
+
+	public void setBookEdition(String bookEdition) {
+		this.bookEdition = bookEdition;
+	}
+
+	public Integer getBookPubsnumber() {
+		return bookPubsnumber;
+	}
+
+	public void setBookPubsnumber(Integer bookPubsnumber) {
+		this.bookPubsnumber = bookPubsnumber;
+	}
+
+	public String getBookSubtitle() {
+		return bookSubtitle;
+	}
+
+	public void setBookSubtitle(String bookSubtitle) {
+		this.bookSubtitle = bookSubtitle;
 	}
 }

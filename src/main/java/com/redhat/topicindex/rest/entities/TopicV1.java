@@ -36,13 +36,13 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 		this.cloneInto(retValue, deepCopy);
 		
 		retValue.description = this.description;
-		retValue.created = (Date)this.created.clone();
-		retValue.lastModified = (Date)lastModified.clone();
+		retValue.created = this.created == null ? null : (Date)this.created.clone();
+		retValue.lastModified = this.lastModified == null ? null : (Date)lastModified.clone();
 		
 		if (deepCopy)
 		{
-			retValue.bugzillaBugs = this.bugzillaBugs.clone(deepCopy);
-			retValue.translatedTopics = this.translatedTopics.clone(deepCopy);
+			retValue.bugzillaBugs = this.bugzillaBugs == null ? null : this.bugzillaBugs.clone(deepCopy);
+			retValue.translatedTopics = this.translatedTopics == null ? null : this.translatedTopics.clone(deepCopy);
 		}
 		else
 		{

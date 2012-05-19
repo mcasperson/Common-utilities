@@ -56,10 +56,10 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		
 		if (deepCopy)
 		{
-			clone.tags = this.tags.clone(deepCopy);
-			clone.outgoingRelationships = this.outgoingRelationships.clone(deepCopy);
-			clone.incomingRelationships = this.incomingRelationships.clone(deepCopy);
-			clone.sourceUrls = this.sourceUrls.clone(deepCopy);
+			clone.tags = this.tags == null ? null: this.tags.clone(deepCopy);
+			clone.outgoingRelationships = this.outgoingRelationships == null ? null : this.outgoingRelationships.clone(deepCopy);
+			clone.incomingRelationships = this.incomingRelationships == null ? null : this.incomingRelationships.clone(deepCopy);
+			clone.sourceUrls = this.sourceUrls == null ? null : this.sourceUrls.clone(deepCopy);
 		}
 		else
 		{

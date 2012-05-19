@@ -19,7 +19,7 @@ public abstract class BaseRESTEntityWithPropertiesV1<T extends BaseRESTEntityV1<
 		
 		if (deepCopy)
 		{
-			clone.properties = this.properties.clone(deepCopy);
+			clone.properties = this.properties == null ? null : this.properties.clone(deepCopy);
 		}
 		else
 		{

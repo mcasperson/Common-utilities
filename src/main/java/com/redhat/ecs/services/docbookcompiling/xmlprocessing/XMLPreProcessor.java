@@ -19,6 +19,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import com.redhat.contentspec.Level;
+import com.redhat.contentspec.SpecTopic;
+import com.redhat.contentspec.entities.TargetRelationship;
+import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
@@ -34,7 +38,6 @@ import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.Injecti
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.TocTopicDatabase;
 import com.redhat.ecs.sort.ExternalListSort;
 
-import com.redhat.topicindex.component.docbookrenderer.structures.tocformat.TocFormatBranch;
 import com.redhat.topicindex.rest.entities.BaseTopicV1;
 import com.redhat.topicindex.rest.entities.PropertyTagV1;
 import com.redhat.topicindex.rest.entities.TagV1;
@@ -167,7 +170,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	 */
 	protected static final String NO_INJECT_ROLE = "noinject";
 
-	public void processTopicBugzillaLink(final T topic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{		
 		/* SIMPLESECT TO HOLD OTHER LINKS */
 		final Element bugzillaSection = document.createElement("simplesect");
@@ -202,13 +205,13 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 			String bugzillaVersion = null;
 			String bugzillaKeywords = null;
 			String bugzillaAssignedTo = null;
-			final String bugzillaEnvironment = URLEncoder.encode("Instance Name: " + fixedInstanceNameProperty + "\nSkynet Build: " + buildName + "\nBuild Filter: " + searchTagsUrl +"\nBuild Name: " + specifiedBuildName + "\nBuild Date: " + formatter.format(buildDate), "UTF-8");
-			final String bugzillaBuildID = URLEncoder.encode(topic.getBugzillaBuildId(), "UTF-8");
+			final String bugzillaEnvironment = URLEncoder.encode("Instance Name: " + fixedInstanceNameProperty + "\nBuild: " + buildName + "\nBuild Filter: " + searchTagsUrl +"\nBuild Name: " + specifiedBuildName + "\nBuild Date: " + formatter.format(buildDate), "UTF-8");
+			final String bugzillaBuildID = URLEncoder.encode(specTopic.getTopic().getBugzillaBuildId(), "UTF-8");
 
 			/* look for the bugzilla options */
-			if (topic.getTags() != null && topic.getTags().getItems() != null)
+			if (specTopic.getTopic().getTags() != null && specTopic.getTopic().getTags().getItems() != null)
 			{
-				for (final TagV1 tag : topic.getTags().getItems())
+				for (final TagV1 tag : specTopic.getTopic().getTags().getItems())
 				{
 					final PropertyTagV1 bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
 					final PropertyTagV1 bugzillaComponentTag = tag.getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
@@ -296,7 +299,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	/**
 	 * Adds some debug information and links to the end of the topic
 	 */
-	public void processTopicAdditionalInfo(final T topic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{		
 		/* SIMPLESECT TO HOLD OTHER LINKS */
 		final Element bugzillaSection = document.createElement("simplesect");
@@ -306,7 +309,10 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		bugzillaSectionTitle.setTextContent("");
 		bugzillaSection.appendChild(bugzillaSectionTitle);
 
-		processTopicBugzillaLink(topic, document, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
+		// BUGZILLA LINK
+		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
+			processTopicBugzillaLink(specTopic, document, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
+		}
 
 		// SURVEY LINK
 		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink())
@@ -339,7 +345,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 			final Element skynetLinkULink = document.createElement("ulink");
 			skynetElement.appendChild(skynetLinkULink);
 			skynetLinkULink.setTextContent("View in Skynet");
-			skynetLinkULink.setAttribute("url", topic.getSkynetURL());
+			skynetLinkULink.setAttribute("url", specTopic.getTopic().getSkynetURL());
 
 			// SKYNET VERSION
 
@@ -390,7 +396,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		return retValue;
 	}
 
-	public List<Integer> processInjections(final TocFormatBranch<T> toc, final T topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/*
 		 * this collection keeps a track of the injection point markers and the
@@ -400,11 +406,11 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 
 		final List<Integer> errorTopics = new ArrayList<Integer>();
 
-		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter<T>(), docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(toc, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter<T>(), docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, usedFixedUrls));
 
 		/*
 		 * If we are not ignoring errors, return the list of topics that could
@@ -456,7 +462,8 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		return errorTopics;
 	}
 
-	public List<Integer> processInjections(final TocFormatBranch<T> toc, final T topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
+	@SuppressWarnings("unchecked")
+	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
 			final ExternalListSort<Integer, T, InjectionTopicData> sortComparator, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
@@ -492,7 +499,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 					/*
 					 * get the outgoing relationships
 					 */
-					final List<T> relatedTopics = topic.getOutgoingRelationships().getItems();
+					final List<T> relatedTopics = (List<T>) topic.getTopic().getOutgoingRelationships().getItems();
 
 					/*
 					 * Create a TocTopicDatabase to hold the related topics. The
@@ -529,7 +536,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 						 * See if the topic is also available in the main
 						 * database (if the main database is available)
 						 */
-						final boolean isInDatabase = toc == null ? true : toc.isInToc(sequenceID.topicId);
+						final boolean isInDatabase = level == null ? true : level.isSpecTopicInLevelByTopicID(sequenceID.topicId);
 
 						/*
 						 * It is possible that the topic id referenced in the
@@ -557,7 +564,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 								list = customInjections.get(comment).listItems;
 
 							/* if the toc is null, we are building an internal page */
-							if (toc == null)
+							if (level == null)
 							{
 								final String url = relatedTopic.getInternalURL();
 								if (sequenceID.optional)
@@ -571,31 +578,24 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 							}
 							else
 							{
-								final String xrefPostfix = toc.getClosestTopicXrefPostfix(relatedTopic.getId(), topic);
-								if (xrefPostfix != null)
-								{								
-									if (sequenceID.optional)
-									{
-										if (usedFixedUrls)
-										{
-											list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + xrefPostfix));
-										}
-										else
-										{
-											list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, relatedTopic.getXRefID() + xrefPostfix));
-										}
-									}
-									else
-									{
-										if (usedFixedUrls)
-										{
-											list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + xrefPostfix));										
-										}
-										else
-										{
-											list.add(DocbookUtils.buildXRef(xmlDocument, relatedTopic.getXRefID() + xrefPostfix));
-										}
-									}
+								final Integer topicId;
+								if (relatedTopic instanceof TranslatedTopicV1)
+								{
+									topicId = ((TranslatedTopicV1) relatedTopic).getTopicId();
+								}
+								else
+								{
+									topicId = relatedTopic.getId();
+								}
+								
+								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);							
+								if (sequenceID.optional)
+								{
+									list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
+								}
+								else
+								{
+									list.add(DocbookUtils.buildXRef(xmlDocument, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));										
 								}
 							}						
 
@@ -617,7 +617,8 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		return retValue;
 	}
 
-	public List<Integer> processGenericInjections(final TocFormatBranch<T> toc, final T topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions,
+	@SuppressWarnings("unchecked")
+	public List<Integer> processGenericInjections(final Level level, final SpecTopic topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions,
 			final boolean usedFixedUrls)
 	{
 		final List<Integer> errors = new ArrayList<Integer>();
@@ -631,9 +632,9 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		final GenericInjectionPointDatabase<T> relatedLists = new GenericInjectionPointDatabase<T>();
 
 		/* wrap each related topic in a listitem tag */
-		if (topic.getOutgoingRelationships() != null && topic.getOutgoingRelationships().getItems()!= null)
+		if (topic.getTopic().getOutgoingRelationships() != null && topic.getTopic().getOutgoingRelationships().getItems()!= null)
 		{
-			for (final T relatedTopic : topic.getOutgoingRelationships().getItems())
+			for (final BaseTopicV1<?> relatedTopic : topic.getTopic().getOutgoingRelationships().getItems())
 			{
 				
 				final Integer topicId;
@@ -653,7 +654,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 				if (!customInjectionIds.contains(topicId))
 				{
 					/* make sure the topic is available to be linked to */
-					if (toc != null && !toc.isInToc(topicId))
+					if (level != null && !level.isSpecTopicInLevelByTopicID(topicId))
 					{
 						if ((docbookBuildingOptions != null && !docbookBuildingOptions.getIgnoreMissingCustomInjections()))
 							errors.add(relatedTopic.getId());
@@ -670,7 +671,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 							 */
 							if (relatedTopic.isTaggedWith(primaryTopicTypeTag.getFirst()))
 							{
-								relatedLists.addInjectionTopic(primaryTopicTypeTag, relatedTopic);
+								relatedLists.addInjectionTopic(primaryTopicTypeTag, (T) relatedTopic);
 
 								break;
 							}
@@ -680,7 +681,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 			}
 		}
 
-		insertGenericInjectionLinks(toc, topic, xmlDocument, relatedLists, docbookBuildingOptions, usedFixedUrls);
+		insertGenericInjectionLinks(level, topic, xmlDocument, relatedLists, docbookBuildingOptions, usedFixedUrls);
 
 		return errors;
 	}
@@ -691,7 +692,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	 * and the topic type tags that are associated with them and injects them
 	 * into the xml document.
 	 */
-	private void insertGenericInjectionLinks(final TocFormatBranch<T> toc, final T topic, final Document xmlDoc, final GenericInjectionPointDatabase<T> relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	private void insertGenericInjectionLinks(final Level level, final SpecTopic topic, final Document xmlDoc, final GenericInjectionPointDatabase<T> relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/* all related topics are placed before the first simplesect */
 		final NodeList nodes = xmlDoc.getDocumentElement().getChildNodes();
@@ -727,21 +728,24 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 
 						for (final T relatedTopic : relatedTopics)
 						{
-							if (toc == null)
+							if (level == null)
 							{
 								DocbookUtils.createRelatedTopicULink(xmlDoc, relatedTopic.getInternalURL(), relatedTopic.getTitle(), itemizedlist);
 							}
 							else
 							{
-								final String xrefPostfix = toc.getClosestTopicXrefPostfix(relatedTopic.getId(), topic);
-								if (usedFixedUrls)
+								final Integer topicId;
+								if (relatedTopic instanceof TranslatedTopicV1)
 								{
-									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID) + xrefPostfix, itemizedlist);
+									topicId = ((TranslatedTopicV1) relatedTopic).getTopicId();
 								}
 								else
 								{
-									DocbookUtils.createRelatedTopicXRef(xmlDoc, relatedTopic.getXRefID() + xrefPostfix, itemizedlist);
+									topicId = relatedTopic.getId();
 								}
+								
+								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
+								DocbookUtils.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls), itemizedlist);
 							}
 
 						}
@@ -785,7 +789,8 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		}
 	}
 
-	public List<Integer> processTopicContentFragments(final T topic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
+	@SuppressWarnings("unchecked")
+	public List<Integer> processTopicContentFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
 
@@ -827,9 +832,9 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 						 * make sure the topic we are trying to inject has been
 						 * related
 						 */
-						if (topic.isRelatedTo(topicID))
+						if (specTopic.getTopic().isRelatedTo(topicID))
 						{
-							final T relatedTopic = topic.getRelatedTopicByID(topicID);
+							final T relatedTopic = (T) specTopic.getTopic().getRelatedTopicByID(topicID);
 							final Document relatedTopicXML = XMLUtilities.convertStringToDocument(relatedTopic.getXml());
 							if (relatedTopicXML != null)
 							{
@@ -935,7 +940,8 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 		}
 	}
 
-	public List<Integer> processTopicTitleFragments(final T topic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
+	@SuppressWarnings("unchecked")
+	public List<Integer> processTopicTitleFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
 
@@ -977,9 +983,9 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 						 * make sure the topic we are trying to inject has been
 						 * related
 						 */
-						if (topic.isRelatedTo(topicID))
+						if (specTopic.getTopic().isRelatedTo(topicID))
 						{
-							final T relatedTopic = topic.getRelatedTopicByID(topicID);
+							final T relatedTopic = (T) specTopic.getTopic().getRelatedTopicByID(topicID);
 							final Element titleNode = xmlDocument.createElement("title");
 							titleNode.setTextContent(relatedTopic.getTitle());
 							replacements.put(comment, titleNode);
@@ -1007,6 +1013,190 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 
 		return retValue;
 	}
+	
+	public void processPrevRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+		if (topic.getPrevTopicRelationships().isEmpty()) return;
+		
+		// Get the title element so that it can be used later to add the prev topic node
+		Element titleEle = null;
+		NodeList titleList = doc.getDocumentElement().getElementsByTagName("title");
+		for (int i = 0; i < titleList.getLength(); i++) {
+			if (titleList.item(i).getParentNode().equals(doc.getDocumentElement())) {
+				titleEle = (Element)titleList.item(i);
+				break;
+			}
+		}
+		if (titleEle != null)
+		{
+			// Attempt to get the previous topic and process it
+			List<TopicRelationship> prevList = topic.getPrevTopicRelationships();
+			// Create the paragraph/itemizedlist and list of previous relationships.
+			Element rootEle = null;
+			rootEle = doc.createElement("itemizedlist");
+			// Create the title
+			Element linkTitleEle = doc.createElement("title");
+			linkTitleEle.setAttribute("role", "process-previous-title");
+			if (prevList.size() > 1) {
+				linkTitleEle.setTextContent("Previous Steps in ");
+			} else {
+				linkTitleEle.setTextContent("Previous Step in ");
+			}
+			Element titleXrefItem = doc.createElement("link");
+			titleXrefItem.setTextContent(topic.getParent().getTitle());
+			titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+			linkTitleEle.appendChild(titleXrefItem);
+			rootEle.appendChild(linkTitleEle);
+			
+			for (TopicRelationship prev: prevList) {
+				Element prevEle = doc.createElement("para");
+				SpecTopic prevTopic = prev.getSecondaryRelationship();
+				prevEle.setAttribute("role", "process-previous-link");
+				// Add the previous element to either the list or paragraph
+				// Create the link element
+				Element xrefItem = doc.createElement("xref");
+				xrefItem.setAttribute("linkend", prevTopic.getUniqueLinkId(useFixedUrls));
+				prevEle.appendChild(xrefItem);
+				Element listitemEle = doc.createElement("listitem");
+				listitemEle.appendChild(prevEle);
+				rootEle.appendChild(listitemEle);
+			}
+			// Insert the node after the title node
+			Node nextNode = titleEle.getNextSibling();
+			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null) {
+				nextNode = nextNode.getNextSibling();
+			}
+			doc.getDocumentElement().insertBefore(rootEle, nextNode);
+		}
+	}
+	
+	public void processNextRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+		if (topic.getNextTopicRelationships().isEmpty()) return;
+		
+		// Attempt to get the previous topic and process it
+		List<TopicRelationship> nextList = topic.getNextTopicRelationships();
+		// Create the paragraph/itemizedlist and list of next relationships.
+		Element rootEle = null;
+		rootEle = doc.createElement("itemizedlist");
+		
+		// Create the title
+		Element linkTitleEle = doc.createElement("title");
+		linkTitleEle.setAttribute("role", "process-next-title");
+		if (nextList.size() > 1) {
+			linkTitleEle.setTextContent("Next Steps in ");
+		} else {
+			linkTitleEle.setTextContent("Next Step in ");
+		}
+		Element titleXrefItem = doc.createElement("link");
+		titleXrefItem.setTextContent(topic.getParent().getTitle());
+		titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+		linkTitleEle.appendChild(titleXrefItem);
+		rootEle.appendChild(linkTitleEle);
+
+		for (TopicRelationship next: nextList) {
+			Element nextEle = doc.createElement("para");
+			SpecTopic nextTopic = next.getSecondaryRelationship();
+			nextEle.setAttribute("role", "process-next-link");
+			// Add the next element to either the list or paragraph
+			// Create the link element
+			Element xrefItem = doc.createElement("xref");
+			xrefItem.setAttribute("linkend", nextTopic.getUniqueLinkId(useFixedUrls));
+			nextEle.appendChild(xrefItem);
+			Element listitemEle = doc.createElement("listitem");
+			listitemEle.appendChild(nextEle);
+			rootEle.appendChild(listitemEle);
+		}
+		// Add the node to the end of the XML data
+		doc.getDocumentElement().appendChild(rootEle);
+	}
+	
+	/*
+	 * Process's a Content Specs Topic and adds in the prerequisite topic links
+	 */
+	public void processPrerequisiteInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+		if (topic.getPrerequisiteRelationships().isEmpty()) return;
+		
+		// Get the title element so that it can be used later to add the prerequisite topic nodes
+		Element titleEle = null;
+		NodeList titleList = doc.getDocumentElement().getElementsByTagName("title");
+		for (int i = 0; i < titleList.getLength(); i++) {
+			if (titleList.item(i).getParentNode().equals(doc.getDocumentElement())) {
+				titleEle = (Element)titleList.item(i);
+				break;
+			}
+		}
+		
+		if (titleEle != null)
+		{
+			// Create the paragraph and list of prerequisites.
+			Element formalParaEle = doc.createElement("formalpara");
+			formalParaEle.setAttribute("role", "prereqs-list");
+			Element formalParaTitleEle = doc.createElement("title");
+			formalParaTitleEle.setTextContent("Prerequisites:");
+			formalParaEle.appendChild(formalParaTitleEle);
+			List<List<Element>> list = new ArrayList<List<Element>>();
+			
+			// Add the Topic Prerequisites
+			for (TopicRelationship prereq: topic.getPrerequisiteTopicRelationships())
+			{
+				SpecTopic relatedTopic = prereq.getSecondaryRelationship();
+				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
+			}
+			
+			// Add the Level Prerequisites
+			for (TargetRelationship prereq: topic.getPrerequisiteLevelRelationships())
+			{
+				Level relatedLevel = (Level) prereq.getSecondaryElement();
+				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
+			}
+			
+			// Wrap the items into an itemized list
+			List<Element> items = DocbookUtils.wrapItemizedListItemsInPara(doc, list);
+			for (Element ele: items) {
+				formalParaEle.appendChild(ele);
+			}
+			
+			// Add the paragraph and list after the title node
+			Node nextNode = titleEle.getNextSibling();
+			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null) {
+				nextNode = nextNode.getNextSibling();
+			}
+			
+			doc.getDocumentElement().insertBefore(formalParaEle, nextNode);
+		}
+	}
+	
+	public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+		// Create the paragraph and list of prerequisites.
+		if (topic.getRelatedRelationships().isEmpty()) return;
+		Element formalParaEle = doc.createElement("formalpara");
+		formalParaEle.setAttribute("role", "refer-to-list");
+		Element formalParaTitleEle = doc.createElement("title");
+		formalParaTitleEle.setTextContent("See Also:");
+		formalParaEle.appendChild(formalParaTitleEle);
+		List<List<Element>> list = new ArrayList<List<Element>>();
+		
+		// Add the Topic Relationships
+		for (TopicRelationship prereq: topic.getRelatedTopicRelationships()) {
+			SpecTopic relatedTopic = prereq.getSecondaryRelationship();
+			
+			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
+		}
+		
+		// Add the Level Relationships
+		for (TargetRelationship prereq: topic.getRelatedLevelRelationships()) {
+			Level relatedLevel = (Level) prereq.getSecondaryElement();
+			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
+		}
+		
+		// Wrap the items into an itemized list
+		List<Element> items = DocbookUtils.wrapItemizedListItemsInPara(doc, list);
+		for (Element ele: items) {
+			formalParaEle.appendChild(ele);
+		}
+		
+		// Add the paragraph and list after at the end of the xml data
+		doc.getDocumentElement().appendChild(formalParaEle);
+	}
 
 	public static String processDocumentType(final String xml)
 	{
@@ -1023,5 +1213,4 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 
 		return xml;
 	}
-
 }

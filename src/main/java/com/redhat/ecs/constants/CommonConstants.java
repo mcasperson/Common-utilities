@@ -135,4 +135,9 @@ public class CommonConstants
 
 	/** The live Skynet URL */
 	public static final String FULL_SERVER_URL = "http://skynet.usersys.redhat.com:8080/TopicIndex";
+	
+	/**
+	 * The default locale to be used on all new topics
+	 */
+	public static final String DEFAULT_LOCALE = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY) == null ? "en-US" : System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
 }

@@ -57,4 +57,15 @@ public class DocBookUtilities
 
 		return null;
 	}
+
+	/**
+	 * Escapes a title so that it is alphanumeric or has a fullstop, underscore or hyphen only.
+	 * It also removes anything from the front of the title that isn't alphanumeric.
+	 * 
+	 * @param title The title to be escaped
+	 * @return The escaped title string.
+	 */
+	public static String escapeTitle(final String title) {
+		return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9\\._-]", "");
+	}
 }

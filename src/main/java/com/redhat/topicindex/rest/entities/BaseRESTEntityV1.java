@@ -51,7 +51,7 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		
 		if (deepCopy)
 		{
-			clone.revisions = this.revisions.clone(deepCopy);
+			clone.revisions = this.revisions == null ? null : this.revisions.clone(deepCopy);
 		}
 		else
 		{

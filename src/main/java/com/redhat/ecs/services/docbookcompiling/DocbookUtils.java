@@ -3,6 +3,10 @@ package com.redhat.ecs.services.docbookcompiling;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -10,6 +14,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.redhat.ecs.commonutils.DocBookUtilities;
+import com.redhat.ecs.commonutils.ExceptionUtilities;
 
 public class DocbookUtils 
 {
@@ -56,6 +61,19 @@ public class DocbookUtils
 		final String chapterContents = contents==null||contents.length()==0?"":contents;
 		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
 		return "<chapter" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</chapter>";
+	}
+	
+	public static String buildAppendix(final String contents, final String title)
+	{
+		return buildAppendix(contents, title, null);
+	}
+	
+	public static String buildAppendix(final String contents, final String title, final String id)
+	{
+		final String titleContents = title==null||title.length()==0?"":title;
+		final String chapterContents = contents==null||contents.length()==0?"":contents;
+		final String idAttribute = id==null||id.length()==0?"":" id=\"" + id + "\"";
+		return "<appendix" + idAttribute + "><title>" + titleContents + "</title>" + chapterContents + "</appendix>";
 	}
 	
 	public static String buildCleanSection(final String contents, final String title)
@@ -494,5 +512,32 @@ public class DocbookUtils
 		itemizedlist.appendChild(itemizedlistTitle);
 		
 		return itemizedlist;
+	}
+	
+	public static Document wrapDocumentInSection(final Document doc)
+	{
+		if (!doc.getDocumentElement().getNodeName().equals("section"))
+		{
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder;
+			Document newDoc = null;
+			try
+			{
+				dBuilder = dbFactory.newDocumentBuilder();	
+				newDoc = dBuilder.newDocument();
+			}
+			catch(ParserConfigurationException ex)
+			{
+				ExceptionUtilities.handleException(ex);
+			}
+			Element section = newDoc.createElement("section");
+			section.appendChild(doc.importNode(doc.getDocumentElement(), true));
+			newDoc.appendChild(section);
+			return newDoc;
+		}
+		else
+		{
+			return doc;
+		}
 	}
 }

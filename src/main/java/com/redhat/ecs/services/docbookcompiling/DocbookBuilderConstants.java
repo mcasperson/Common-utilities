@@ -87,6 +87,14 @@ public class DocbookBuilderConstants
 	public static final Integer TREEVIEW_CSS_ID = 23;
 	/** The StringConstantsID that represents the jquery_min.js file */
 	public static final Integer JQUERY_MIN_JS_ID = 24;
+	/** The StringConstantsID that represents the Empty Topic template file */
+	public static final Integer CSP_EMPTY_TOPIC_ERROR_XML_ID = 31;
+	/** The StringConstantsID that represents the Invalid Injection Topic template file */
+	public static final Integer CSP_INVALID_INJECTION_TOPIC_ERROR_XML_ID = 32;
+	/** The StringConstantsID that represents the Invalid Validation Topic template file */
+	public static final Integer CSP_INVALID_VALIDATION_TOPIC_ERROR_XML_ID = 33;
+	/** The StringConstantsID that represents the preface.xml file */
+	public static final Integer CSP_PREFACE_XML_ID = 34;
 
 	public static final Integer TREEVIEW_SPRITE_GIF_ID = 1;
 	public static final Integer TREEVIEW_LOADING_GIF_ID = 2;
