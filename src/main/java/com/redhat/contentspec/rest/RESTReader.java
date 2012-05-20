@@ -251,13 +251,22 @@ public class RESTReader {
 				
 				/* We need to expand the all the items in the topic collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
-				final ExpandDataTrunk expandTopics = new ExpandDataTrunk(new ExpandDataDetails("topics")); 
-				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
-				expandTopics.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), 
-						new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")),
-						new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
-				expand.setBranches(CollectionUtilities.toArrayList(expandTopics));
+
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails("topics"));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(TopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
+				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships"));
+				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(TopicV1.TRANSLATEDTOPICS_NAME));
+				
+				/* We need to expand the categories collection on the topic tags */
+				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
+				topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, 
+						new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
+
+				expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
 				
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
@@ -371,17 +380,27 @@ public class RESTReader {
 				
 				PathSegment path = new PathSegmentImpl(query, false);
 				
-				/* We need to expand the all the items in the topic collection */
+				/* We need to expand the all the items in the translatedtopic collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
-				final ExpandDataTrunk expandTopic = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.TOPIC_NAME)); 
-				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics")); 
-				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+
+				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
+				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(TopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(TopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
+				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.TOPIC_NAME));
 				
-				expandTopic.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails(TopicV1.TRANSLATEDTOPICS_NAME))));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
-				expandTranslatedTopics.setBranches(CollectionUtilities.toArrayList(expandTags, expandTopic, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), 
-						new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.ALL_LATEST_OUTGOING_NAME))));
-				expand.setBranches(CollectionUtilities.toArrayList(expandTranslatedTopics));
+				/* We need to expand the categories collection on the topic tags */
+				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+				
+				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
+				
+				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+
+				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
 				
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
@@ -408,42 +427,9 @@ public class RESTReader {
 	 */
 	public TranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final String locale) {
 		try {
-			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true&topicIds=");
-			final String encodedComma = URLEncoder.encode(",", "UTF-8");
-
-			if (!entityCache.containsKeyValue(TranslatedTopicV1.class, id)) {
-				urlVars.append(id + encodedComma);
-			} else {
-				return entityCache.get(TranslatedTopicV1.class, id);
-			}
+			final BaseRestCollectionV1<TranslatedTopicV1> topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
 			
-			String query = urlVars.toString();
-			query = query.substring(0, query.length() - encodedComma.length());
-			
-			/* Add the locale to the query if one was passed */
-			if (locale != null && !locale.isEmpty())
-				query += "&locale1=" + locale + "1";
-			
-			PathSegment path = new PathSegmentImpl(query, false);
-			
-			/* We need to expand the all the items in the topic collection */
-			final ExpandDataTrunk expand = new ExpandDataTrunk();
-			final ExpandDataTrunk expandTopic = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.TOPIC_NAME)); 
-			final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails("translatdtopics")); 
-			final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-			
-			expandTopic.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails(TopicV1.TRANSLATEDTOPICS_NAME))));
-			expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
-			expandTranslatedTopics.setBranches(CollectionUtilities.toArrayList(expandTags, expandTopic, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), 
-					new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.ALL_LATEST_OUTGOING_NAME))));
-			expand.setBranches(CollectionUtilities.toArrayList(expandTranslatedTopics));
-			
-			final String expandString = mapper.writeValueAsString(expand);
-			final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-			BaseRestCollectionV1<TranslatedTopicV1> topics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
-			entityCache.add(topics);
-			
-			return topics.getItems() != null && topics.getItems().size() == 1 ? topics.getItems().get(0) : null;
+			return topics != null && topics.getItems() != null && topics.getItems().size() == 1 ? topics.getItems().get(0) : null;
 		} catch (Exception e) {
 			log.error(ExceptionUtilities.getStackTrace(e));
 		}
