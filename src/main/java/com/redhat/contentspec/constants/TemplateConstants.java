@@ -25,6 +25,14 @@ public class TemplateConstants {
 			"# pubsnumber =\n" +
 			"# Debug = [0|1|2]\n" +
 			"\n" +
+			"# Bug Links = On\n" +
+			"# BZProduct =\n"+
+			"# BZComponent =\n"+
+			"# BZVersion =\n"+
+			"\n" +
+			"# Output Style =\n" +
+			"# Translation Locale =\n"+
+			"\n" +
 			"# Indentation is meaningful. Use 2 spaces.\n" +
 			"\n" +
 			"# These are global tags. Anything declared at this level is inherited by the entire content spec. They will be applied to any new topics created by this content spec. They *will not* be applied to existing topics.\n" +
@@ -160,6 +168,14 @@ public class TemplateConstants {
 			"multiline ]\n" +
 			"# pubsnumber =\n" +
 			"# Debug = [0|1|2]\n" +
+			"\n" +
+			"# Bug Links = On\n" +
+			"# BZProduct =\n"+
+			"# BZComponent =\n"+
+			"# BZVersion =\n"+
+			"\n" +
+			"# Output Style =\n" +
+			"# Translation Locale =\n"+
 			"\n" +
 			"# Indentation is meaningful. Use 2 spaces.\n";
 }

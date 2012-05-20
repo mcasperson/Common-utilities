@@ -86,7 +86,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	 * A regular expression that matches an InjectSequence custom injection
 	 * point
 	 */
-	protected static final String CUSTOM_INJECTION_SEQUENCE_RE =
+	public static final String CUSTOM_INJECTION_SEQUENCE_RE =
 	/*
 	 * start xml comment and 'InjectSequence:' surrounded by optional white
 	 * space
@@ -101,7 +101,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	"\\s*";
 
 	/** A regular expression that matches an InjectList custom injection point */
-	protected static final String CUSTOM_INJECTION_LIST_RE =
+	public static final String CUSTOM_INJECTION_LIST_RE =
 	/* start xml comment and 'InjectList:' surrounded by optional white space */
 	"\\s*InjectList:\\s*" +
 	/*
@@ -112,7 +112,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	/* xml comment end */
 	"\\s*";
 
-	protected static final String CUSTOM_INJECTION_LISTITEMS_RE =
+	public static final String CUSTOM_INJECTION_LISTITEMS_RE =
 	/* start xml comment and 'InjectList:' surrounded by optional white space */
 	"\\s*InjectListItems:\\s*" +
 	/*
@@ -123,7 +123,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	/* xml comment end */
 	"\\s*";
 
-	protected static final String CUSTOM_ALPHA_SORT_INJECTION_LIST_RE =
+	public static final String CUSTOM_ALPHA_SORT_INJECTION_LIST_RE =
 	/*
 	 * start xml comment and 'InjectListAlphaSort:' surrounded by optional white
 	 * space
@@ -138,7 +138,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	"\\s*";
 
 	/** A regular expression that matches an Inject custom injection point */
-	protected static final String CUSTOM_INJECTION_SINGLE_RE =
+	public static final String CUSTOM_INJECTION_SINGLE_RE =
 	/* start xml comment and 'Inject:' surrounded by optional white space */
 	"\\s*Inject:\\s*" +
 	/* one digit block */
@@ -147,7 +147,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	"\\s*";
 
 	/** A regular expression that matches an Inject Content Fragment */
-	protected static final String INJECT_CONTENT_FRAGMENT_RE =
+	public static final String INJECT_CONTENT_FRAGMENT_RE =
 	/* start xml comment and 'Inject:' surrounded by optional white space */
 	"\\s*InjectText:\\s*" +
 	/* one digit block */
@@ -156,7 +156,7 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	"\\s*";
 
 	/** A regular expression that matches an Inject Content Fragment */
-	protected static final String INJECT_TITLE_FRAGMENT_RE =
+	public static final String INJECT_TITLE_FRAGMENT_RE =
 	/* start xml comment and 'Inject:' surrounded by optional white space */
 	"\\s*InjectTitle:\\s*" +
 	/* one digit block */

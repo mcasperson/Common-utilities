@@ -2,6 +2,7 @@ package com.redhat.ecs.commonutils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +35,18 @@ public class CollectionUtilities
 	{
 		final ArrayList<T> retValue = new ArrayList<T>();
 		for (final T item : set)
+			retValue.add(item);
+		return retValue;
+	}
+	
+	/**
+	 * @param items The Collection of items to be converted to an ArrayList
+	 * @return An ArrayList containing the elements in the set
+	 */
+	public static <T> ArrayList<T> toArrayList(final Collection<T> items)
+	{
+		final ArrayList<T> retValue = new ArrayList<T>();
+		for (final T item : items)
 			retValue.add(item);
 		return retValue;
 	}
@@ -101,6 +114,18 @@ public class CollectionUtilities
 		{
 			if (stringBuffer.length() != 0)
 				stringBuffer.append(",");
+			stringBuffer.append(element.toString());
+		}
+		return stringBuffer.toString();
+	}
+	
+	public static <T> String toSeperatedString(final List<T> list, final String separator)
+	{	
+		final StringBuffer stringBuffer = new StringBuffer();
+		for (final T element : list)
+		{
+			if (stringBuffer.length() != 0)
+				stringBuffer.append(separator);
 			stringBuffer.append(element.toString());
 		}
 		return stringBuffer.toString();
