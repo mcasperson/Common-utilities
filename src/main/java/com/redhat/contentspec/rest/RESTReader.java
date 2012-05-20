@@ -348,7 +348,7 @@ public class RESTReader {
 		
 		try {
 			final BaseRestCollectionV1<TranslatedTopicV1> topics = new BaseRestCollectionV1<TranslatedTopicV1>();
-			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true&topicIds=");
+			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;topicIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 			
 			for (Integer id: ids) {
@@ -361,20 +361,20 @@ public class RESTReader {
 			
 			String query = urlVars.toString();
 			
-			if (query.length() != "query;latestTranslations=true&topicIds=".length())
+			if (query.length() != "query;latestTranslations=true;topicIds=".length())
 			{
 				query = query.substring(0, query.length() - encodedComma.length());
 				
 				/* Add the locale to the query if one was passed */
 				if (locale != null && !locale.isEmpty())
-					query += "&locale1=" + locale + "1";
+					query += ";locale1=" + locale + "1";
 				
 				PathSegment path = new PathSegmentImpl(query, false);
 				
 				/* We need to expand the all the items in the topic collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTopic = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.TOPIC_NAME)); 
-				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails("translatdtopics")); 
+				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics")); 
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
 				
 				expandTopic.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails(TopicV1.TRANSLATEDTOPICS_NAME))));

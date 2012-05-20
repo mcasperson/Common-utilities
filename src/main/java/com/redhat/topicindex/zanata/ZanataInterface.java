@@ -22,24 +22,29 @@ import com.redhat.ecs.constants.CommonConstants;
 public class ZanataInterface
 {
 	private static final ZanataDetails details = new ZanataDetails();
+	private static final ZanataInterface zanataInterface = new ZanataInterface();
 	
-	public static final ZanataProxyFactory proxyFactory;
-	static {
+	public static final ZanataInterface getInstance()
+	{
+		return zanataInterface;
+	}
+	
+	private final ZanataProxyFactory proxyFactory;
+	
+	public ZanataInterface() {
 		URI URI = null;
 		try {
 			URI = new URI(details.getServer());
 		} catch (URISyntaxException e) {
 		}
 		final VersionInfo versionInfo = VersionUtility.getVersionInfo(ZanataProxyFactory.class);
-		if (versionInfo.getBuildTimeStamp() == null || versionInfo.getBuildTimeStamp().isEmpty() || versionInfo.getBuildTimeStamp().equals("unknown"))
-			versionInfo.setBuildTimeStamp("20120301-0949");
 		if (versionInfo.getVersionNo() == null || versionInfo.getVersionNo().isEmpty() || versionInfo.getVersionNo().equals("unknown"))
 			versionInfo.setVersionNo("1.5.0");
-		
+				
 		proxyFactory = new ZanataProxyFactory(URI, details.getUsername(), details.getToken(), versionInfo);
 	}
 	
-	public static boolean getZanataResourceExists(final String id)
+	public boolean getZanataResourceExists(final String id)
 	{
 		try
 		{
@@ -59,7 +64,7 @@ public class ZanataInterface
 		return false;
 	}
 	
-	public static Resource getZanataResource(final String id)
+	public Resource getZanataResource(final String id)
 	{
 		try
 		{
@@ -86,7 +91,7 @@ public class ZanataInterface
 		return null;
 	}
 	
-	public static List<ResourceMeta> getZanataResources()
+	public List<ResourceMeta> getZanataResources()
 	{
 		try
 		{
@@ -113,7 +118,7 @@ public class ZanataInterface
 		return null;
 	}
 
-	public static void createFile(final Resource resource)
+	public void createFile(final Resource resource)
 	{
 		try
 		{
@@ -141,7 +146,7 @@ public class ZanataInterface
 		}
 	}
 	
-	public static boolean getTranslationsExists(final String id, final LocaleId locale)
+	public boolean getTranslationsExists(final String id, final LocaleId locale)
 	{
 		try
 		{
@@ -161,7 +166,7 @@ public class ZanataInterface
 		return false;
 	}
 
-	public static TranslationsResource getTranslations(final String id, final LocaleId locale)
+	public TranslationsResource getTranslations(final String id, final LocaleId locale)
 	{
 		try
 		{
@@ -182,7 +187,7 @@ public class ZanataInterface
 		return null;
 	}
 	
-	public static TranslationsResource deleteResource(final String id)
+	public TranslationsResource deleteResource(final String id)
 	{
 		try
 		{

@@ -94,6 +94,7 @@
   		<groupId>org.jboss.resteasy</groupId>
   		<artifactId>resteasy-jackson-provider</artifactId>
   		<version>2.2.3.GA</version>
+  		<scope>provided</scope>
   	</dependency>
   	
   	<!-- Zanata Libraries -->
