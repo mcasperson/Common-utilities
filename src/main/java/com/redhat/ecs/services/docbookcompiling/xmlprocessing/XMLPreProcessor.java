@@ -301,62 +301,65 @@ public class XMLPreProcessor<T extends BaseTopicV1<T>>
 	 */
 	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{		
-		/* SIMPLESECT TO HOLD OTHER LINKS */
-		final Element bugzillaSection = document.createElement("simplesect");
-		document.getDocumentElement().appendChild(bugzillaSection);
-
-		final Element bugzillaSectionTitle = document.createElement("title");
-		bugzillaSectionTitle.setTextContent("");
-		bugzillaSection.appendChild(bugzillaSectionTitle);
-
+		if ((docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink()) || searchTagsUrl != null)
+		{
+			/* SIMPLESECT TO HOLD OTHER LINKS */
+			final Element bugzillaSection = document.createElement("simplesect");
+			document.getDocumentElement().appendChild(bugzillaSection);
+	
+			final Element bugzillaSectionTitle = document.createElement("title");
+			bugzillaSectionTitle.setTextContent("");
+			bugzillaSection.appendChild(bugzillaSectionTitle);
+	
+			// SURVEY LINK
+			if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink())
+			{
+				final Element surveyPara = document.createElement("para");
+				surveyPara.setAttribute("role", DocbookBuilderConstants.ROLE_CREATE_BUG_PARA);
+				bugzillaSection.appendChild(surveyPara);
+	
+				final Text startSurveyText = document.createTextNode("Thank you for evaluating the new documentation format for JBoss Enterprise Application Platform. Let us know what you think by taking a short ");
+				surveyPara.appendChild(startSurveyText);
+	
+				final Element surveyULink = document.createElement("ulink");
+				surveyPara.appendChild(surveyULink);
+				surveyULink.setTextContent("survey");
+				surveyULink.setAttribute("url", "https://www.keysurvey.com/survey/380730/106f/");
+	
+				final Text endSurveyText = document.createTextNode(".");
+				surveyPara.appendChild(endSurveyText);
+			}
+	
+			/* searchTagsUrl will be null for internal (i.e. HTML rendering) builds */
+			if (searchTagsUrl != null)
+			{
+				// VIEW IN SKYNET
+	
+				final Element skynetElement = document.createElement("remark");
+				skynetElement.setAttribute("role", DocbookBuilderConstants.ROLE_VIEW_IN_SKYNET_PARA);
+				bugzillaSection.appendChild(skynetElement);
+	
+				final Element skynetLinkULink = document.createElement("ulink");
+				skynetElement.appendChild(skynetLinkULink);
+				skynetLinkULink.setTextContent("View in Skynet");
+				skynetLinkULink.setAttribute("url", specTopic.getTopic().getSkynetURL());
+	
+				// SKYNET VERSION
+	
+				final Element buildVersionElement = document.createElement("remark");
+				buildVersionElement.setAttribute("role", DocbookBuilderConstants.ROLE_BUILD_VERSION_PARA);
+				bugzillaSection.appendChild(buildVersionElement);
+	
+				final Element skynetVersionElementULink = document.createElement("ulink");
+				buildVersionElement.appendChild(skynetVersionElementULink);
+				skynetVersionElementULink.setTextContent("Built with " + buildName);
+				skynetVersionElementULink.setAttribute("url", searchTagsUrl);
+			}
+		}
+		
 		// BUGZILLA LINK
 		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
 			processTopicBugzillaLink(specTopic, document, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
-		}
-
-		// SURVEY LINK
-		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink())
-		{
-			final Element surveyPara = document.createElement("para");
-			surveyPara.setAttribute("role", DocbookBuilderConstants.ROLE_CREATE_BUG_PARA);
-			bugzillaSection.appendChild(surveyPara);
-
-			final Text startSurveyText = document.createTextNode("Thank you for evaluating the new documentation format for JBoss Enterprise Application Platform. Let us know what you think by taking a short ");
-			surveyPara.appendChild(startSurveyText);
-
-			final Element surveyULink = document.createElement("ulink");
-			surveyPara.appendChild(surveyULink);
-			surveyULink.setTextContent("survey");
-			surveyULink.setAttribute("url", "https://www.keysurvey.com/survey/380730/106f/");
-
-			final Text endSurveyText = document.createTextNode(".");
-			surveyPara.appendChild(endSurveyText);
-		}
-
-		/* searchTagsUrl will be null for internal (i.e. HTML rendering) builds */
-		if (searchTagsUrl != null)
-		{
-			// VIEW IN SKYNET
-
-			final Element skynetElement = document.createElement("remark");
-			skynetElement.setAttribute("role", DocbookBuilderConstants.ROLE_VIEW_IN_SKYNET_PARA);
-			bugzillaSection.appendChild(skynetElement);
-
-			final Element skynetLinkULink = document.createElement("ulink");
-			skynetElement.appendChild(skynetLinkULink);
-			skynetLinkULink.setTextContent("View in Skynet");
-			skynetLinkULink.setAttribute("url", specTopic.getTopic().getSkynetURL());
-
-			// SKYNET VERSION
-
-			final Element buildVersionElement = document.createElement("remark");
-			buildVersionElement.setAttribute("role", DocbookBuilderConstants.ROLE_BUILD_VERSION_PARA);
-			bugzillaSection.appendChild(buildVersionElement);
-
-			final Element skynetVersionElementULink = document.createElement("ulink");
-			buildVersionElement.appendChild(skynetVersionElementULink);
-			skynetVersionElementULink.setTextContent("Built with " + buildName);
-			skynetVersionElementULink.setAttribute("url", searchTagsUrl);
 		}
 	}
 
