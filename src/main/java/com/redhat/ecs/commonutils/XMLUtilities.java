@@ -58,7 +58,7 @@ public class XMLUtilities
 	public static final String END_CDATA_RE = "\\]\\]>";
 	public static final String END_CDATA_REPLACE = "]]&gt;";
 	public static final String XML_ENTITY_NAMED_GROUP = "name";
-	public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[A-Za-z0-9]*?);";
+	public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);";
 	public static final String DOCTYPE_START = "<!DOCTYPE";
 	public static final String DOCTYPE_END = ">";
 	public static final String PREAMBLE_START = "<?xml";
