@@ -808,7 +808,7 @@ public class ContentSpec {
 		for (Comment baseComment: baseComments) {
 			output += baseComment.toString();
 		}
-		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off");
+		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
 		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) +
 				(bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) +
 				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"));
