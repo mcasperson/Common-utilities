@@ -586,6 +586,9 @@ public class Level extends SpecNode {
 		case CHAPTER:
 			preFix = "chap-";
 			break;
+		case PART:
+			preFix = "part-";
+			break;
 		default:
 			preFix = "";
 		}
