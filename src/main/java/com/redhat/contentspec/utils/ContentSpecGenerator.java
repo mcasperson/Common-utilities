@@ -159,6 +159,7 @@ public class ContentSpecGenerator
 			retValue.setDtd("Docbook 4.5");
 			retValue.setOutputStyle(CSConstants.SKYNET_OUTPUT_FORMAT);
 			retValue.setCopyrightHolder("Red Hat, Inc");
+			retValue.setInjectSurveyLinks(docbookBuildingOptions.getInsertSurveyLink() == null ? false : docbookBuildingOptions.getInsertSurveyLink());
 			
 			if (clazz == TranslatedTopicV1.class)
 				retValue.setLocale(locale);
