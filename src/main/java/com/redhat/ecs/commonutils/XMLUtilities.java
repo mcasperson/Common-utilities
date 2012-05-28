@@ -613,12 +613,21 @@ public class XMLUtilities
 					if (startedWithWhiteSpace && !firstNotInlinedTextNode)
 						trimmedNodeValue = " " + trimmedNodeValue;
 
-					if (endedWithWhitespace)
+					/* Only add whitespace if the node isn't the last node */
+					if (endedWithWhitespace && node.getNextSibling() != null)
 						trimmedNodeValue += " ";
 
 					retValue.append(trimmedNodeValue);
 
 					return retValue.toString();
+				}
+				/* 
+				 * Allow for spaces between nodes. i.e.
+				 * <literal>Test</literal> <literal>Test2</literal>
+				 */
+				else if (node.getNodeValue().matches("^[ ]*$") && node.getNextSibling() != null)
+				{
+					return new String(" ");
 				}
 
 				return new String();
