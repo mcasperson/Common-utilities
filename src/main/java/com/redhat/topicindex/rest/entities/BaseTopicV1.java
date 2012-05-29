@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.w3c.dom.Document;
@@ -195,7 +194,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 	 * @return the XML contained in a new element, or null if the XML is not
 	 *         valid
 	 */
-	@XmlTransient
 	@JsonIgnore
 	public String getXMLWithNewContainer(final String containerName)
 	{
@@ -221,7 +219,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return XMLUtilities.convertDocumentToString(document);
 	}
 
-	@XmlTransient
 	@JsonIgnore
 	public String getXMLWithNoContainer(final Boolean includeTitle)
 	{
@@ -262,7 +259,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public String getXrefPropertyOrId(final Integer propertyTagId)
 	{
@@ -277,7 +273,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		}
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public String getCommaSeparatedTagList()
 	{
@@ -310,7 +305,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return tagsList;
 	}
 
-	@XmlTransient
 	@JsonIgnore
 	private TreeMap<NameIDSortMap, ArrayList<TagV1>> getCategoriesMappedToTags()
 	{
@@ -352,7 +346,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return tags;
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public List<TagV1> getTagsInCategoriesByID(final List<Integer> categories)
 	{
@@ -376,7 +369,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return retValue;
 	}
 
-	@XmlTransient
 	@JsonIgnore
 	public int getTagsInCategory(final Integer categoryId)
 	{
@@ -394,7 +386,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return retValue;
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public T getRelatedTopicByID(final Integer id)
 	{
@@ -405,14 +396,12 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return null;
 	}
 
-	@XmlTransient
 	@JsonIgnore
 	public boolean isRelatedTo(final Integer id)
 	{
 		return getRelatedTopicByID(id) != null;
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public boolean isTaggedWith(final Integer tagID)
 	{
@@ -428,7 +417,6 @@ public abstract class BaseTopicV1<T extends BaseTopicV1<T>> extends BaseRESTEnti
 		return false;
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public boolean isDummyTopic()
 	{

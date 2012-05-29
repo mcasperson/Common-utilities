@@ -1,7 +1,6 @@
 package com.redhat.topicindex.rest.entities;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 
@@ -44,7 +43,6 @@ public abstract class BaseRESTEntityWithPropertiesV1<T extends BaseRESTEntityV1<
 		setParamaterToConfigured(PROPERTIES_NAME);
 	}
 
-	@XmlTransient
 	public PropertyTagV1 getProperty(final Integer propertyTagId)
 	{
 		if (this.properties != null && this.properties.getItems() != null)
