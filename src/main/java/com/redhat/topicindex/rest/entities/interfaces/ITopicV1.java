@@ -2,12 +2,9 @@ package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
-
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.TopicV1;
 
-@XmlSeeAlso(TopicV1.class)
+
 public interface ITopicV1 extends IBaseTopicV1<ITopicV1>
 {
 	public static final String DESCRIPTION_NAME = "description";
