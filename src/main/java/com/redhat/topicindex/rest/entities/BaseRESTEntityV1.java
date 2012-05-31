@@ -13,8 +13,6 @@ import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
  */
 public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implements IBaseRESTEntityV1<T>
 {
-	public static final String REVISIONS_NAME = "revisions";
-	
 	/** The id of the entity */
 	private Integer id;
 	/** The revision of the entity */
@@ -74,7 +72,7 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 			configuredParameters.add(paramater);
 	}
 	
-	public boolean isParameterSet(final String parameter)
+	public boolean hasParameterSet(final String parameter)
 	{
 		return getConfiguredParameters() != null && getConfiguredParameters().contains(parameter);
 	}

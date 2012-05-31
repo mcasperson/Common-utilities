@@ -6,6 +6,8 @@ import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 
 public interface IBaseRESTEntityV1<T extends IBaseRESTEntityV1<T>>
 {
+	public static final String REVISIONS_NAME = "revisions";
+	
 	Integer getId();
 	void setId(Integer id);
 	
@@ -52,4 +54,8 @@ public interface IBaseRESTEntityV1<T extends IBaseRESTEntityV1<T>>
 	 * @return a cloned copy of this object.
 	 */
 	T clone(final boolean deepCopy);
+	
+	boolean hasParameterSet(final String parameter);
+	
+	void setLinks(final String baseUrl, final String restBasePath, final String dataType, final Object id);
 }

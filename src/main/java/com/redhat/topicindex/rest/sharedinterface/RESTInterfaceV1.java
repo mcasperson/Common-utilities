@@ -18,7 +18,6 @@ import com.redhat.topicindex.rest.entities.ImageV1;
 import com.redhat.topicindex.rest.entities.RoleV1;
 import com.redhat.topicindex.rest.entities.StringConstantV1;
 import com.redhat.topicindex.rest.entities.UserV1;
-import com.redhat.topicindex.rest.entities.TranslatedTopicStringV1;
 import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.IProjectV1;
 import com.redhat.topicindex.rest.entities.interfaces.IPropertyTagV1;
@@ -63,11 +62,11 @@ public interface RESTInterfaceV1
 	/* TRANSLATEDTOPICSTING FUNCTIONS */
 	/**
 	 * @param id
-	 *            The TranslatedTopicStringV1 ID
+	 *            The ITranslatedTopicStringV1 ID
 	 * @param expand
 	 *            The expansion options
 	 * @return A JSON representation of the requested
-	 *         TranslatedTopicStringV1 object
+	 *         ITranslatedTopicStringV1 object
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
@@ -75,7 +74,7 @@ public interface RESTInterfaceV1
 	@Path("/translatedtopicstring/get/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public TranslatedTopicStringV1 getJSONTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public ITranslatedTopicStringV1 getJSONTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
 	@GET
 	@Path("/translatedtopicstring/get/jsonp/{id}")
@@ -85,7 +84,7 @@ public interface RESTInterfaceV1
 
 	/**
 	 * @param expand
-	 * @return JSON representations of all the TranslatedTopicStringV1
+	 * @return JSON representations of all the ITranslatedTopicStringV1
 	 *         entities that could be found in the database
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
@@ -102,20 +101,20 @@ public interface RESTInterfaceV1
 	public String getJSONPTranslatedTopicStrings(@QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Updates a single TranslatedTopicStringV1 entity.
+	 * Updates a single ITranslatedTopicStringV1 entity.
 	 * 
 	 * @param expand
 	 *            The expansion options
 	 * @param dataObject
-	 *            The new details of the TranslatedTopicStringV1
+	 *            The new details of the ITranslatedTopicStringV1
 	 *            entity. The id property of the entity needs to be set. In
 	 *            addition to setting the properties of the
-	 *            TranslatedTopicStringV1 entity, the
+	 *            ITranslatedTopicStringV1 entity, the
 	 *            configuredParameters variable needs to also needs to reflect
 	 *            those properties that are to be updated. This is to
 	 *            distinguish between an unset property (which is ignored), and
 	 *            a property that might specifically be set to null.
-	 * @return A JSON representation of the TranslatedTopicStringV1
+	 * @return A JSON representation of the ITranslatedTopicStringV1
 	 *         after is updated
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
@@ -124,25 +123,25 @@ public interface RESTInterfaceV1
 	@Path("/translatedtopicstring/put/json")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public TranslatedTopicStringV1 updateJSONTranslatedTopicString(@QueryParam("expand") final String expand, final TranslatedTopicStringV1 dataObject) throws InvalidParameterException, InternalProcessingException;
+	public ITranslatedTopicStringV1 updateJSONTranslatedTopicString(@QueryParam("expand") final String expand, final ITranslatedTopicStringV1 dataObject) throws InvalidParameterException, InternalProcessingException;
 	
 	@PUT
 	@Path("/translatedtopicstring/put/jsonp")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updateJSONPTranslatedTopicString(@QueryParam("expand") final String expand, final TranslatedTopicStringV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
+	public String updateJSONPTranslatedTopicString(@QueryParam("expand") final String expand, final ITranslatedTopicStringV1 dataObject, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Updates a collection of TranslatedTopicStringV1 entities.
+	 * Updates a collection of ITranslatedTopicStringV1 entities.
 	 * 
 	 * @param expand
 	 *            The expansion options
 	 * @param dataObjects
-	 *            A collection of TranslatedTopicStringV1 entities,
+	 *            A collection of ITranslatedTopicStringV1 entities,
 	 *            each with their id property set, each with the new properties
 	 *            to be saved, and each with their configuredParameters property
 	 *            set.
-	 * @return The details of the TranslatedTopicStringV1 entities after they have been updated.
+	 * @return The details of the ITranslatedTopicStringV1 entities after they have been updated.
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
@@ -159,10 +158,10 @@ public interface RESTInterfaceV1
 	public String updateJSONPTranslatedTopicStrings(@QueryParam("expand") final String expand, final BaseRestCollectionV1<ITranslatedTopicStringV1> dataObjects, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Deletes a single TranslatedTopicStringV1 entity. 
+	 * Deletes a single ITranslatedTopicStringV1 entity. 
 	 * @param id The id of the entity to be deleted.
 	 * @param expand The expansion options.
-	 * @return The details of the deleted TranslatedTopicStringV1 entity.
+	 * @return The details of the deleted ITranslatedTopicStringV1 entity.
 	 * @HTTP 400 if the id is not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */
@@ -170,7 +169,7 @@ public interface RESTInterfaceV1
 	@Path("/translatedtopicstring/delete/json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
-	public TranslatedTopicStringV1 deleteJSONTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
+	public ITranslatedTopicStringV1 deleteJSONTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 	
 	@DELETE
 	@Path("/translatedtopicstring/delete/jsonp/{id}")
@@ -179,10 +178,10 @@ public interface RESTInterfaceV1
 	public String deleteJSONPTranslatedTopicString(@PathParam("id") final Integer id, @QueryParam("expand") final String expand, @QueryParam("callback") final String callback) throws InvalidParameterException, InternalProcessingException;
 
 	/**
-	 * Deletes a collection of TranslatedTopicStringV1 entities. 
+	 * Deletes a collection of ITranslatedTopicStringV1 entities. 
 	 * @param ids A semicolon separated list of ids to be deleted, starting with the prefix "ids;" e.g. ids;1;13;652
 	 * @param expand The expansion options
-	 * @return The details of the deleted TranslatedTopicStringV1 entities. 
+	 * @return The details of the deleted ITranslatedTopicStringV1 entities. 
 	 * @HTTP 400 if any of the ids are not valid
 	 * @HTTP 500 if there was an unexpected internal error
 	 */

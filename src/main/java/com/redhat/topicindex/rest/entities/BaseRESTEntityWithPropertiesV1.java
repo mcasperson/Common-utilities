@@ -11,7 +11,6 @@ import com.redhat.topicindex.rest.entities.interfaces.IPropertyTagV1;
  */
 public abstract class BaseRESTEntityWithPropertiesV1<T extends IBaseRESTEntityV1<T>> extends BaseRESTEntityV1<T> implements IBaseRESTEntityWithPropertiesV1<T>
 {
-	public static final String PROPERTIES_NAME = "properties";
 	private BaseRestCollectionV1<IPropertyTagV1> properties = null;
 	
 	public void cloneInto(final BaseRESTEntityWithPropertiesV1<T> clone, final boolean deepCopy)

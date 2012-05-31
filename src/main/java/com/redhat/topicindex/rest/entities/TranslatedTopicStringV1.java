@@ -5,10 +5,6 @@ import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 
 public class TranslatedTopicStringV1 extends BaseRESTEntityV1<ITranslatedTopicStringV1> implements ITranslatedTopicStringV1
 {
-	public static final String ORIGINALSTRING_NAME = "originalstring";
-	public static final String TRANSLATEDSTRING_NAME = "translatedstring";
-	public static final String TRANSLATEDTOPIC_NAME = "translatedtopic";
-	
 	private ITranslatedTopicV1 translatedTopic;
 	private String originalString;
 	private String translatedString;

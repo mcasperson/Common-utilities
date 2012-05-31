@@ -217,9 +217,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 	 * @return the XML contained in a new element, or null if the XML is not
 	 *         valid
 	 */
-	@XmlTransient
-	@JsonIgnore
-	public String getXMLWithNewContainer(final String containerName)
+	public String returnXMLWithNewContainer(final String containerName)
 	{
 		assert containerName != null : "The containerName parameter can not be null";
 
@@ -238,9 +236,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return XMLUtilities.convertDocumentToString(document);
 	}
 
-	@XmlTransient
-	@JsonIgnore
-	public String getXMLWithNoContainer(final Boolean includeTitle)
+	public String returnXMLWithNoContainer(final Boolean includeTitle)
 	{
 		final Document document = XMLUtilities.convertStringToDocument(this.xml);
 

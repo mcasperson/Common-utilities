@@ -63,4 +63,6 @@ public interface IBaseTopicV1<T extends IBaseRESTEntityWithPropertiesV1<T>> exte
 	String returnXrefPropertyOrId(final Integer propertyTagId);
 	boolean hasRelationshipTo(final Integer id);
 	T returnRelatedTopicByID(final Integer id);
+	String returnXMLWithNoContainer(final Boolean includeTitle);
+	String returnXMLWithNewContainer(final String containerName);
 }

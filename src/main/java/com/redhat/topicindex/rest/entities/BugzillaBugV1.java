@@ -4,10 +4,6 @@ import com.redhat.topicindex.rest.entities.interfaces.IBugzillaBugV1;
 
 public class BugzillaBugV1 extends BaseRESTEntityV1<IBugzillaBugV1> implements IBugzillaBugV1
 {
-	public static final String BUG_ID = "bugzillabugid";
-	public static final String BUG_ISOPEN = "bugisopen";
-	public static final String BUG_SUMMARY = "bugsummary";
-
 	private Integer bugId;
 	private Boolean isOpen;
 	private String summary;
