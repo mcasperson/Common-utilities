@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 
 /**
  * Stores information on the errors and warnings that were detected in a topic.
  */
-public class TopicErrorData<T extends BaseTopicV1<T>>
+public class TopicErrorData<T extends IBaseTopicV1<T>>
 {
 	private T topic;
 	private Map<Integer, ArrayList<String>> errors = new HashMap<Integer, ArrayList<String>>();

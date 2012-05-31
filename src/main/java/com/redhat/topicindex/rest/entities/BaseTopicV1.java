@@ -377,7 +377,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 			{
 				for (final ITagV1 tag : this.tags.getItems())
 				{
-					if (tag.containedInCatgeory(categoryId))
+					if (tag.containedInCategory(categoryId))
 					{
 						if (!retValue.contains(tag))
 							retValue.add(tag);
@@ -398,7 +398,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		{
 			for (final ITagV1 tag : this.getTags().getItems())
 			{
-				if (tag.containedInCatgeory(categoryId))
+				if (tag.containedInCategory(categoryId))
 					++retValue;
 			}
 		}

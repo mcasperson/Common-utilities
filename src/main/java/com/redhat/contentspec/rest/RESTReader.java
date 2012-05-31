@@ -861,7 +861,7 @@ public class RESTReader
 		{
 			for (ITagV1 tag : tags)
 			{
-				if (tag.containedInCatgeory(CSConstants.TYPE_CATEGORY_ID) && tag.getName().equals(name))
+				if (tag.containedInCategory(CSConstants.TYPE_CATEGORY_ID) && tag.getName().equals(name))
 				{
 					return tag;
 				}
@@ -902,7 +902,7 @@ public class RESTReader
 			{
 				for (ITagV1 tag : tags)
 				{
-					if (tag.containedInCatgeory(CSConstants.WRITER_CATEGORY_ID))
+					if (tag.containedInCategory(CSConstants.WRITER_CATEGORY_ID))
 						return tag;
 				}
 			}

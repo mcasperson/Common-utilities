@@ -1,12 +1,12 @@
 package com.redhat.topicindex.component.docbookrenderer.structures;
 
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 
 /**
  * This class is used to map an image referenced inside a topic to the topic
  * itself. This is mostly for error reporting purposes.
  */
-public class TopicImageData<T extends BaseTopicV1<T>>
+public class TopicImageData<T extends IBaseTopicV1<T>>
 {
 	private T topic;
 	private String imageName;

@@ -14,7 +14,6 @@ import com.redhat.contentspec.constants.CSConstants;
 import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.TopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
 import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
 import com.redhat.topicindex.rest.exceptions.InvalidParameterException;
@@ -36,11 +35,11 @@ public class TopicPool {
 		this.client = client;
 	}
 	
-	public void addNewTopic(TopicV1 topic) {
+	public void addNewTopic(final ITopicV1 topic) {
 		newTopicPool.addItem(topic);
 	}
 	
-	public void addUpdatedTopic(TopicV1 topic) {
+	public void addUpdatedTopic(final ITopicV1 topic) {
 		updatedTopicPool.addItem(topic);
 	}
 	

@@ -65,4 +65,5 @@ public interface IBaseTopicV1<T extends IBaseRESTEntityWithPropertiesV1<T>> exte
 	T returnRelatedTopicByID(final Integer id);
 	String returnXMLWithNoContainer(final Boolean includeTitle);
 	String returnXMLWithNewContainer(final String containerName);
+	boolean isDummyTopic();
 }

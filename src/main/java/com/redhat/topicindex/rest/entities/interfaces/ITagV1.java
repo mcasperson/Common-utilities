@@ -39,5 +39,5 @@ public interface ITagV1 extends IBaseRESTEntityWithPropertiesV1<ITagV1>
 	void setProjects(BaseRestCollectionV1<IProjectV1> categories);
 	void explicitSetProjects(BaseRestCollectionV1<IProjectV1> categories);
 	
-	boolean containedInCatgeory(Integer categoryId);
+	boolean containedInCategory(Integer categoryId);
 }

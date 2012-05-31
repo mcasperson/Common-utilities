@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
 import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 
 /**
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase<T extends BaseTopicV1<T>>
+public class TopicErrorDatabase<T extends IBaseTopicV1<T>>
 {
 	public static final Integer ERROR = 1;
 	public static final Integer WARNING = 5;

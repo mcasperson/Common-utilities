@@ -139,7 +139,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		return this.getId().equals(otherTag.getId());			
 	}
 	
-	public boolean containedInCatgeory(final Integer categoryId)
+	public boolean containedInCategory(final Integer categoryId)
 	{
 		if (this.getCategories() != null && this.getCategories().getItems() != null)
 		{
