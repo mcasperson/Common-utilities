@@ -10,13 +10,6 @@ import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
  */
 public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITagV1
 {
-	public static final String NAME_NAME = "name";
-	public static final String DESCRIPTION_NAME = "description";
-	public static final String CATEGORIES_NAME = "categories";
-	public static final String PARENT_TAGS_NAME = "parenttags";
-	public static final String CHILD_TAGS_NAME = "childtags";
-	public static final String PROJECTS_NAME = "projects";
-
 	private String name = null;
 	private String description = null;
 	private BaseRestCollectionV1<ICategoryV1> categories = new BaseRestCollectionV1<ICategoryV1>();
@@ -62,7 +55,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -78,7 +71,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
@@ -94,7 +87,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		this.categories = categories;
 	}
 	
-	public void setCategoriesExplicit(final BaseRestCollectionV1<ICategoryV1> categories)
+	public void explicitSetCategories(final BaseRestCollectionV1<ICategoryV1> categories)
 	{
 		this.categories = categories;
 		this.setParamaterToConfigured(CATEGORIES_NAME);
@@ -110,7 +103,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		this.parentTags = parentTags;
 	}
 	
-	public void setParentTagsExplicit(final BaseRestCollectionV1<ITagV1> parentTags)
+	public void explicitSetParentTags(final BaseRestCollectionV1<ITagV1> parentTags)
 	{
 		this.parentTags = parentTags;
 		this.setParamaterToConfigured(PARENT_TAGS_NAME);
@@ -126,7 +119,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		this.childTags = childTags;
 	}
 	
-	public void setChildTagsExplicit(final BaseRestCollectionV1<ITagV1> childTags)
+	public void explicitSetChildTags(final BaseRestCollectionV1<ITagV1> childTags)
 	{
 		this.childTags = childTags;
 		this.setParamaterToConfigured(CHILD_TAGS_NAME);
@@ -146,7 +139,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		return this.getId().equals(otherTag.getId());			
 	}
 	
-	public boolean isInCategory(final Integer categoryId)
+	public boolean containedInCatgeory(final Integer categoryId)
 	{
 		if (this.getCategories() != null && this.getCategories().getItems() != null)
 		{
@@ -182,7 +175,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITa
 		this.projects = projects;
 	}
 	
-	public void setProjectsExplicit(final BaseRestCollectionV1<IProjectV1> projects)
+	public void explicitSetProjects(final BaseRestCollectionV1<IProjectV1> projects)
 	{
 		this.projects = projects;
 		this.setParamaterToConfigured(PROJECTS_NAME);

@@ -7,13 +7,6 @@ import com.redhat.topicindex.rest.entities.interfaces.IPropertyTagV1;
  */
 public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements IPropertyTagV1
 {
-	public static String NAME_NAME = "name";
-	public static String DESCRIPTION_NAME = "description";
-	public static String VALUE_NAME = "value";
-	public static String REGEX_NAME = "regex";
-	public static String CANBENULL_NAME = "canbenull";
-	public static String ISUNIQUE_NAME = "isunique";
-	
 	private String name;
 	private String description;
 	private String value;
@@ -50,7 +43,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements I
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -66,7 +59,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements I
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
@@ -82,7 +75,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements I
 		this.value = value;
 	}
 	
-	public void setValueExplicit(final String value)
+	public void explicitSetValue(final String value)
 	{
 		this.value = value;
 		this.setParamaterToConfigured(VALUE_NAME);
@@ -108,7 +101,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements I
 		this.regex = regex;
 	}
 	
-	public void setRegexExplicit(final String regex)
+	public void explicitSetRegex(final String regex)
 	{
 		this.regex = regex;
 		this.setParamaterToConfigured(REGEX_NAME);
@@ -124,7 +117,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements I
 		this.canBeNull = canBeNull;
 	}
 	
-	public void setCanBeNullExplicit(final boolean canBeNull)
+	public void explicitSetCanBeNull(final boolean canBeNull)
 	{
 		this.canBeNull = canBeNull;
 		this.setParamaterToConfigured(CANBENULL_NAME);
@@ -140,7 +133,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements I
 		this.isUnique = isUnique;
 	}
 	
-	public void setUniqueExplicit(boolean isUnique)
+	public void explicitSetIsUnique(boolean isUnique)
 	{
 		this.isUnique = isUnique;
 		this.setParamaterToConfigured(ISUNIQUE_NAME);

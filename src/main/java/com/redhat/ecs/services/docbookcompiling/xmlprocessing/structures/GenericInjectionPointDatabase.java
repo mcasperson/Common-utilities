@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.topicindex.rest.entities.BaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 
 /**
  * Provides a way to manage a collection of GenericInjectionPoint objects.
  */
-public class GenericInjectionPointDatabase<T extends BaseTopicV1<T>>
+public class GenericInjectionPointDatabase<T extends IBaseTopicV1<T>>
 {
 	private List<GenericInjectionPoint<T>> injectionPoints = new ArrayList<GenericInjectionPoint<T>>();
 	

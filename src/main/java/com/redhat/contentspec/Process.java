@@ -14,7 +14,7 @@ import com.redhat.contentspec.enums.LevelType;
 import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.contentspec.rest.RESTReader;
 import com.redhat.contentspec.utils.ContentSpecUtilities;
-import com.redhat.topicindex.rest.entities.TopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
 
 /**
  * A class that is used to represent and process a "Process" within a Content Specification.
@@ -197,7 +197,7 @@ public class Process extends Level {
 			// If the topic is an existing or cloned topic then use the database information
 			if (nonUniqueId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
 				// Get the topic information from the database
-				TopicV1 topic;
+				ITopicV1 topic;
 				if (nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX)) {
 					topic = reader.getTopicById(Integer.parseInt(nonUniqueId.substring(1)), null);
 				} else if (nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
@@ -207,7 +207,7 @@ public class Process extends Level {
 				}
 				if (topic != null) {
 					// Add relationships if the topic is a task
-					if (topic.isTaggedWith(CSConstants.TASK_TAG_ID)) {
+					if (topic.hasTag(CSConstants.TASK_TAG_ID)) {
 						String topicTargetId;
 						// Create a target if one doesn't already exist
 						if (specTopic.getTargetId() == null) {

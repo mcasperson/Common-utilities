@@ -18,17 +18,6 @@ import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 @XmlRootElement(name = "translatedtopic")
 public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implements ITranslatedTopicV1
 {
-	public static final String TOPICID_NAME = "topicid";
-	public static final String TOPICREVISION_NAME = "topicrevision";
-	public static final String TOPIC_NAME = "topic";
-	public static final String TRANSLATEDTOPICSTRING_NAME = "translatedtopicstring_OTM";
-	public static final String TRANSLATIONPERCENTAGE_NAME = "translationpercentage";
-	public static final String HTML_UPDATED = "htmlUpdated";
-	public static final String OUTGOING_NAME = "outgoingTranslatedRelationships";
-	public static final String INCOMING_NAME = "incomingTranslatedRelationships";
-	public static final String ALL_LATEST_OUTGOING_NAME = "allLatestOutgoingRelationships";
-	public static final String ALL_LATEST_INCOMING_NAME = "allLatestIncomingRelationships";
-	
 	private ITopicV1 topic;
 	private Integer translatedTopicId;
 	private Integer topicId;
@@ -73,19 +62,19 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		this.translatedTopicId = translatedTopicId;
 	}
 
-	public void setXmlExplicit(final String xml)
+	public void explicitSetXml(final String xml)
 	{
 		setXml(xml);
 		setParamaterToConfigured(XML_NAME);
 	}
 	
-	public void setXmlErrorsExplicit(final String xmlErrors)
+	public void explicitSetXmlErrors(final String xmlErrors)
 	{
 		setXmlErrors(xmlErrors);
 		setParamaterToConfigured(XML_ERRORS_NAME);
 	}
 
-	public void setHtmlExplicit(final String html)
+	public void explicitSetHtml(final String html)
 	{
 		setHtml(html);
 		setParamaterToConfigured(HTML_NAME);
@@ -102,7 +91,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		this.topicId = topicId;
 	}
 	
-	public void setTopicIdExplicit(final Integer topicId)
+	public void explicitSetTopicId(final Integer topicId)
 	{
 		this.topicId = topicId;
 		this.setParamaterToConfigured(TOPICID_NAME);
@@ -130,7 +119,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		this.topic = topic;
 	}
 	
-	public void setTopicRevisionExplicit(final Integer topicRevision)
+	public void explicitSetTopicRevision(final Integer topicRevision)
 	{
 		this.topicRevision = topicRevision;
 		this.setParamaterToConfigured(TOPICREVISION_NAME);
@@ -145,7 +134,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		this.translationPercentage = translationPercentage;
 	}
 	
-	public void setTranslationPercentageExplicit(Integer translationPercentage) {
+	public void explicitSetTranslationPercentage(Integer translationPercentage) {
 		this.translationPercentage = translationPercentage;
 		this.setParamaterToConfigured(TRANSLATIONPERCENTAGE_NAME);
 	}
@@ -161,7 +150,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		this.translatedTopicStrings = translatedTopicStrings;
 	}
 	
-	public void setTranslatedTopicStringExplicit_OTM(final BaseRestCollectionV1<ITranslatedTopicStringV1> translatedTopicStrings)
+	public void explicitSetTranslatedTopicString_OTM(final BaseRestCollectionV1<ITranslatedTopicStringV1> translatedTopicStrings)
 	{
 		this.translatedTopicStrings = translatedTopicStrings;
 		this.setParamaterToConfigured(TRANSLATEDTOPICSTRING_NAME);
@@ -178,13 +167,13 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		this.htmlUpdated = htmlUpdated;
 	}
 	
-	public void setHtmlUpdatedExplicit(final Date htmlUpdated)
+	public void explicitSetHtmlUpdated(final Date htmlUpdated)
 	{
 		this.htmlUpdated = htmlUpdated;
 		this.setParamaterToConfigured(HTML_UPDATED);
 	}
 	
-	public void setLocaleExplicit(final String locale)
+	public void explicitSetLocale(final String locale)
 	{
 		setLocale(locale);
 		setParamaterToConfigured(LOCALE_NAME);
@@ -267,10 +256,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		}
 	}
 	
-	@Override
-	@XmlTransient
-	@JsonIgnore
-	public ITranslatedTopicV1 getRelatedTopicByID(final Integer id)
+	public ITranslatedTopicV1 returnRelatedTopicByID(final Integer id)
 	{
 		ITranslatedTopicV1 relatedTopic = null;
 		if (this.getOutgoingRelationships() != null && this.getOutgoingRelationships().getItems() != null)
@@ -291,9 +277,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		return relatedTopic;
 	}
 	
-	@XmlTransient
-	@JsonIgnore
-	public String getXRefID()
+	public String returnXRefID()
 	{
 		if (!isDummyTopic())
 			return "TranslatedTopicID" + this.getId();
@@ -303,9 +287,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 			return topic.returnXRefID();
 	}
 	
-	@XmlTransient
-	@JsonIgnore
-	public String getErrorXRefID()
+	public String returnErrorXRefID()
 	{
 		return DocbookBuilderConstants.ERROR_XREF_ID_PREFIX + getZanataId();
 	}

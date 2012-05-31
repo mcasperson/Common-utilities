@@ -19,10 +19,11 @@ import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuildingOptions;
 import com.redhat.topicindex.component.docbookrenderer.structures.tocformat.TagRequirements;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
-import com.redhat.topicindex.rest.entities.CategoryV1;
-import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 import com.redhat.topicindex.rest.expand.ExpandDataDetails;
 import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
@@ -40,12 +41,12 @@ public class ContentSpecGenerator
 		this.restClient = restClient;
 	}
 	
-	public <T extends BaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale)
+	public <T extends IBaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale)
 	{
 		return this.generateContentSpecFromTopics(clazz, topics, locale, new DocbookBuildingOptions());
 	}
 	
-	public <T extends BaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	public <T extends IBaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final ContentSpec contentSpec = doFormattedTocPass(clazz, topics, locale, docbookBuildingOptions);
 		trimEmptySectionsFromContentSpecLevel(contentSpec.getBaseLevel());
@@ -64,7 +65,7 @@ public class ContentSpecGenerator
 		}
 	}
 	
-	private <T extends BaseTopicV1<T>> void populateTocLevel(final BaseRestCollectionV1<T> topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
+	private <T extends IBaseTopicV1<T>> void populateTocLevel(final BaseRestCollectionV1<T> topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
 	{
 		/*
 		 * If this branch has no parent, then it is the top level and we don't
@@ -81,9 +82,9 @@ public class ContentSpecGenerator
 			for (final T topic : topics.getItems())
 			{
 				boolean doesMatch = true;
-				for (final TagV1 andTag : requirements.getMatchAllOf())
+				for (final ITagV1 andTag : requirements.getMatchAllOf())
 				{
-					if (!topic.isTaggedWith(andTag.getId()))
+					if (!topic.hasTag(andTag.getId()))
 					{
 						doesMatch = false;
 						break;
@@ -92,14 +93,14 @@ public class ContentSpecGenerator
 
 				if (doesMatch && requirements.getMatchOneOf().size() != 0)
 				{
-					for (final ArrayList<TagV1> orBlock : requirements.getMatchOneOf())
+					for (final ArrayList<ITagV1> orBlock : requirements.getMatchOneOf())
 					{
 						if (orBlock.size() != 0)
 						{
 							boolean matchesOrBlock = false;
-							for (final TagV1 orTag : orBlock)
+							for (final ITagV1 orTag : orBlock)
 							{
-								if (topic.isTaggedWith(orTag.getId()))
+								if (topic.hasTag(orTag.getId()))
 								{
 									matchesOrBlock = true;
 									break;
@@ -138,7 +139,7 @@ public class ContentSpecGenerator
 		}
 	}
 
-	private <T extends BaseTopicV1<T>> ContentSpec doFormattedTocPass(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	private <T extends IBaseTopicV1<T>> ContentSpec doFormattedTocPass(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		try
 		{
@@ -160,7 +161,7 @@ public class ContentSpecGenerator
 			retValue.setOutputStyle(CSConstants.SKYNET_OUTPUT_FORMAT);
 			retValue.setCopyrightHolder("Red Hat, Inc");
 			
-			if (clazz == TranslatedTopicV1.class)
+			if (clazz == ITranslatedTopicV1.class)
 				retValue.setLocale(locale);
 
 			/* Create an expand block for the tag parent tags */
@@ -179,8 +180,8 @@ public class ContentSpecGenerator
 			final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 			/* Get the technology and common names categories */
-			final CategoryV1 technologyCategroy = restClient.getJSONCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID, expandEncodedString);
-			final CategoryV1 commonNamesCategory = restClient.getJSONCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID, expandEncodedString);
+			final ICategoryV1 technologyCategroy = restClient.getJSONCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID, expandEncodedString);
+			final ICategoryV1 commonNamesCategory = restClient.getJSONCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID, expandEncodedString);
 
 			/*
 			 * The top level TOC elements are made up of the technology and
@@ -188,16 +189,16 @@ public class ContentSpecGenerator
 			 * we get the tags out of the tech and common names categories, and
 			 * pull outthose that are not encompassed.
 			 */
-			final List<TagV1> topLevelTags = new ArrayList<TagV1>();
-			for (final CategoryV1 category : new CategoryV1[]
+			final List<ITagV1> topLevelTags = new ArrayList<ITagV1>();
+			for (final ICategoryV1 category : new ICategoryV1[]
 			{ technologyCategroy, commonNamesCategory })
 			{
-				for (final TagV1 tag : category.getTags().getItems())
+				for (final ITagV1 tag : category.getTags().getItems())
 				{
 					boolean isEmcompassed = false;
-					for (final TagV1 parentTag : tag.getParentTags().getItems())
+					for (final ITagV1 parentTag : tag.getParentTags().getItems())
 					{
-						for (final CategoryV1 parentTagCategory : parentTag.getCategories().getItems())
+						for (final ICategoryV1 parentTagCategory : parentTag.getCategories().getItems())
 						{
 							if (parentTagCategory.getId() == DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID || parentTagCategory.getId() == DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID)
 							{
@@ -231,23 +232,23 @@ public class ContentSpecGenerator
 			final String concernCategoryExpandStringEncoded = URLEncoder.encode(concernCategoryExpandString, "UTF-8");
 
 			/* Get the technology and common names categories */
-			final CategoryV1 concernCategory = restClient.getJSONCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID, concernCategoryExpandStringEncoded);
+			final ICategoryV1 concernCategory = restClient.getJSONCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID, concernCategoryExpandStringEncoded);
 
 			/* Get the task reference and concept tag*/
-			final TagV1 referenceTag = restClient.getJSONTag(DocbookBuilderConstants.REFERENCE_TAG_ID, "");
-			final TagV1 conceptTag = restClient.getJSONTag(DocbookBuilderConstants.CONCEPT_TAG_ID, "");
-			final TagV1 conceptualOverviewTag = restClient.getJSONTag(DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID, "");
-			final TagV1 taskTag = restClient.getJSONTag(DocbookBuilderConstants.TASK_TAG_ID, "");
+			final ITagV1 referenceTag = restClient.getJSONTag(DocbookBuilderConstants.REFERENCE_TAG_ID, "");
+			final ITagV1 conceptTag = restClient.getJSONTag(DocbookBuilderConstants.CONCEPT_TAG_ID, "");
+			final ITagV1 conceptualOverviewTag = restClient.getJSONTag(DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID, "");
+			final ITagV1 taskTag = restClient.getJSONTag(DocbookBuilderConstants.TASK_TAG_ID, "");
 
 			/* add TocFormatBranch objects for each top level tag */
-			for (final TagV1 tag : topLevelTags)
+			for (final ITagV1 tag : topLevelTags)
 			{
 				/*
 				 * Create the top level tag. This level is represented by the
 				 * tags that are not encompased, and includes any topic that has
 				 * that tag or any tag that is encompassed by this tag.
 				 */
-				final TagRequirements topLevelBranchTags = new TagRequirements((TagV1) null, new ArrayList<TagV1>()
+				final TagRequirements topLevelBranchTags = new TagRequirements((ITagV1) null, new ArrayList<ITagV1>()
 				{
 					private static final long serialVersionUID = 7499166852563779981L;
 
@@ -262,15 +263,15 @@ public class ContentSpecGenerator
 				
 				populateTocLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
 
-				for (final TagV1 concernTag : concernCategory.getTags().getItems())
+				for (final ITagV1 concernTag : concernCategory.getTags().getItems())
 				{
 					/*
 					 * the second level of the toc are the concerns, which will
 					 * display the tasks and conceptual overviews beneath them
 					 */
-					final TagRequirements concernLevelChildTags = new TagRequirements(concernTag, (TagV1) null);
+					final TagRequirements concernLevelChildTags = new TagRequirements(concernTag, (ITagV1) null);
 					concernLevelChildTags.merge(topLevelBranchTags);
-					final TagRequirements concernLevelDisplayTags = new TagRequirements((TagV1) null, CollectionUtilities.toArrayList(conceptualOverviewTag, taskTag));
+					final TagRequirements concernLevelDisplayTags = new TagRequirements((ITagV1) null, CollectionUtilities.toArrayList(conceptualOverviewTag, taskTag));
 					
 					final Section concernSection = new Section(concernTag.getName());
 					topLevelTagChapter.appendChild(concernSection);
@@ -290,8 +291,8 @@ public class ContentSpecGenerator
 						concernSection.insertBefore(referenceSection, concernSection.getFirstSpecNode());
 					concernSection.insertBefore(conceptSection, referenceSection);
 					
-					populateTocLevel(topics, conceptSection, concernLevelChildTags, new TagRequirements(conceptTag, (TagV1) null));
-					populateTocLevel(topics, referenceSection, concernLevelChildTags, new TagRequirements(referenceTag, (TagV1) null));
+					populateTocLevel(topics, conceptSection, concernLevelChildTags, new TagRequirements(conceptTag, (ITagV1) null));
+					populateTocLevel(topics, referenceSection, concernLevelChildTags, new TagRequirements(referenceTag, (ITagV1) null));
 				}
 			}
 

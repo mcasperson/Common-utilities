@@ -9,12 +9,7 @@ import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
  */
 public class CategoryV1 extends BaseRESTEntityV1<ICategoryV1> implements ICategoryV1
 {
-	public static final String NAME_NAME = "name";
-	public static final String DESCRIPTION_NAME = "description";
-	public static final String MUTUALLYEXCLUSIVE_NAME = "mutuallyExclusive";
-	public static final String SORT_NAME = "sort";
-	public static final String TAGS_NAME = "tags";
-	
+
 	private String name = null;
 	private String description = null;
 	private boolean mutuallyExclusive = false;
@@ -55,7 +50,7 @@ public class CategoryV1 extends BaseRESTEntityV1<ICategoryV1> implements ICatego
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -71,7 +66,7 @@ public class CategoryV1 extends BaseRESTEntityV1<ICategoryV1> implements ICatego
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
@@ -87,7 +82,7 @@ public class CategoryV1 extends BaseRESTEntityV1<ICategoryV1> implements ICatego
 		this.mutuallyExclusive = mutuallyExclusive;
 	}
 	
-	public void setMutuallyExclusiveExplicit(final boolean mutuallyExclusive)
+	public void explicitSetMutuallyExclusive(final boolean mutuallyExclusive)
 	{
 		this.mutuallyExclusive = mutuallyExclusive;
 		this.setParamaterToConfigured(MUTUALLYEXCLUSIVE_NAME);

@@ -41,14 +41,13 @@ public abstract class BaseRESTEntityWithPropertiesV1<T extends IBaseRESTEntityV1
 		this.properties = properties;
 	}
 
-	public void setPropertiesExplicit(final BaseRestCollectionV1<IPropertyTagV1> properties)
+	public void explicitSetProperties(final BaseRestCollectionV1<IPropertyTagV1> properties)
 	{
 		this.properties = properties;
 		setParamaterToConfigured(PROPERTIES_NAME);
 	}
 
-	@XmlTransient
-	public IPropertyTagV1 getProperty(final Integer propertyTagId)
+	public IPropertyTagV1 returnProperty(final Integer propertyTagId)
 	{
 		if (this.properties != null && this.properties.getItems() != null)
 		{

@@ -21,22 +21,11 @@ import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.IPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
 import com.redhat.topicindex.rest.sort.TagV1NameComparator;
 
 public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEntityWithPropertiesV1<T> implements IBaseTopicV1<T>
 {
-	
-	public static final String TITLE_NAME = "title";
-	public static final String XML_NAME = "xml";
-	public static final String XML_ERRORS_NAME = "xmlErrors";
-	public static final String HTML_NAME = "html";
-	public static final String TAGS_NAME = "tags";
-	public static final String OUTGOING_NAME = "outgoingRelationships";
-	public static final String INCOMING_NAME = "incomingRelationships";
-	public static final String LOCALE_NAME = "locale";
-	public static final String SOURCE_URLS_NAME = "sourceUrls_OTM";
-	public static final String PROPERTIES_NAME = "properties";
-	
 	private String title = null;
 	private String xml = null;
 	private String xmlErrors = null;
@@ -46,7 +35,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 	private BaseRestCollectionV1<ITagV1> tags = null;
 	private BaseRestCollectionV1<T> outgoingRelationships = null;
 	private BaseRestCollectionV1<T> incomingRelationships = null;
-	private BaseRestCollectionV1<TopicSourceUrlV1> sourceUrls = null;
+	private BaseRestCollectionV1<ITopicSourceUrlV1> sourceUrls = null;
 	
 	public void cloneInto(final BaseTopicV1<T> clone, final boolean deepCopy)
 	{
@@ -99,6 +88,12 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		this.title = title;
 	}
 	
+	public void explicitSetTitle(final String title)
+	{
+		setTitle(title);
+		setParamaterToConfigured(TITLE_NAME);
+	}
+	
 	@XmlElement
 	public String getXml()
 	{
@@ -147,6 +142,12 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 	{
 		return tags;
 	}
+	
+	public void explicitSetTags(final BaseRestCollectionV1<ITagV1> tags)
+	{
+		setTags(tags);
+		setParamaterToConfigured(TAGS_NAME);
+	}
 
 	public void setTags(final BaseRestCollectionV1<ITagV1> tags)
 	{
@@ -172,6 +173,12 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		this.outgoingRelationships = outgoingRelationships;
 	}
 	
+	public void explicitSetOutgoingRelationships(final BaseRestCollectionV1<T> outgoingRelationships)
+	{
+		setOutgoingRelationships(outgoingRelationships);
+		setParamaterToConfigured(OUTGOING_NAME);
+	}
+
 	@XmlElement
 	public BaseRestCollectionV1<T> getIncomingRelationships()
 	{
@@ -182,16 +189,28 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 	{
 		this.incomingRelationships = incomingRelationships;
 	}
+	
+	public void explicitSetIncomingRelationships(final BaseRestCollectionV1<T> incomingRelationships)
+	{
+		setIncomingRelationships(incomingRelationships);
+		setParamaterToConfigured(INCOMING_NAME);
+	}
 
 	@XmlElement
-	public BaseRestCollectionV1<TopicSourceUrlV1> getSourceUrls_OTM()
+	public BaseRestCollectionV1<ITopicSourceUrlV1> getSourceUrls_OTM()
 	{
 		return sourceUrls;
 	}
 
-	public void setSourceUrls_OTM(final BaseRestCollectionV1<TopicSourceUrlV1> sourceUrls)
+	public void setSourceUrls_OTM(final BaseRestCollectionV1<ITopicSourceUrlV1> sourceUrls)
 	{
 		this.sourceUrls = sourceUrls;		
+	}
+	
+	public void explicitSetSourceUrls_OTM(final BaseRestCollectionV1<ITopicSourceUrlV1> sourceUrls)
+	{
+		setSourceUrls_OTM(sourceUrls);
+		setParamaterToConfigured(SOURCE_URLS_NAME);
 	}
 	
 	/**
@@ -255,11 +274,9 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 
 	}
 	
-	@XmlTransient
-	@JsonIgnore
-	public String getXrefPropertyOrId(final Integer propertyTagId)
+	public String returnXrefPropertyOrId(final Integer propertyTagId)
 	{
-		final IPropertyTagV1 propTag = this.getProperty(propertyTagId);
+		final IPropertyTagV1 propTag = this.returnProperty(propertyTagId);
 		if (propTag != null)
 		{
 			return propTag.getValue();
@@ -355,7 +372,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 			{
 				for (final ITagV1 tag : this.tags.getItems())
 				{
-					if (tag.isInCategory(categoryId))
+					if (tag.containedInCatgeory(categoryId))
 					{
 						if (!retValue.contains(tag))
 							retValue.add(tag);
@@ -377,7 +394,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		{
 			for (final ITagV1 tag : this.getTags().getItems())
 			{
-				if (tag.isInCategory(categoryId))
+				if (tag.containedInCatgeory(categoryId))
 					++retValue;
 			}
 		}
@@ -385,9 +402,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return retValue;
 	}
 	
-	@XmlTransient
-	@JsonIgnore
-	public T getRelatedTopicByID(final Integer id)
+	public T returnRelatedTopicByID(final Integer id)
 	{
 		if (this.getOutgoingRelationships() != null && this.getOutgoingRelationships().getItems() != null)
 			for (final T topic : this.getOutgoingRelationships().getItems())
@@ -396,16 +411,12 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return null;
 	}
 
-	@XmlTransient
-	@JsonIgnore
-	public boolean isRelatedTo(final Integer id)
+	public boolean hasRelationshipTo(final Integer id)
 	{
-		return getRelatedTopicByID(id) != null;
+		return returnRelatedTopicByID(id) != null;
 	}
 	
-	@XmlTransient
-	@JsonIgnore
-	public boolean isTaggedWith(final Integer tagID)
+	public boolean hasTag(final Integer tagID)
 	{
 		if (this.getTags() != null && this.getTags().getItems() != null)
 		{

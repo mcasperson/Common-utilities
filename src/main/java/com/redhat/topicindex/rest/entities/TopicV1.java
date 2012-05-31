@@ -5,14 +5,13 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBugzillaBugV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 
@@ -22,10 +21,6 @@ import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 @XmlRootElement(name = "topic")
 public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 {	
-	public static final String DESCRIPTION_NAME = "description";
-	public static final String BUGZILLABUGS_NAME = "bugzillabugs_OTM";
-	public static final String TRANSLATEDTOPICS_NAME = "translatedtopics_OTM";
-	
 	private String description = null;
 	private Date created = null;
 	private Date lastModified = null;
@@ -57,11 +52,7 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 		
 	}
 
-	public void setTitleExplicit(final String title)
-	{
-		setTitle(title);
-		setParamaterToConfigured(TITLE_NAME);
-	}
+
 
 	@XmlElement
 	public String getDescription()
@@ -74,7 +65,7 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		setDescription(description);
 		setParamaterToConfigured(DESCRIPTION_NAME);
@@ -91,34 +82,22 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 		this.created = created;
 	}
 
-	public void setXmlExplicit(final String xml)
+	public void explicitSetXml(final String xml)
 	{
 		setXml(xml);
 		setParamaterToConfigured(XML_NAME);
 	}
 
-	public void setHtmlExplicit(final String html)
+	public void explicitSetHtml(final String html)
 	{
 		setHtml(html);
 		setParamaterToConfigured(HTML_NAME);
 	}
-
-	public void setTagsExplicit(final BaseRestCollectionV1<ITagV1> tags)
+	
+	public void explicitSetLocale(final String locale)
 	{
-		setTags(tags);
-		setParamaterToConfigured(TAGS_NAME);
-	}
-
-	public void setOutgoingRelationshipsExplicit(final BaseRestCollectionV1<ITopicV1> outgoingRelationships)
-	{
-		setOutgoingRelationships(outgoingRelationships);
-		setParamaterToConfigured(OUTGOING_NAME);
-	}
-
-	public void setIncomingRelationshipsExplicit(final BaseRestCollectionV1<ITopicV1> incomingRelationships)
-	{
-		setIncomingRelationships(incomingRelationships);
-		setParamaterToConfigured(INCOMING_NAME);
+		setLocale(locale);
+		setParamaterToConfigured(LOCALE_NAME);
 	}
 
 	public Date getLastModified()
@@ -146,12 +125,6 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 		return this.getId() + "-" + getRevision() + " " + (this.lastModified == null ? formatter.format(this.lastModified) : formatter.format(new Date())) + " " + getLocale();
 	}
 	
-	public void setSourceUrlsExplicit_OTM(final BaseRestCollectionV1<TopicSourceUrlV1> sourceUrls)
-	{
-		setSourceUrls_OTM(sourceUrls);
-		setParamaterToConfigured(SOURCE_URLS_NAME);
-	}
-	
 	@XmlElement
 	public BaseRestCollectionV1<IBugzillaBugV1> getBugzillaBugs_OTM()
 	{
@@ -163,7 +136,7 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 		this.bugzillaBugs = bugzillaBugs;
 	}
 	
-	public void setBugzillaBugsExplicit_OTM(final BaseRestCollectionV1<IBugzillaBugV1> bugzillaBugs)
+	public void explicitSetBugzillaBugs_OTM(final BaseRestCollectionV1<IBugzillaBugV1> bugzillaBugs)
 	{
 		setBugzillaBugs_OTM(bugzillaBugs);
 		setParamaterToConfigured(BUGZILLABUGS_NAME);
@@ -175,7 +148,7 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 		setParamaterToConfigured(LOCALE_NAME);
 	}
 	
-	public void setXmlErrorsExplicit(final String xmlErrors)
+	public void explicitSetXmlErrors(final String xmlErrors)
 	{
 		setXmlErrors(xmlErrors);
 		setParamaterToConfigured(XML_ERRORS_NAME);
@@ -191,6 +164,12 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 	{
 		this.translatedTopics = translatedTopics;
 	}
+	
+	public void explicitSetTranslatedTopics_OTM(final BaseRestCollectionV1<ITranslatedTopicV1> translatedTopics)
+	{
+		this.translatedTopics = translatedTopics;
+		setParamaterToConfigured(TRANSLATEDTOPICS_NAME);
+	}
 
 	public String returnInternalURL() {
 		return "Topic.seam?topicTopicId=" + getId() + "&selectedTab=Rendered+View";
@@ -200,10 +179,8 @@ public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 	{
 		return "TopicID" + this.getId();
 	}
-	
-	@XmlTransient
-	@JsonIgnore
-	public String getErrorXRefID()
+
+	public String returnErrorXRefID()
 	{
 		return DocbookBuilderConstants.ERROR_XREF_ID_PREFIX + this.getId();
 	}

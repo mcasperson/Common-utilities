@@ -19,7 +19,7 @@ import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.ecs.commonutils.StringUtilities;
 import com.redhat.ecs.constants.CommonConstants;
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 
 public class SpecTopic extends SpecNode {
 	
@@ -33,7 +33,7 @@ public class SpecTopic extends SpecNode {
 	private int preProcessedLineNumber = 0;
 	private String title = null;
 	private String duplicateId = null;
-	private BaseTopicV1<? extends BaseTopicV1<?>> topic = null;
+	private IBaseTopicV1<? extends IBaseTopicV1<?>> topic = null;
 	private Document xmlDocument = null;
 	
 	/**
@@ -88,11 +88,11 @@ public class SpecTopic extends SpecNode {
 	
 	// Start of the basic getter/setter methods for this Topic.
 	
-	public BaseTopicV1<? extends BaseTopicV1<?>> getTopic() {
+	public IBaseTopicV1<? extends IBaseTopicV1<?>> getTopic() {
 		return topic;
 	}
 
-	public <T extends BaseTopicV1<T>> void setTopic(BaseTopicV1<T> topic) {
+	public <T extends IBaseTopicV1<T>> void setTopic(IBaseTopicV1<T> topic) {
 		this.topic = topic;
 	}
 	
@@ -607,9 +607,9 @@ public class SpecTopic extends SpecNode {
 	{
 		final String topicXRefId;
 		if (useFixedUrls)
-			topicXRefId = topic.getXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
+			topicXRefId = topic.returnXrefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
 		else
-			topicXRefId = topic.getXRefID();
+			topicXRefId = topic.returnXRefID();
 			
 		return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
 	}
