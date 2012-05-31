@@ -8,6 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 public class HTMLUtilities
 {
@@ -30,7 +31,12 @@ public class HTMLUtilities
 	{
 		String retValue = html;
 
-		final Document doc = XMLUtilities.convertStringToDocument(html);
+		Document doc = null;
+		try {
+			doc = XMLUtilities.convertStringToDocument(html);
+		} catch (SAXException ex) {
+			ExceptionUtilities.handleException(ex);
+		}
 		if (doc != null)
 		{
 			inlineImgNodes(doc, basePath);

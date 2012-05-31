@@ -531,7 +531,7 @@ public class DocbookUtils
 				ExceptionUtilities.handleException(ex);
 			}
 			Element section = newDoc.createElement("section");
-			section.appendChild(doc.importNode(doc.getDocumentElement(), true));
+			section.appendChild(newDoc.importNode(doc.getDocumentElement(), true));
 			newDoc.appendChild(section);
 			return newDoc;
 		}

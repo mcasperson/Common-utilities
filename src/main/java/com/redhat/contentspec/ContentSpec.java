@@ -41,6 +41,7 @@ public class ContentSpec {
 	private String bugzillaComponent = null;
 	private String bugzillaVersion = null;
 	private boolean injectBugLinks = true;
+	private boolean injectSurveyLinks = false;
 	private String locale = null;
 	private String outputStyle = CSConstants.CSP_OUTOUT_FORMAT;
 	private Boolean allowDuplicateTopics = true; 
@@ -781,6 +782,14 @@ public class ContentSpec {
 		this.injectBugLinks = injectBugLinks;
 	}
 
+	public boolean isInjectSurveyLinks() {
+		return injectSurveyLinks;
+	}
+
+	public void setInjectSurveyLinks(boolean injectSurveyLinks) {
+		this.injectSurveyLinks = injectSurveyLinks;
+	}
+
 	public BugzillaOptions getBugzillaOptions() {
 		final BugzillaOptions bzOption = new BugzillaOptions();
 		bzOption.setProduct(bugzillaProduct);
@@ -799,7 +808,7 @@ public class ContentSpec {
 		for (Comment baseComment: baseComments) {
 			output += baseComment.toString();
 		}
-		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off");
+		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
 		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) +
 				(bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) +
 				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"));
@@ -821,6 +830,7 @@ public class ContentSpec {
 				(outputStyle == null ? "" : ("Output Style = " + outputStyle + "\n")) +
 				(locale == null ? "" : ("Translation Locale = " + locale + "\n")) +
 				"\n" + bugzillaDetails +
+				(injectSurveyLinks ? "Survey Links = On\n" : "") + 
 				(publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n"));
 		
 		// Add the injection options if they exist

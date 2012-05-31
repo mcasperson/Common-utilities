@@ -33,6 +33,20 @@ public class StringUtilities
 	}
 	
 	/**
+	 * Prepares a string to be inserted into xml by escaping any reserved XML symbols.
+	 * 
+	 * The current symbols are: < >
+	 * 
+	 * @param input The original string
+	 * @return A string with the reserved xml characters escaped.
+	 */
+	public static String escapeForXML(final String input)
+	{
+		return input.replaceAll("<", "&lt;")
+				.replaceAll(">", "&gt;");
+	}
+	
+	/**
 	 * A utility function to allow us to build a single string with line breaks
 	 * from an array of strings. This is really just used to make defining text
 	 * files in code easier to read, as opposed to having to add and maintain

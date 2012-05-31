@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * A collection of static variables and functions that can be used when working
@@ -27,7 +28,12 @@ public class DocBookUtilities
 	public static String findTitle(final String xml)
 	{
 		/* Convert the string to a document to make it easier to get the proper title */
-		final Document doc = XMLUtilities.convertStringToDocument(xml);
+		Document doc = null;
+		try {
+			doc = XMLUtilities.convertStringToDocument(xml);
+		} catch (SAXException ex) {
+			ExceptionUtilities.handleException(ex);
+		}
 		
 		return findTitle(doc);
 	}

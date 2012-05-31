@@ -41,11 +41,36 @@ public class ContentSpecGenerator
 		this.restClient = restClient;
 	}
 	
+
+	/**
+	 * Generates a Content Specification and fills it in using a set of topics. Once the content
+	 * specification is assembled it then removes any empty sections.
+	 * 
+	 * Note: All topics should be of the same locale.
+	 * 
+	 * @param clazz The Class of the list of topics. This should be either TopicV1 or TranslatedTopicV1.
+	 * @param topics The collection of topics to be used in the generate of the Content Specification.
+	 * @param locale The locale of the topics.
+	 * @return A ContentSpec object that represents the Content Specification. The toString() method can be used to get the text based version.
+	 */
 	public <T extends IBaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale)
 	{
 		return this.generateContentSpecFromTopics(clazz, topics, locale, new DocbookBuildingOptions());
 	}
 	
+
+	/**
+	 * Generates a Content Specification and fills it in using a set of topics. Once the content
+	 * specification is assembled it then removes any empty sections.
+	 * 
+	 * Note: All topics should be of the same locale.
+	 * 
+	 * @param clazz The Class of the list of topics. This should be either TopicV1 or TranslatedTopicV1.
+	 * @param topics The collection of topics to be used in the generate of the Content Specification.
+	 * @param locale The locale of the topics.
+	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
+	 * @return A ContentSpec object that represents the Content Specification. The toString() method can be used to get the text based version.
+	 */
 	public <T extends IBaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final ContentSpec contentSpec = doFormattedTocPass(clazz, topics, locale, docbookBuildingOptions);
@@ -53,6 +78,11 @@ public class ContentSpecGenerator
 		return contentSpec;
 	}
 	
+	/**
+	 * Removes any levels from a Content Specification level that contain no content.
+	 * 
+	 * @param level The level to remove empty sections from.
+	 */
 	private void trimEmptySectionsFromContentSpecLevel(final Level level)
 	{
 		final List<Level> childLevels = new LinkedList<Level>(level.getChildLevels());
@@ -65,7 +95,16 @@ public class ContentSpecGenerator
 		}
 	}
 	
-	private <T extends IBaseTopicV1<T>> void populateTocLevel(final BaseRestCollectionV1<T> topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
+	/**
+	 * Populates a content specifications level with all topics that match the
+	 * criteria required by the TagRequirements.
+	 * 
+	 * @param topics The list of topics that can be matched to the level requirements.
+	 * @param level The level to populate with topics.
+	 * @param childRequirements The TagRequirements for this level based on the child requirements from the levels parent.
+	 * @param displayRequirements The TagRequirements to display topics at this level.
+	 */
+	private <T extends IBaseTopicV1<T>> void populateContentSpecLevel(final BaseRestCollectionV1<T> topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
 	{
 		/*
 		 * If this branch has no parent, then it is the top level and we don't
@@ -139,6 +178,16 @@ public class ContentSpecGenerator
 		}
 	}
 
+	/**
+	 * Uses the technology, common names and concerns to build a basic content specification and then
+	 * adds topics that match each levels criteria into the content specification.
+	 * 
+	 * @param clazz The Class of the list of topics. This should be either TopicV1 or TranslatedTopicV1.
+	 * @param topics The collection of topics to be used in the generate of the Content Specification.
+	 * @param locale The locale of the topics.
+	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
+	 * @return A ContentSpec object that represents the assembled Content Specification. The toString() method can be used to get the text based version.
+	 */
 	private <T extends IBaseTopicV1<T>> ContentSpec doFormattedTocPass(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		try
@@ -160,6 +209,7 @@ public class ContentSpecGenerator
 			retValue.setDtd("Docbook 4.5");
 			retValue.setOutputStyle(CSConstants.SKYNET_OUTPUT_FORMAT);
 			retValue.setCopyrightHolder("Red Hat, Inc");
+			retValue.setInjectSurveyLinks(docbookBuildingOptions.getInsertSurveyLink() == null ? false : docbookBuildingOptions.getInsertSurveyLink());
 			
 			if (clazz == ITranslatedTopicV1.class)
 				retValue.setLocale(locale);
@@ -261,7 +311,7 @@ public class ContentSpecGenerator
 				final Chapter topLevelTagChapter = new Chapter(tag.getName());
 				retValue.appendChapter(topLevelTagChapter);
 				
-				populateTocLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
+				populateContentSpecLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
 
 				for (final ITagV1 concernTag : concernCategory.getTags().getItems())
 				{
@@ -276,7 +326,7 @@ public class ContentSpecGenerator
 					final Section concernSection = new Section(concernTag.getName());
 					topLevelTagChapter.appendChild(concernSection);
 					
-					populateTocLevel(topics, concernSection, concernLevelChildTags, concernLevelDisplayTags);
+					populateContentSpecLevel(topics, concernSection, concernLevelChildTags, concernLevelDisplayTags);
 					
 					/*
 					 * the third levels of the TOC are the concept and reference
@@ -291,8 +341,9 @@ public class ContentSpecGenerator
 						concernSection.insertBefore(referenceSection, concernSection.getFirstSpecNode());
 					concernSection.insertBefore(conceptSection, referenceSection);
 					
-					populateTocLevel(topics, conceptSection, concernLevelChildTags, new TagRequirements(conceptTag, (ITagV1) null));
-					populateTocLevel(topics, referenceSection, concernLevelChildTags, new TagRequirements(referenceTag, (ITagV1) null));
+					populateContentSpecLevel(topics, conceptSection, concernLevelChildTags, new TagRequirements(conceptTag, (ITagV1) null));
+					populateContentSpecLevel(topics, referenceSection, concernLevelChildTags, new TagRequirements(referenceTag, (ITagV1) null));
+
 				}
 			}
 

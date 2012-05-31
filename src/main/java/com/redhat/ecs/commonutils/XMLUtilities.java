@@ -20,6 +20,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.SAXException;
 
 import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonstructures.StringToNodeCollection;
@@ -58,7 +59,7 @@ public class XMLUtilities
 	public static final String END_CDATA_RE = "\\]\\]>";
 	public static final String END_CDATA_REPLACE = "]]&gt;";
 	public static final String XML_ENTITY_NAMED_GROUP = "name";
-	public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[A-Za-z0-9]*?);";
+	public static final String XML_ENTITY_RE = "\\&(?<" + XML_ENTITY_NAMED_GROUP + ">[#\\w\\d]*?);";
 	public static final String DOCTYPE_START = "<!DOCTYPE";
 	public static final String DOCTYPE_END = ">";
 	public static final String PREAMBLE_START = "<?xml";
@@ -348,8 +349,9 @@ public class XMLUtilities
 	 *            The XML to be converted
 	 * @return A Document converted from the supplied XML, or null if the
 	 *         supplied XML was invalid
+	 * @throws SAXException 
 	 */
-	public static Document convertStringToDocument(final String xml)
+	public static Document convertStringToDocument(final String xml) throws SAXException
 	{
 		if (xml == null)
 			return null;
@@ -395,6 +397,10 @@ public class XMLUtilities
 			restoreEntities(replacements, document.getDocumentElement());
 
 			return document;
+		}
+		catch (SAXException ex)
+		{
+			throw ex;
 		}
 		catch (Exception ex)
 		{
@@ -607,12 +613,21 @@ public class XMLUtilities
 					if (startedWithWhiteSpace && !firstNotInlinedTextNode)
 						trimmedNodeValue = " " + trimmedNodeValue;
 
-					if (endedWithWhitespace)
+					/* Only add whitespace if the node isn't the last node */
+					if (endedWithWhitespace && node.getNextSibling() != null)
 						trimmedNodeValue += " ";
 
 					retValue.append(trimmedNodeValue);
 
 					return retValue.toString();
+				}
+				/* 
+				 * Allow for spaces between nodes. i.e.
+				 * <literal>Test</literal> <literal>Test2</literal>
+				 */
+				else if (node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null)
+				{
+					return new String(" ");
 				}
 
 				return new String();
@@ -973,7 +988,12 @@ public class XMLUtilities
 					final String wrappedTranslation = "<tempRoot>" + translation + "</tempRoot>";
 
 					/* convert the wrapped translation into an XML document */
-					final Document translationDocument = convertStringToDocument(wrappedTranslation);
+					Document translationDocument = null;
+					try {
+						translationDocument = convertStringToDocument(wrappedTranslation);
+					} catch (SAXException ex) {
+						ExceptionUtilities.handleException(ex);
+					}
 
 					/* was the conversion successful */
 					if (translationDocument != null)

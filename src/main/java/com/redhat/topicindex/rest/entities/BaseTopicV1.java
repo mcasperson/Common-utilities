@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.redhat.ecs.commonstructures.NameIDSortMap;
+import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
@@ -221,7 +222,12 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 	{
 		assert containerName != null : "The containerName parameter can not be null";
 
-		final Document document = XMLUtilities.convertStringToDocument(this.xml);
+		Document document = null;
+		try {
+			document = XMLUtilities.convertStringToDocument(this.xml);
+		} catch (SAXException ex) {
+			ExceptionUtilities.handleException(ex);
+		}
 
 		if (document == null)
 			return null;
@@ -238,7 +244,12 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 
 	public String returnXMLWithNoContainer(final Boolean includeTitle)
 	{
-		final Document document = XMLUtilities.convertStringToDocument(this.xml);
+		Document document = null;
+		try {
+			document = XMLUtilities.convertStringToDocument(this.xml);
+		} catch (SAXException ex) {
+			ExceptionUtilities.handleException(ex);
+		}
 
 		if (document == null)
 			return null;
@@ -283,7 +294,6 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		}
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public String getCommaSeparatedTagList()
 	{
@@ -316,7 +326,6 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return tagsList;
 	}
 
-	@XmlTransient
 	@JsonIgnore
 	private TreeMap<NameIDSortMap, ArrayList<ITagV1>> getCategoriesMappedToTags()
 	{
@@ -380,7 +389,6 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return retValue;
 	}
 
-	@XmlTransient
 	@JsonIgnore
 	public int getTagsInCategory(final Integer categoryId)
 	{
@@ -412,6 +420,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return returnRelatedTopicByID(id) != null;
 	}
 	
+
 	public boolean hasTag(final Integer tagID)
 	{
 		if (this.getTags() != null && this.getTags().getItems() != null)
@@ -426,7 +435,6 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return false;
 	}
 	
-	@XmlTransient
 	@JsonIgnore
 	public boolean isDummyTopic()
 	{
