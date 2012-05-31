@@ -164,9 +164,9 @@ public class Level extends SpecNode {
 	 */
 	public void removeChild(SpecNode child) {
 		if (child instanceof Level) {
-			levels.remove((Level) child);
+			levels.remove(child);
 		} else if (child instanceof SpecTopic) {
-			topics.remove((SpecTopic) child);
+			topics.remove(child);
 		}
 		nodes.remove(child);
 	}
@@ -568,6 +568,7 @@ public class Level extends SpecNode {
 		return false;
 	}
 	
+	@Override
 	public String getUniqueLinkId(final boolean useFixedUrls)
 	{
 		// Get the pre link string

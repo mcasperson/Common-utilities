@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.ecs.commonstructures.Pair;
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 
 /**

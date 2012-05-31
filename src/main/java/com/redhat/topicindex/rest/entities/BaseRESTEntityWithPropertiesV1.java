@@ -1,8 +1,6 @@
 package com.redhat.topicindex.rest.entities;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityWithPropertiesV1;

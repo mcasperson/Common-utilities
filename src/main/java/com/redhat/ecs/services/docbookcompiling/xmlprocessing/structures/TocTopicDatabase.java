@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.topicindex.rest.entities.BaseTopicV1;
 import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITagV1;

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.redhat.ecs.commonutils.StringUtilities;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.BaseRESTEntityV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
 
 public class RESTCollectionCache

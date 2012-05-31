@@ -19,6 +19,7 @@ import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ImageV1;
 import com.redhat.topicindex.rest.entities.UserV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
@@ -59,7 +60,7 @@ public class RESTReader
 		{
 			if (entityCache.containsKeyValue(ICategoryV1.class, id))
 			{
-				return (ICategoryV1) entityCache.get(ICategoryV1.class, id);
+				return entityCache.get(ICategoryV1.class, id);
 			}
 			else
 			{
@@ -320,7 +321,7 @@ public class RESTReader
 
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails("topics"));
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(ITopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(IBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
 				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
 				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships"));
@@ -480,7 +481,7 @@ public class RESTReader
 				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
 				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(ITopicV1.TRANSLATEDTOPICS_NAME));
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(ITopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(IBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
 				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
 				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(ITranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
@@ -596,7 +597,7 @@ public class RESTReader
 		{
 			if (entityCache.containsKeyValue(UserV1.class, id))
 			{
-				return (UserV1) entityCache.get(UserV1.class, id);
+				return entityCache.get(UserV1.class, id);
 			}
 			else
 			{
@@ -758,7 +759,7 @@ public class RESTReader
 		ITopicV1 cs = getTopicById(csId, null);
 		if (cs != null)
 		{
-			return (Integer) cs.getRevision();
+			return cs.getRevision();
 		}
 		return null;
 	}
@@ -779,7 +780,7 @@ public class RESTReader
 		SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
 		for (Object[] specRev : specRevisions)
 		{
-			if ((Integer) specRev[0] <= (Integer) cs.getRevision())
+			if ((Integer) specRev[0] <= cs.getRevision())
 			{
 				sortedSpecRevisions.add((Integer) specRev[0]);
 			}
@@ -820,7 +821,7 @@ public class RESTReader
 		SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
 		for (Object[] specRev : specRevisions)
 		{
-			if ((Integer) specRev[0] <= (Integer) cs.getRevision())
+			if ((Integer) specRev[0] <= cs.getRevision())
 			{
 				sortedSpecRevisions.add((Integer) specRev[0]);
 			}

@@ -603,6 +603,7 @@ public class SpecTopic extends SpecNode {
 		return null;
 	}
 	
+	@Override
 	public String getUniqueLinkId(final boolean useFixedUrls)
 	{
 		final String topicXRefId;

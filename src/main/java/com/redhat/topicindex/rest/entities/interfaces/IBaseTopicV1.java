@@ -3,7 +3,6 @@ package com.redhat.topicindex.rest.entities.interfaces;
 import java.util.List;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.TopicSourceUrlV1;
 
 public interface IBaseTopicV1<T extends IBaseRESTEntityWithPropertiesV1<T>> extends IBaseRESTEntityWithPropertiesV1<T>
 {

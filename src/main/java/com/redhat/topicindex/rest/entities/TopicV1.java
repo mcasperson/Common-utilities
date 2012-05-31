@@ -10,8 +10,6 @@ import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBugzillaBugV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 

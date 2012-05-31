@@ -190,14 +190,17 @@ public class NamedMatcher implements NamedMatchResult {
 		return this;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return matcher.equals(obj);
 	}
 
+	@Override
 	public int hashCode() {
 		return matcher.hashCode();
 	}
 
+	@Override
 	public String toString() {
 		return matcher.toString();
 	}

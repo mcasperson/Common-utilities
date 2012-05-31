@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.topicindex.rest.entities.TagV1;
 import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
 
 /**

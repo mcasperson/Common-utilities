@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import com.redhat.topicindex.rest.entities.BaseRESTEntityV1;
 import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
 
 /**

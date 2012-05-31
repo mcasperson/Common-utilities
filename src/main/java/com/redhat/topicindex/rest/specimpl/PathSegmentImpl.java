@@ -68,7 +68,8 @@ public class PathSegmentImpl implements PathSegment
       return matrixParameters;
    }
 
-   public String toString()
+   @Override
+public String toString()
    {
       StringBuffer buf = new StringBuffer();
       if (path != null) buf.append(path);

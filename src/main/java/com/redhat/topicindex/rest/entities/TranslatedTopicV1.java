@@ -256,6 +256,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		}
 	}
 	
+	@Override
 	public ITranslatedTopicV1 returnRelatedTopicByID(final Integer id)
 	{
 		ITranslatedTopicV1 relatedTopic = null;
