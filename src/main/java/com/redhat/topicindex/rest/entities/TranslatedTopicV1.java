@@ -11,9 +11,12 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicStringV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 
 @XmlRootElement(name = "translatedtopic")
-public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
+public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implements ITranslatedTopicV1
 {
 	public static final String TOPICID_NAME = "topicid";
 	public static final String TOPICREVISION_NAME = "topicrevision";
@@ -26,15 +29,15 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 	public static final String ALL_LATEST_OUTGOING_NAME = "allLatestOutgoingRelationships";
 	public static final String ALL_LATEST_INCOMING_NAME = "allLatestIncomingRelationships";
 	
-	private TopicV1 topic;
+	private ITopicV1 topic;
 	private Integer translatedTopicId;
 	private Integer topicId;
 	private Integer topicRevision;
 	private Integer translationPercentage;
 	private Date htmlUpdated;
-	private BaseRestCollectionV1<TranslatedTopicStringV1> translatedTopicStrings = null;
-	private BaseRestCollectionV1<TranslatedTopicV1> outgoingTranslatedRelationships = null;
-	private BaseRestCollectionV1<TranslatedTopicV1> incomingTranslatedRelationships = null;
+	private BaseRestCollectionV1<ITranslatedTopicStringV1> translatedTopicStrings = null;
+	private BaseRestCollectionV1<ITranslatedTopicV1> outgoingTranslatedRelationships = null;
+	private BaseRestCollectionV1<ITranslatedTopicV1> incomingTranslatedRelationships = null;
 
 	@Override
 	public TranslatedTopicV1 clone(final boolean deepCopy)
@@ -43,19 +46,19 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		
 		this.cloneInto(retValue, deepCopy);
 		
-		retValue.topicId = this.topicId;
-		retValue.topicRevision = this.topicRevision;
-		retValue.translatedTopicId = this.translatedTopicId;
-		retValue.translationPercentage = this.translationPercentage;
+		retValue.setTopicId(this.topicId);
+		retValue.setTopicRevision(this.topicRevision);
+		retValue.setTranslatedTopicId(this.translatedTopicId);
+		retValue.setTranslationPercentage(this.translationPercentage);
 		
 		if (deepCopy)
 		{
-			retValue.translatedTopicStrings = this.translatedTopicStrings != null ? this.translatedTopicStrings.clone(deepCopy) : null;
-			retValue.topic = this.topic != null ? this.topic.clone(deepCopy) : null;
+			retValue.setTranslatedTopicStrings_OTM(this.getTranslatedTopicStrings_OTM() != null ? this.getTranslatedTopicStrings_OTM().clone(deepCopy) : null);
+			retValue.setTopic(this.topic != null ? this.topic.clone(deepCopy) : null);
 		}
 		else
 		{
-			retValue.translatedTopicStrings = this.translatedTopicStrings;
+			retValue.setTranslatedTopicStrings_OTM(this.getTranslatedTopicStrings_OTM());
 			retValue.topic = this.topic;
 		}
 		return retValue;
@@ -117,12 +120,12 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 	}
 	
 	@XmlElement
-	public TopicV1 getTopic()
+	public ITopicV1 getTopic()
 	{
 		return topic;
 	}
 
-	public void setTopic(final TopicV1 topic)
+	public void setTopic(final ITopicV1 topic)
 	{
 		this.topic = topic;
 	}
@@ -148,17 +151,17 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 	}
 
 	@XmlElement
-	public BaseRestCollectionV1<TranslatedTopicStringV1> getTranslatedTopicString_OTM()
+	public BaseRestCollectionV1<ITranslatedTopicStringV1> getTranslatedTopicStrings_OTM()
 	{
 		return translatedTopicStrings;
 	}
 
-	public void setTranslatedTopicString_OTM(final BaseRestCollectionV1<TranslatedTopicStringV1> translatedTopicStrings)
+	public void setTranslatedTopicStrings_OTM(final BaseRestCollectionV1<ITranslatedTopicStringV1> translatedTopicStrings)
 	{
 		this.translatedTopicStrings = translatedTopicStrings;
 	}
 	
-	public void setTranslatedTopicStringExplicit_OTM(final BaseRestCollectionV1<TranslatedTopicStringV1> translatedTopicStrings)
+	public void setTranslatedTopicStringExplicit_OTM(final BaseRestCollectionV1<ITranslatedTopicStringV1> translatedTopicStrings)
 	{
 		this.translatedTopicStrings = translatedTopicStrings;
 		this.setParamaterToConfigured(TRANSLATEDTOPICSTRING_NAME);
@@ -188,23 +191,23 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 	}
 	
 	@XmlElement
-	public BaseRestCollectionV1<TranslatedTopicV1> getOutgoingTranslatedRelationships()
+	public BaseRestCollectionV1<ITranslatedTopicV1> getOutgoingTranslatedRelationships()
 	{
 		return outgoingTranslatedRelationships;
 	}
 	
-	public void setOutgoingTranslatedRelationships(final BaseRestCollectionV1<TranslatedTopicV1> outgoingTranslatedRelationships)
+	public void setOutgoingTranslatedRelationships(final BaseRestCollectionV1<ITranslatedTopicV1> outgoingTranslatedRelationships)
 	{
 		this.outgoingTranslatedRelationships = outgoingTranslatedRelationships;
 	}
 	
 	@XmlElement
-	public BaseRestCollectionV1<TranslatedTopicV1> getIncomingTranslatedRelationships()
+	public BaseRestCollectionV1<ITranslatedTopicV1> getIncomingTranslatedRelationships()
 	{
 		return incomingTranslatedRelationships;
 	}
 	
-	public void setIncomingTranslatedRelationships(final BaseRestCollectionV1<TranslatedTopicV1> incomingTranslatedRelationships)
+	public void setIncomingTranslatedRelationships(final BaseRestCollectionV1<ITranslatedTopicV1> incomingTranslatedRelationships)
 	{
 		this.incomingTranslatedRelationships = incomingTranslatedRelationships;
 	}
@@ -216,17 +219,11 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		return topicId + "-" + topicRevision;
 	}
 
-	@Override
-	@JsonIgnore
-	@XmlTransient
-	public String getBugzillaBuildId() {
+	public String returnBugzillaBuildId() {
 		return "Translation " + this.getZanataId() + " " + getLocale();
 	}
 
-	@Override
-	@JsonIgnore
-	@XmlTransient
-	public String getSkynetURL() {
+	public String returnSkynetURL() {
 		/*
 		 * If the topic isn't a dummy then link to the translated counterpart.
 		 * If the topic is a dummy URL and the locale doesn't match the 
@@ -244,14 +241,11 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		}
 		else
 		{
-			return topic.getSkynetURL();
+			return topic.returnSkynetURL();
 		}
 	}
 
-	@Override
-	@JsonIgnore
-	@XmlTransient
-	public String getInternalURL() {
+	public String returnInternalURL() {
 		/*
 		 * If the topic isn't a dummy then link to the translated counterpart.
 		 * If the topic is a dummy URL and the locale doesn't match the 
@@ -269,19 +263,19 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		}
 		else
 		{
-			return topic.getInternalURL();
+			return topic.returnInternalURL();
 		}
 	}
 	
 	@Override
 	@XmlTransient
 	@JsonIgnore
-	public TranslatedTopicV1 getRelatedTopicByID(final Integer id)
+	public ITranslatedTopicV1 getRelatedTopicByID(final Integer id)
 	{
-		TranslatedTopicV1 relatedTopic = null;
+		ITranslatedTopicV1 relatedTopic = null;
 		if (this.getOutgoingRelationships() != null && this.getOutgoingRelationships().getItems() != null)
 		{
-			for (final TranslatedTopicV1 topic : getOutgoingRelationships().getItems())
+			for (final ITranslatedTopicV1 topic : getOutgoingRelationships().getItems())
 			{
 				if (topic.getTopicId().equals(id)
 						/* Check that the translation is complete */
@@ -306,7 +300,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		else if (hasBeenPushedForTranslation())
 			return "TranslatedTopicID" + getPushedTranslationTopicId();
 		else
-			return topic.getXRefID();
+			return topic.returnXRefID();
 	}
 	
 	@XmlTransient
@@ -326,7 +320,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		boolean baseTranslationExists = false;
 		if (topic.getTranslatedTopics_OTM() != null && topic.getTranslatedTopics_OTM().getItems() != null)
 		{
-			for (final TranslatedTopicV1 translatedTopic: topic.getTranslatedTopics_OTM().getItems())
+			for (final ITranslatedTopicV1 translatedTopic: topic.getTranslatedTopics_OTM().getItems())
 			{
 				if (translatedTopic.getLocale().equals(topic.getLocale()))
 					baseTranslationExists = true;
@@ -345,10 +339,10 @@ public class TranslatedTopicV1 extends BaseTopicV1<TranslatedTopicV1>
 		/* Check that a translation exists that is the same locale as the base topic */
 		if (topic.getTranslatedTopics_OTM() != null && topic.getTranslatedTopics_OTM().getItems() != null)
 		{
-			for (final TranslatedTopicV1 translatedTopic: topic.getTranslatedTopics_OTM().getItems())
+			for (final ITranslatedTopicV1 translatedTopic: topic.getTranslatedTopics_OTM().getItems())
 			{
 				if (translatedTopic.getLocale().equals(topic.getLocale()))
-					return translatedTopic.translatedTopicId;
+					return translatedTopic.getTranslatedTopicId();
 			}
 		}
 		

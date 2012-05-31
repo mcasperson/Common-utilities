@@ -6,18 +6,19 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
 
 /**
  * The base class for all entities used by the REST interface.
  */
-public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
+public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implements IBaseRESTEntityV1<T>
 {
 	public static final String REVISIONS_NAME = "revisions";
 	
 	/** The id of the entity */
 	private Integer id;
 	/** The revision of the entity */
-	private Number revision;
+	private Integer revision;
 	/**
 	 * Maintains a list of the database fields that have been specifically set
 	 * on this object. This allows us to distinguish them from those that are
@@ -37,25 +38,25 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 	/** A list of the Envers revision numbers */
 	private BaseRestCollectionV1<T> revisions = null;
 	
-	public void cloneInto(final BaseRESTEntityV1<T> clone, final boolean deepCopy)
+	public void cloneInto(final IBaseRESTEntityV1<T> clone, final boolean deepCopy)
 	{
-		clone.id = new Integer(this.id);
-		clone.revision = this.revision;
-		clone.selfLink = this.selfLink;
-		clone.editLink = this.editLink;
-		clone.deleteLink = this.deleteLink;
-		clone.addItem = this.addItem;
-		clone.expand = this.expand;
-		clone.addItem = this.addItem;
-		clone.removeItem = this.removeItem;
+		clone.setId(new Integer(this.id));
+		clone.setRevision(this.revision);
+		clone.setSelfLink(this.selfLink);
+		clone.setEditLink(this.editLink);
+		clone.setDeleteLink(this.deleteLink);
+		clone.setAddItem(this.addItem);
+		clone.setExpand(this.expand);
+		clone.setAddItem(this.addItem);
+		clone.setRemoveItem(this.removeItem);
 		
 		if (deepCopy)
 		{
-			clone.revisions = this.revisions == null ? null : this.revisions.clone(deepCopy);
+			clone.setRevisions(this.revisions == null ? null : this.revisions.clone(deepCopy));
 		}
 		else
 		{
-			clone.revisions = this.revisions;
+			clone.setRevisions(this.revisions);
 		}
 	}
 	
@@ -184,12 +185,12 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.id = id;
 	}
 
-	public Number getRevision()
+	public Integer getRevision()
 	{
 		return revision;
 	}
 
-	public void setRevision(Number revision)
+	public void setRevision(final Integer revision)
 	{
 		this.revision = revision;
 	}

@@ -1,11 +1,14 @@
 package com.redhat.topicindex.rest.entities;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
+import com.redhat.topicindex.rest.entities.interfaces.IProjectV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
 
 /**
  * A REST representation of the Tag entity
  */
-public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
+public class TagV1 extends BaseRESTEntityWithPropertiesV1<ITagV1> implements ITagV1
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -16,10 +19,10 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 
 	private String name = null;
 	private String description = null;
-	private BaseRestCollectionV1<CategoryV1> categories = new BaseRestCollectionV1<CategoryV1>();
-	private BaseRestCollectionV1<TagV1> parentTags = new BaseRestCollectionV1<TagV1>();
-	private BaseRestCollectionV1<TagV1> childTags = new BaseRestCollectionV1<TagV1>();
-	private BaseRestCollectionV1<ProjectV1> projects = new BaseRestCollectionV1<ProjectV1>();
+	private BaseRestCollectionV1<ICategoryV1> categories = new BaseRestCollectionV1<ICategoryV1>();
+	private BaseRestCollectionV1<ITagV1> parentTags = new BaseRestCollectionV1<ITagV1>();
+	private BaseRestCollectionV1<ITagV1> childTags = new BaseRestCollectionV1<ITagV1>();
+	private BaseRestCollectionV1<IProjectV1> projects = new BaseRestCollectionV1<IProjectV1>();
 	
 	@Override
 	public TagV1 clone(boolean deepCopy)
@@ -81,49 +84,49 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<CategoryV1> getCategories()
+	public BaseRestCollectionV1<ICategoryV1> getCategories()
 	{
 		return categories;
 	}
 
-	public void setCategories(final BaseRestCollectionV1<CategoryV1> categories)
+	public void setCategories(final BaseRestCollectionV1<ICategoryV1> categories)
 	{
 		this.categories = categories;
 	}
 	
-	public void setCategoriesExplicit(final BaseRestCollectionV1<CategoryV1> categories)
+	public void setCategoriesExplicit(final BaseRestCollectionV1<ICategoryV1> categories)
 	{
 		this.categories = categories;
 		this.setParamaterToConfigured(CATEGORIES_NAME);
 	}
 
-	public BaseRestCollectionV1<TagV1> getParentTags()
+	public BaseRestCollectionV1<ITagV1> getParentTags()
 	{
 		return parentTags;
 	}
 
-	public void setParentTags(final BaseRestCollectionV1<TagV1> parentTags)
+	public void setParentTags(final BaseRestCollectionV1<ITagV1> parentTags)
 	{
 		this.parentTags = parentTags;
 	}
 	
-	public void setParentTagsExplicit(final BaseRestCollectionV1<TagV1> parentTags)
+	public void setParentTagsExplicit(final BaseRestCollectionV1<ITagV1> parentTags)
 	{
 		this.parentTags = parentTags;
 		this.setParamaterToConfigured(PARENT_TAGS_NAME);
 	}
 
-	public BaseRestCollectionV1<TagV1> getChildTags()
+	public BaseRestCollectionV1<ITagV1> getChildTags()
 	{
 		return childTags;
 	}
 
-	public void setChildTags(final BaseRestCollectionV1<TagV1> childTags)
+	public void setChildTags(final BaseRestCollectionV1<ITagV1> childTags)
 	{
 		this.childTags = childTags;
 	}
 	
-	public void setChildTagsExplicit(final BaseRestCollectionV1<TagV1> childTags)
+	public void setChildTagsExplicit(final BaseRestCollectionV1<ITagV1> childTags)
 	{
 		this.childTags = childTags;
 		this.setParamaterToConfigured(CHILD_TAGS_NAME);
@@ -147,7 +150,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 	{
 		if (this.getCategories() != null && this.getCategories().getItems() != null)
 		{
-			for (final CategoryV1 category : this.getCategories().getItems())
+			for (final ICategoryV1 category : this.getCategories().getItems())
 				if (categoryId.equals(category.getId()))
 					return true;
 		}
@@ -159,7 +162,7 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 	{
 		if (this.categories != null && this.categories.getItems() != null)
 		{
-			for (final CategoryV1 category : this.categories.getItems())
+			for (final ICategoryV1 category : this.categories.getItems())
 			{
 				if (category.getId().equals(id))
 					return category.getSort();
@@ -169,17 +172,17 @@ public class TagV1 extends BaseRESTEntityWithPropertiesV1<TagV1>
 		return null;
 	}
 
-	public BaseRestCollectionV1<ProjectV1> getProjects()
+	public BaseRestCollectionV1<IProjectV1> getProjects()
 	{
 		return projects;
 	}
 
-	public void setProjects(final BaseRestCollectionV1<ProjectV1> projects)
+	public void setProjects(final BaseRestCollectionV1<IProjectV1> projects)
 	{
 		this.projects = projects;
 	}
 	
-	public void setProjectsExplicit(final BaseRestCollectionV1<ProjectV1> projects)
+	public void setProjectsExplicit(final BaseRestCollectionV1<IProjectV1> projects)
 	{
 		this.projects = projects;
 		this.setParamaterToConfigured(PROJECTS_NAME);

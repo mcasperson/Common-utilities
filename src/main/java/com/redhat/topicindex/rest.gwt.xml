@@ -1,4 +1,4 @@
 <module>
   <inherits name='com.google.gwt.user.User'/>
-  <source path="rest"></source>
+  <source path="rest"/>
 </module>

@@ -12,8 +12,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.PathSegment;
 
-import org.jboss.resteasy.plugins.providers.atom.Feed;
-
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.BlobConstantV1;
 import com.redhat.topicindex.rest.entities.CategoryV1;
@@ -34,6 +32,8 @@ import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 @Path("/1")
 public interface RESTInterfaceV1
 {
+	String ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
+	
 	/* SYSTEM FUNCTIONS */
 
 	/**
@@ -1193,7 +1193,7 @@ public interface RESTInterfaceV1
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
 	public BaseRestCollectionV1<ImageV1> deleteJSONImages(@PathParam("ids") final PathSegment id, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
+	
 	/* TOPIC FUNCTIONS */
 	/*		JSONP FUNCTIONS */	
 	@GET
@@ -1256,12 +1256,6 @@ public interface RESTInterfaceV1
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes({ "*" })
 	public BaseRestCollectionV1<TopicV1> getJSONTopics(@QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
-
-	@GET
-	@Path("/topics/get/atom/{query}")
-	@Produces(MediaType.APPLICATION_ATOM_XML)
-	@Consumes({ "*" })
-	public Feed getATOMTopicsWithQuery(@PathParam("query") PathSegment query, @QueryParam("expand") final String expand) throws InvalidParameterException, InternalProcessingException;
 
 	@GET
 	@Path("/topics/get/json/{query}")

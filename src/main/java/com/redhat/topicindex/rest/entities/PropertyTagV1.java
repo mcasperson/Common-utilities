@@ -1,9 +1,11 @@
 package com.redhat.topicindex.rest.entities;
 
+import com.redhat.topicindex.rest.entities.interfaces.IPropertyTagV1;
+
 /**
  * A REST representation of the PropertyTag database entity
  */
-public class PropertyTagV1 extends BaseRESTEntityV1<PropertyTagV1>
+public class PropertyTagV1 extends BaseRESTEntityV1<IPropertyTagV1> implements IPropertyTagV1
 {
 	public static String NAME_NAME = "name";
 	public static String DESCRIPTION_NAME = "description";
@@ -86,7 +88,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<PropertyTagV1>
 		this.setParamaterToConfigured(VALUE_NAME);
 	}
 
-	public boolean isValid()
+	public boolean getValid()
 	{
 		return valid;
 	}
@@ -112,7 +114,7 @@ public class PropertyTagV1 extends BaseRESTEntityV1<PropertyTagV1>
 		this.setParamaterToConfigured(REGEX_NAME);
 	}
 
-	public boolean isCanBeNull()
+	public boolean getCanBeNull()
 	{
 		return canBeNull;
 	}
@@ -128,12 +130,12 @@ public class PropertyTagV1 extends BaseRESTEntityV1<PropertyTagV1>
 		this.setParamaterToConfigured(CANBENULL_NAME);
 	}
 
-	public boolean isUnique()
+	public boolean getIsUnique()
 	{
 		return isUnique;
 	}
 
-	public void setUnique(boolean isUnique)
+	public void setIsUnique(boolean isUnique)
 	{
 		this.isUnique = isUnique;
 	}

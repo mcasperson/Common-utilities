@@ -1,12 +1,13 @@
 package com.redhat.topicindex.rest.entities;
 
-public class BugzillaBugV1 extends BaseRESTEntityV1<BugzillaBugV1>
+import com.redhat.topicindex.rest.entities.interfaces.IBugzillaBugV1;
+
+public class BugzillaBugV1 extends BaseRESTEntityV1<IBugzillaBugV1> implements IBugzillaBugV1
 {
 	public static final String BUG_ID = "bugzillabugid";
 	public static final String BUG_ISOPEN = "bugisopen";
 	public static final String BUG_SUMMARY = "bugsummary";
 
-	private Integer id;
 	private Integer bugId;
 	private Boolean isOpen;
 	private String summary;
@@ -18,23 +19,10 @@ public class BugzillaBugV1 extends BaseRESTEntityV1<BugzillaBugV1>
 		
 		this.cloneInto(retValue, deepCopy);
 		
-		retValue.id = new Integer(this.id);
 		retValue.bugId = new Integer(this.bugId);
 		retValue.isOpen = new Boolean(this.isOpen);
 		retValue.summary = summary;
 		return retValue;
-	}
-
-	@Override
-	public Integer getId()
-	{
-		return id;
-	}
-
-	@Override
-	public void setId(final Integer id)
-	{
-		this.id = id;
 	}
 
 	public Integer getBugId()

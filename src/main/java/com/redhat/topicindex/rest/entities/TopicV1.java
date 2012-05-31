@@ -11,12 +11,16 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.IBugzillaBugV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
 
 /**
  * A REST representation of the Topic entity
  */
 @XmlRootElement(name = "topic")
-public class TopicV1 extends BaseTopicV1<TopicV1>
+public class TopicV1 extends BaseTopicV1<ITopicV1> implements ITopicV1
 {	
 	public static final String DESCRIPTION_NAME = "description";
 	public static final String BUGZILLABUGS_NAME = "bugzillabugs_OTM";
@@ -25,8 +29,8 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 	private String description = null;
 	private Date created = null;
 	private Date lastModified = null;
-	private BaseRestCollectionV1<BugzillaBugV1> bugzillaBugs = null;
-	private BaseRestCollectionV1<TranslatedTopicV1> translatedTopics = null;
+	private BaseRestCollectionV1<IBugzillaBugV1> bugzillaBugs = null;
+	private BaseRestCollectionV1<ITranslatedTopicV1> translatedTopics = null;
 	
 	@Override
 	public TopicV1 clone(final boolean deepCopy)
@@ -99,19 +103,19 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 		setParamaterToConfigured(HTML_NAME);
 	}
 
-	public void setTagsExplicit(final BaseRestCollectionV1<TagV1> tags)
+	public void setTagsExplicit(final BaseRestCollectionV1<ITagV1> tags)
 	{
 		setTags(tags);
 		setParamaterToConfigured(TAGS_NAME);
 	}
 
-	public void setOutgoingRelationshipsExplicit(final BaseRestCollectionV1<TopicV1> outgoingRelationships)
+	public void setOutgoingRelationshipsExplicit(final BaseRestCollectionV1<ITopicV1> outgoingRelationships)
 	{
 		setOutgoingRelationships(outgoingRelationships);
 		setParamaterToConfigured(OUTGOING_NAME);
 	}
 
-	public void setIncomingRelationshipsExplicit(final BaseRestCollectionV1<TopicV1> incomingRelationships)
+	public void setIncomingRelationshipsExplicit(final BaseRestCollectionV1<ITopicV1> incomingRelationships)
 	{
 		setIncomingRelationships(incomingRelationships);
 		setParamaterToConfigured(INCOMING_NAME);
@@ -127,10 +131,7 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 		this.lastModified = lastModified;
 	}
 	
-	@Override
-	@XmlTransient
-	@JsonIgnore
-	public String getSkynetURL()
+	public String returnSkynetURL()
 	{
 		return CommonConstants.SERVER_URL + "/TopicIndex/CustomSearchTopicList.seam?topicIds=" + this.getId();
 	}
@@ -139,10 +140,7 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 	 * @return The value to be saved into the Build ID field of any bugzilla
 	 *         bugs assigned to this topic.
 	 */
-	@Override
-	@XmlTransient
-	@JsonIgnore
-	public String getBugzillaBuildId()
+	public String returnBugzillaBuildId()
 	{
 		final SimpleDateFormat formatter = new SimpleDateFormat(CommonConstants.FILTER_DISPLAY_DATE_FORMAT);
 		return this.getId() + "-" + getRevision() + " " + (this.lastModified == null ? formatter.format(this.lastModified) : formatter.format(new Date())) + " " + getLocale();
@@ -155,17 +153,17 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 	}
 	
 	@XmlElement
-	public BaseRestCollectionV1<BugzillaBugV1> getBugzillaBugs_OTM()
+	public BaseRestCollectionV1<IBugzillaBugV1> getBugzillaBugs_OTM()
 	{
 		return bugzillaBugs;
 	}
 
-	public void setBugzillaBugs_OTM(final BaseRestCollectionV1<BugzillaBugV1> bugzillaBugs)
+	public void setBugzillaBugs_OTM(final BaseRestCollectionV1<IBugzillaBugV1> bugzillaBugs)
 	{
 		this.bugzillaBugs = bugzillaBugs;
 	}
 	
-	public void setBugzillaBugsExplicit_OTM(final BaseRestCollectionV1<BugzillaBugV1> bugzillaBugs)
+	public void setBugzillaBugsExplicit_OTM(final BaseRestCollectionV1<IBugzillaBugV1> bugzillaBugs)
 	{
 		setBugzillaBugs_OTM(bugzillaBugs);
 		setParamaterToConfigured(BUGZILLABUGS_NAME);
@@ -184,26 +182,21 @@ public class TopicV1 extends BaseTopicV1<TopicV1>
 	}
 	
 	@XmlElement
-	public BaseRestCollectionV1<TranslatedTopicV1> getTranslatedTopics_OTM()
+	public BaseRestCollectionV1<ITranslatedTopicV1> getTranslatedTopics_OTM()
 	{
 		return translatedTopics;
 	}
 
-	public void setTranslatedTopics_OTM(final BaseRestCollectionV1<TranslatedTopicV1> translatedTopics)
+	public void setTranslatedTopics_OTM(final BaseRestCollectionV1<ITranslatedTopicV1> translatedTopics)
 	{
 		this.translatedTopics = translatedTopics;
 	}
 
-	@Override
-	@XmlTransient
-	@JsonIgnore
-	public String getInternalURL() {
+	public String returnInternalURL() {
 		return "Topic.seam?topicTopicId=" + getId() + "&selectedTab=Rendered+View";
 	}
 	
-	@XmlTransient
-	@JsonIgnore
-	public String getXRefID()
+	public String returnXRefID()
 	{
 		return "TopicID" + this.getId();
 	}

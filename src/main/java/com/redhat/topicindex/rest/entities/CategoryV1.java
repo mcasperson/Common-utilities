@@ -1,11 +1,13 @@
 package com.redhat.topicindex.rest.entities;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
+import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
 
 /**
  * A REST representation of the Category database entity
  */
-public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
+public class CategoryV1 extends BaseRESTEntityV1<ICategoryV1> implements ICategoryV1
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -17,7 +19,7 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 	private String description = null;
 	private boolean mutuallyExclusive = false;
 	private Integer sort = null;
-	private BaseRestCollectionV1<TagV1> tags = null;
+	private BaseRestCollectionV1<ITagV1> tags = null;
 	
 	@Override
 	public CategoryV1 clone(boolean deepCopy)
@@ -75,7 +77,7 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public boolean isMutuallyExclusive()
+	public boolean getMutuallyExclusive()
 	{
 		return mutuallyExclusive;
 	}
@@ -107,17 +109,17 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 		this.setParamaterToConfigured(SORT_NAME);
 	}
 
-	public BaseRestCollectionV1<TagV1> getTags()
+	public BaseRestCollectionV1<ITagV1> getTags()
 	{
 		return tags;
 	}
 
-	public void setTags(final BaseRestCollectionV1<TagV1> tags)
+	public void setTags(final BaseRestCollectionV1<ITagV1> tags)
 	{
 		this.tags = tags;
 	}
 	
-	public void setTagsExplicit(final BaseRestCollectionV1<TagV1> tags)
+	public void setTagsExplicit(final BaseRestCollectionV1<ITagV1> tags)
 	{
 		this.tags = tags;
 		this.setParamaterToConfigured(TAGS_NAME);
