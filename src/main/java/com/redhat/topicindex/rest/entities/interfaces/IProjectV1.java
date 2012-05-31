@@ -1,11 +1,8 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
-
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.ProjectV1;
 
-@XmlSeeAlso(ProjectV1.class)
+
 public interface IProjectV1 extends IBaseRESTEntityV1<IProjectV1>
 {
 	public static final String NAME_NAME = "name";
