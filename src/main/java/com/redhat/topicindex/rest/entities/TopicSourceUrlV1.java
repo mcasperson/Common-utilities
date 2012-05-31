@@ -4,10 +4,6 @@ import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
 
 public class TopicSourceUrlV1 extends BaseRESTEntityV1<ITopicSourceUrlV1> implements ITopicSourceUrlV1
 {
-	public static final String URL_NAME = "url";
-	public static final String DESCRIPTION_NAME = "description";
-	public static final String TITLE_NAME = "title";
-	
 	private String url;
 	private String title;
 	private String description;

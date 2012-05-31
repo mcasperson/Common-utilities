@@ -1,7 +1,11 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.CategoryV1;
+
+@XmlSeeAlso(CategoryV1.class)
 public interface ICategoryV1 extends IBaseRESTEntityV1<ICategoryV1>
 {
 	public static final String NAME_NAME = "name";

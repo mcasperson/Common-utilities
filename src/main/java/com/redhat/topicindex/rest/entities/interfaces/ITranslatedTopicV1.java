@@ -2,8 +2,12 @@ package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.Date;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
+
+@XmlSeeAlso(TranslatedTopicV1.class)
 public interface ITranslatedTopicV1 extends IBaseTopicV1<ITranslatedTopicV1>
 {
 	public static final String TOPICID_NAME = "topicid";

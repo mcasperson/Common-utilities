@@ -1,5 +1,10 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+import com.redhat.topicindex.rest.entities.BugzillaBugV1;
+
+@XmlSeeAlso(BugzillaBugV1.class)
 public interface IBugzillaBugV1 extends IBaseRESTEntityV1<IBugzillaBugV1>
 {
 	public static final String BUG_ID = "bugzillabugid";

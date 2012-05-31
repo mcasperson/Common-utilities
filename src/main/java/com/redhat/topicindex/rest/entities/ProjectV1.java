@@ -9,10 +9,6 @@ import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
  */
 public class ProjectV1 extends BaseRESTEntityV1<IProjectV1> implements IProjectV1
 {
-	public static final String NAME_NAME = "name";
-	public static final String DESCRIPTION_NAME = "description";
-	public static final String TAGS_NAME = "tags";
-	
 	private String name = null;
 	private String description = null;
 	private BaseRestCollectionV1<ITagV1> tags = null;

@@ -1,5 +1,10 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+import com.redhat.topicindex.rest.entities.PropertyTagV1;
+
+@XmlSeeAlso(PropertyTagV1.class)
 public interface IPropertyTagV1 extends IBaseRESTEntityV1<IPropertyTagV1>
 {
 	public static String NAME_NAME = "name";
