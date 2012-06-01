@@ -44,4 +44,6 @@ public interface ITranslatedTopicV1 extends IBaseTopicV1<ITranslatedTopicV1>
 	
 	BaseRestCollectionV1<ITranslatedTopicV1> getIncomingTranslatedRelationships();
 	void setIncomingTranslatedRelationships(BaseRestCollectionV1<ITranslatedTopicV1> incominTranslatedRelationships);
+	
+	boolean hasBeenPushedForTranslation();
 }

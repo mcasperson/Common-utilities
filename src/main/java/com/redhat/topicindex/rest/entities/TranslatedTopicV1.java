@@ -293,8 +293,6 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		return DocbookBuilderConstants.ERROR_XREF_ID_PREFIX + getZanataId();
 	}
 	
-	@XmlTransient
-	@JsonIgnore
 	public boolean hasBeenPushedForTranslation()
 	{
 		if (!returnIsDummyTopic()) return true;
