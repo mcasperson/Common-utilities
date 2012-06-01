@@ -435,8 +435,7 @@ public abstract class BaseTopicV1<T extends IBaseTopicV1<T>> extends BaseRESTEnt
 		return false;
 	}
 	
-	@JsonIgnore
-	public boolean isDummyTopic()
+	public boolean returnIsDummyTopic()
 	{
 		return getId() == null || getId() < 0;
 	}

@@ -220,7 +220,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		 * pushed to zanata so link to the original pushed translation.
 		 * If neither of these rules apply then link to the standard topic.
 		 */
-		if (!isDummyTopic())
+		if (!returnIsDummyTopic())
 		{
 			return CommonConstants.SERVER_URL + "/TopicIndex/TranslatedTopic.seam?translatedTopicId=" + this.getTranslatedTopicId() + "&amp;locale=" + getLocale();
 		}
@@ -242,7 +242,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 		 * pushed to zanata so link to the original pushed translation.
 		 * If neither of these rules apply then link to the standard topic.
 		 */
-		if (!isDummyTopic())
+		if (!returnIsDummyTopic())
 		{
 			return "TranslatedTopic.seam?translatedTopicId=" + getTranslatedTopicId() + "&locale=" + getLocale() + "&selectedTab=Rendered+View";
 		}
@@ -280,7 +280,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 	
 	public String returnXRefID()
 	{
-		if (!isDummyTopic())
+		if (!returnIsDummyTopic())
 			return "TranslatedTopicID" + this.getId();
 		else if (hasBeenPushedForTranslation())
 			return "TranslatedTopicID" + getPushedTranslationTopicId();
@@ -297,7 +297,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 	@JsonIgnore
 	public boolean hasBeenPushedForTranslation()
 	{
-		if (!isDummyTopic()) return true;
+		if (!returnIsDummyTopic()) return true;
 		
 		/* Check that a translation exists that is the same locale as the base topic */
 		boolean baseTranslationExists = false;
@@ -317,7 +317,7 @@ public class TranslatedTopicV1 extends BaseTopicV1<ITranslatedTopicV1> implement
 	@JsonIgnore
 	public Integer getPushedTranslationTopicId()
 	{
-		if (!isDummyTopic()) return translatedTopicId;
+		if (!returnIsDummyTopic()) return translatedTopicId;
 		
 		/* Check that a translation exists that is the same locale as the base topic */
 		if (topic.getTranslatedTopics_OTM() != null && topic.getTranslatedTopics_OTM().getItems() != null)

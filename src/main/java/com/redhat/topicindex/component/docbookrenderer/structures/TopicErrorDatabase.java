@@ -73,7 +73,7 @@ public class TopicErrorDatabase<T extends IBaseTopicV1<T>>
 		for (final String locale : errors.keySet())
 			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
 			{
-				if (topic.isDummyTopic())
+				if (topic.returnIsDummyTopic())
 				{
 					if (topic.getClass() == TranslatedTopicV1.class && topicErrorData.getTopic() instanceof TranslatedTopicV1)
 					{
