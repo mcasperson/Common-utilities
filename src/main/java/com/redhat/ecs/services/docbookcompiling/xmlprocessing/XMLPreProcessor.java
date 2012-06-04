@@ -547,7 +547,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 							/* if the toc is null, we are building an internal page */
 							if (level == null)
 							{
-								final String url = ComponentBaseTopicV1.returnInternalURL(relatedTopic);
+								final String url = relatedTopic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.returnInternalURL((RESTTranslatedTopicV1) relatedTopic) : ComponentTopicV1.returnInternalURL((RESTTopicV1) relatedTopic);
 								if (sequenceID.optional)
 								{
 									list.add(DocbookUtils.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX, url, relatedTopic.getTitle()));
@@ -597,7 +597,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		return retValue;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<Integer> processGenericInjections(final Level level, final SpecTopic topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> errors = new ArrayList<Integer>();
@@ -613,7 +613,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		/* wrap each related topic in a listitem tag */
 		if (topic.getTopic().getOutgoingRelationships() != null && topic.getTopic().getOutgoingRelationships().getItems() != null)
 		{
-			for (final RESTBaseTopicV1<?> relatedTopic : topic.getTopic().getOutgoingRelationships().getItems())
+			for (final RESTBaseTopicV1 relatedTopic : topic.getTopic().getOutgoingRelationships().getItems())
 			{
 
 				final Integer topicId;
@@ -646,7 +646,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 							 * see if we have processed a related topic with one of the topic type tags this may never be true if not processing all related
 							 * topics
 							 */
-							if (ComponentTopicV1.<RESTBaseTopicV1> hasTag(relatedTopic, primaryTopicTypeTag.getFirst()))
+							if (ComponentBaseTopicV1.hasTag(relatedTopic, primaryTopicTypeTag.getFirst()))
 							{
 								relatedLists.addInjectionTopic(primaryTopicTypeTag, (T) relatedTopic);
 
@@ -704,7 +704,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 						{
 							if (level == null)
 							{
-								DocbookUtils.createRelatedTopicULink(xmlDoc, ComponentTopicV1.returnInternalURL(relatedTopic), relatedTopic.getTitle(), itemizedlist);
+								final String internalURL = relatedTopic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.returnInternalURL((RESTTranslatedTopicV1) relatedTopic) : ComponentTopicV1.returnInternalURL((RESTTopicV1) relatedTopic);
+								DocbookUtils.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(), itemizedlist);
 							}
 							else
 							{
@@ -765,6 +766,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	@SuppressWarnings("unchecked")
 	public List<Integer> processTopicContentFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
+		final T topic = (T) specTopic.getTopic();
+		
 		final List<Integer> retValue = new ArrayList<Integer>();
 
 		if (xmlDocument == null)
@@ -803,9 +806,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 						/*
 						 * make sure the topic we are trying to inject has been related
 						 */
-						if (ComponentTopicV1.<RESTBaseTopicV1> hasRelationshipTo(specTopic.getTopic(), topicID))
+						if (topic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.hasRelationshipTo((RESTTranslatedTopicV1) topic, topicID) : ComponentTopicV1.hasRelationshipTo((RESTTopicV1) topic, topicID))
 						{
-							final T relatedTopic = (T) ComponentTopicV1.<RESTBaseTopicV1>returnRelatedTopicByID(specTopic.getTopic(), topicID);
+							final T relatedTopic = (T) (topic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.returnRelatedTopicByID((RESTTranslatedTopicV1) topic, topicID) : ComponentTopicV1.returnRelatedTopicByID((RESTTopicV1) topic, topicID));
 							final Document relatedTopicXML = XMLUtilities.convertStringToDocument(relatedTopic.getXml());
 							if (relatedTopicXML != null)
 							{
@@ -910,6 +913,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	@SuppressWarnings("unchecked")
 	public List<Integer> processTopicTitleFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
+		final T topic = (T) specTopic.getTopic();
+		
 		final List<Integer> retValue = new ArrayList<Integer>();
 
 		if (xmlDocument == null)
@@ -948,9 +953,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 						/*
 						 * make sure the topic we are trying to inject has been related
 						 */
-						if (ComponentBaseTopicV1.<RESTBaseTopicV1> hasRelationshipTo(specTopic.getTopic(), topicID))
+						if (topic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.hasRelationshipTo((RESTTranslatedTopicV1) topic, topicID) : ComponentTopicV1.hasRelationshipTo((RESTTopicV1) topic, topicID))
 						{
-							final T relatedTopic = (T) ComponentBaseTopicV1.<RESTBaseTopicV1> returnRelatedTopicByID(specTopic.getTopic(), topicID);
+							final T relatedTopic = (T) (topic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.returnRelatedTopicByID((RESTTranslatedTopicV1) topic, topicID) : ComponentTopicV1.returnRelatedTopicByID((RESTTopicV1) topic, topicID));
 							final Element titleNode = xmlDocument.createElement("title");
 							titleNode.setTextContent(relatedTopic.getTitle());
 							replacements.put(comment, titleNode);

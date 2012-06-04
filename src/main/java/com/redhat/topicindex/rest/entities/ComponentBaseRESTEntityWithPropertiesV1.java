@@ -6,7 +6,7 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 /**
  * This is the base class for all entities that have Property Tags
  */
-public class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBaseEntityWithPropertiesV1<T>> 
+public abstract class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBaseEntityWithPropertiesV1<T>> 
 {
 	final T source;
 	
@@ -32,33 +32,5 @@ public class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBaseEntityWit
 		}
 
 		return null;
-	}
-	
-	public String returnXrefPropertyOrId(final Integer propertyTagId)
-	{
-		return returnXrefPropertyOrId(source, propertyTagId);
-	}
-	
-	static public <T extends RESTBaseEntityWithPropertiesV1<T>> String returnXrefPropertyOrId(final T source, final Integer propertyTagId)
-	{
-		final RESTPropertyTagV1 propTag = returnProperty(source, propertyTagId);
-		if (propTag != null)
-		{
-			return propTag.getValue();
-		}
-		else
-		{
-			return returnXRefID(source);
-		}
-	}
-	
-	public String returnXRefID()
-	{
-		return returnXRefID(source);
-	}
-	
-	static public <T extends RESTBaseEntityWithPropertiesV1<T>> String returnXRefID(final T source)
-	{
-		return "TopicID" + source.getId();
 	}
 }
