@@ -4,7 +4,8 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
 
 /**
- * A REST representation of the Tag entity
+ * This component contains methods that can be applied against tags
+ * @author Matthew Casperson
  */
 public class ComponentTagV1 extends ComponentBaseRESTEntityWithPropertiesV1<RESTTagV1>
 {

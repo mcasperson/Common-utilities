@@ -5,6 +5,10 @@ import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
+/**
+ * This component contains methods that can be applied against translated topics
+ * @author Matthew Casperson
+ */
 public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTranslatedTopicV1>
 {
 	final RESTTranslatedTopicV1 source;

@@ -33,6 +33,10 @@ import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 public interface RESTInterfaceV1
 {
 	String ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
+	String ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method";
+	String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+	String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
+	String ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers";
 	
 	/* SYSTEM FUNCTIONS */
 
