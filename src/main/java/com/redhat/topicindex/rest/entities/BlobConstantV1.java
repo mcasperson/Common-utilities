@@ -1,9 +1,11 @@
 package com.redhat.topicindex.rest.entities;
 
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
+
 /**
  * A REST representation of the BlobConstants database entity
  */
-public class BlobConstantV1 extends BaseRESTEntityV1<BlobConstantV1>
+public class BlobConstantV1 extends RESTBaseEntityV1<BlobConstantV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String VALUE_NAME = "value";

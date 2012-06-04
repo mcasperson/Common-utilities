@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.ecs.commonstructures.Pair;
-import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
 /**
  * This class represents the topics that will be injected into a topic for a
@@ -21,7 +21,7 @@ import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
  * already has the listed of related topics available to it in a child
  * collection.
  */
-public class GenericInjectionPoint<T extends IBaseTopicV1<T>>
+public class GenericInjectionPoint<T extends RESTBaseTopicV1<T>>
 {
 	/** The details of the topic type tag */
 	private Pair<Integer, String> categoryIDAndName;

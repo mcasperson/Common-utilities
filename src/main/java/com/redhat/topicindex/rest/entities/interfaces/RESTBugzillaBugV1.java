@@ -1,17 +1,19 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.entities.interfaces.IBugzillaBugV1;
-
-public class BugzillaBugV1 extends BaseRESTEntityV1<IBugzillaBugV1> implements IBugzillaBugV1
+public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1>
 {
+	public static final String BUG_ID = "bugzillabugid";
+	public static final String BUG_ISOPEN = "bugisopen";
+	public static final String BUG_SUMMARY = "bugsummary";
+	
 	private Integer bugId;
 	private Boolean isOpen;
 	private String summary;
 	
 	@Override
-	public BugzillaBugV1 clone(boolean deepCopy)
+	public RESTBugzillaBugV1 clone(boolean deepCopy)
 	{
-		final BugzillaBugV1 retValue = new BugzillaBugV1();
+		final RESTBugzillaBugV1 retValue = new RESTBugzillaBugV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		

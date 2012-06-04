@@ -8,14 +8,12 @@ import com.redhat.contentspec.rest.utils.RESTCollectionCache;
 import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.CategoryV1;
-import com.redhat.topicindex.rest.entities.TagV1;
-import com.redhat.topicindex.rest.entities.TopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
-import com.redhat.topicindex.rest.entities.interfaces.IPropertyTagV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
+import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTopicSourceUrlV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
 
 public class RESTWriter
@@ -44,13 +42,13 @@ public class RESTWriter
 		Integer insertId = null;
 		try
 		{
-			ICategoryV1 category = new CategoryV1();
+			RESTCategoryV1 category = new RESTCategoryV1();
 			category.explicitSetMutuallyExclusive(mutuallyExclusive);
 			category.explicitSetName(name);
 
 			category = client.createJSONCategory(null, category);
 			insertId = category.getId();
-			collectionsCache.expire(ICategoryV1.class);
+			collectionsCache.expire(RESTCategoryV1.class);
 		}
 		catch (Exception e)
 		{
@@ -63,15 +61,15 @@ public class RESTWriter
 	/*
 	 * Writes a Tag tuple to the database using the data provided.
 	 */
-	public Integer createTag(String name, String description, BaseRestCollectionV1<ICategoryV1> categories)
+	public Integer createTag(String name, String description, BaseRestCollectionV1<RESTCategoryV1> categories)
 	{
 		Integer insertId = null;
 		try
 		{
-			ITagV1 tag = new TagV1();
+			RESTTagV1 tag = new RESTTagV1();
 			tag.explicitSetName(name);
 			tag.explicitSetDescription(description);
-			for (ICategoryV1 category : categories.getItems())
+			for (RESTCategoryV1 category : categories.getItems())
 			{
 				category.setAddItem(true);
 			}
@@ -79,7 +77,7 @@ public class RESTWriter
 
 			tag = client.createJSONTag(null, tag);
 			insertId = tag.getId();
-			collectionsCache.expire(ITagV1.class);
+			collectionsCache.expire(RESTTagV1.class);
 		}
 		catch (Exception e)
 		{
@@ -99,14 +97,14 @@ public class RESTWriter
 	/*
 	 * Writes a Topic tuple to the database using the data provided.
 	 */
-	public Integer createTopic(String title, String text, String description, Date timestamp, BaseRestCollectionV1<ITopicSourceUrlV1> sourceUrls, BaseRestCollectionV1<ITopicV1> incomingRelationships, BaseRestCollectionV1<ITopicV1> outgoingRelationships, BaseRestCollectionV1<ITagV1> tags,
-			BaseRestCollectionV1<IPropertyTagV1> properties)
+	public Integer createTopic(String title, String text, String description, Date timestamp, BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls, BaseRestCollectionV1<RESTTopicV1> incomingRelationships, BaseRestCollectionV1<RESTTopicV1> outgoingRelationships, BaseRestCollectionV1<RESTTagV1> tags,
+			BaseRestCollectionV1<RESTPropertyTagV1> properties)
 	{
 		Integer insertId = null;
 		try
 		{
 
-			ITopicV1 topic = new TopicV1();
+			RESTTopicV1 topic = new RESTTopicV1();
 
 			topic.explicitSetTitle(title);
 			topic.explicitSetDescription(description);
@@ -120,7 +118,7 @@ public class RESTWriter
 			}
 			if (!incomingRelationships.getItems().isEmpty())
 			{
-				for (ITopicV1 incomingRelationship : incomingRelationships.getItems())
+				for (RESTTopicV1 incomingRelationship : incomingRelationships.getItems())
 				{
 					incomingRelationship.setAddItem(true);
 				}
@@ -128,7 +126,7 @@ public class RESTWriter
 			}
 			if (!outgoingRelationships.getItems().isEmpty())
 			{
-				for (ITopicV1 outgoingRelationship : outgoingRelationships.getItems())
+				for (RESTTopicV1 outgoingRelationship : outgoingRelationships.getItems())
 				{
 					outgoingRelationship.setAddItem(true);
 				}
@@ -136,7 +134,7 @@ public class RESTWriter
 			}
 			if (!tags.getItems().isEmpty())
 			{
-				for (ITagV1 tag : tags.getItems())
+				for (RESTTagV1 tag : tags.getItems())
 				{
 					tag.setAddItem(true);
 				}
@@ -144,7 +142,7 @@ public class RESTWriter
 			}
 			if (!properties.getItems().isEmpty())
 			{
-				for (IPropertyTagV1 tag : properties.getItems())
+				for (RESTPropertyTagV1 tag : properties.getItems())
 				{
 					tag.setAddItem(true);
 				}
@@ -152,7 +150,7 @@ public class RESTWriter
 			}
 			if (!sourceUrls.getItems().isEmpty())
 			{
-				for (ITopicSourceUrlV1 sourceUrl : sourceUrls.getItems())
+				for (RESTTopicSourceUrlV1 sourceUrl : sourceUrls.getItems())
 				{
 					sourceUrl.setAddItem(true);
 				}
@@ -161,7 +159,7 @@ public class RESTWriter
 
 			topic = client.createJSONTopic(null, topic);
 			insertId = topic.getId();
-			collectionsCache.expire(ITopicV1.class);
+			collectionsCache.expire(RESTTopicV1.class);
 		}
 		catch (Exception e)
 		{
@@ -181,14 +179,14 @@ public class RESTWriter
 	/*
 	 * Updates a Topic tuple in the database using the data provided.
 	 */
-	public Integer updateTopic(Integer topicId, String title, String text, String description, Date timestamp, BaseRestCollectionV1<ITopicSourceUrlV1> sourceUrls, BaseRestCollectionV1<ITopicV1> incomingRelationships, BaseRestCollectionV1<ITopicV1> outgoingRelationships, BaseRestCollectionV1<ITagV1> tags,
-			BaseRestCollectionV1<IPropertyTagV1> properties)
+	public Integer updateTopic(Integer topicId, String title, String text, String description, Date timestamp, BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls, BaseRestCollectionV1<RESTTopicV1> incomingRelationships, BaseRestCollectionV1<RESTTopicV1> outgoingRelationships, BaseRestCollectionV1<RESTTagV1> tags,
+			BaseRestCollectionV1<RESTPropertyTagV1> properties)
 	{
 		Integer insertId = null;
 		try
 		{
 
-			ITopicV1 topic = reader.getTopicById(topicId, null);
+			RESTTopicV1 topic = reader.getTopicById(topicId, null);
 
 			if (title != null)
 			{
@@ -208,7 +206,7 @@ public class RESTWriter
 			}
 			if (!incomingRelationships.getItems().isEmpty())
 			{
-				for (ITopicV1 incomingRelationship : incomingRelationships.getItems())
+				for (RESTTopicV1 incomingRelationship : incomingRelationships.getItems())
 				{
 					incomingRelationship.setAddItem(true);
 				}
@@ -216,7 +214,7 @@ public class RESTWriter
 			}
 			if (!outgoingRelationships.getItems().isEmpty())
 			{
-				for (ITopicV1 outgoingRelationship : outgoingRelationships.getItems())
+				for (RESTTopicV1 outgoingRelationship : outgoingRelationships.getItems())
 				{
 					outgoingRelationship.setAddItem(true);
 				}
@@ -224,7 +222,7 @@ public class RESTWriter
 			}
 			if (!tags.getItems().isEmpty())
 			{
-				for (ITagV1 tag : tags.getItems())
+				for (RESTTagV1 tag : tags.getItems())
 				{
 					tag.setAddItem(true);
 				}
@@ -232,7 +230,7 @@ public class RESTWriter
 			}
 			if (!properties.getItems().isEmpty())
 			{
-				for (IPropertyTagV1 tag : properties.getItems())
+				for (RESTPropertyTagV1 tag : properties.getItems())
 				{
 					tag.setAddItem(true);
 				}
@@ -240,7 +238,7 @@ public class RESTWriter
 			}
 			if (!sourceUrls.getItems().isEmpty())
 			{
-				for (ITopicSourceUrlV1 sourceUrl : sourceUrls.getItems())
+				for (RESTTopicSourceUrlV1 sourceUrl : sourceUrls.getItems())
 				{
 					sourceUrl.setAddItem(true);
 				}
@@ -249,8 +247,8 @@ public class RESTWriter
 
 			topic = client.createJSONTopic(null, topic);
 			insertId = topic.getId();
-			entityCache.expire(ITopicV1.class, insertId);
-			collectionsCache.expire(ITopicV1.class);
+			entityCache.expire(RESTTopicV1.class, insertId);
+			collectionsCache.expire(RESTTopicV1.class);
 		}
 		catch (Exception e)
 		{
@@ -266,21 +264,21 @@ public class RESTWriter
 	{
 		try
 		{
-			ITopicV1 contentSpec = new TopicV1();
+			RESTTopicV1 contentSpec = new RESTTopicV1();
 			contentSpec.explicitSetTitle(title);
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Create the Added By, Content Spec Type and DTD property tags
-			BaseRestCollectionV1<IPropertyTagV1> properties = new BaseRestCollectionV1<IPropertyTagV1>();
-			IPropertyTagV1 addedBy = client.getJSONPropertyTag(CSConstants.ADDED_BY_PROPERTY_TAG_ID, null);
+			BaseRestCollectionV1<RESTPropertyTagV1> properties = new BaseRestCollectionV1<RESTPropertyTagV1>();
+			RESTPropertyTagV1 addedBy = client.getJSONPropertyTag(CSConstants.ADDED_BY_PROPERTY_TAG_ID, null);
 			addedBy.explicitSetValue(createdBy);
 			addedBy.setAddItem(true);
 
-			IPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+			RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
 			typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
 			typePropertyTag.setAddItem(true);
 
-			IPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
+			RESTPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
 			dtdPropertyTag.explicitSetValue(dtd);
 			dtdPropertyTag.setAddItem(true);
 
@@ -291,8 +289,8 @@ public class RESTWriter
 			contentSpec.explicitSetProperties(properties);
 
 			// Add the Content Specification Type Tag
-			BaseRestCollectionV1<ITagV1> tags = new BaseRestCollectionV1<ITagV1>();
-			ITagV1 typeTag = client.getJSONTag(CSConstants.CONTENT_SPEC_TAG_ID, null);
+			BaseRestCollectionV1<RESTTagV1> tags = new BaseRestCollectionV1<RESTTagV1>();
+			RESTTagV1 typeTag = client.getJSONTag(CSConstants.CONTENT_SPEC_TAG_ID, null);
 			typeTag.setAddItem(true);
 			tags.addItem(typeTag);
 
@@ -301,7 +299,7 @@ public class RESTWriter
 			contentSpec = client.createJSONTopic("", contentSpec);
 			if (contentSpec != null)
 				return contentSpec.getId();
-			collectionsCache.expire(ITopicV1.class);
+			collectionsCache.expire(RESTTopicV1.class);
 		}
 		catch (Exception e)
 		{
@@ -317,7 +315,7 @@ public class RESTWriter
 	{
 		try
 		{
-			ITopicV1 contentSpec = reader.getContentSpecById(id, null);
+			RESTTopicV1 contentSpec = reader.getContentSpecById(id, null);
 
 			if (contentSpec == null)
 				return false;
@@ -331,7 +329,7 @@ public class RESTWriter
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Update the Content Spec Type and DTD property tags
-			BaseRestCollectionV1<IPropertyTagV1> properties = contentSpec.getProperties();
+			BaseRestCollectionV1<RESTPropertyTagV1> properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 
@@ -339,7 +337,7 @@ public class RESTWriter
 
 				// Loop through and remove any Type or DTD tags if they don't
 				// match
-				for (IPropertyTagV1 property : properties.getItems())
+				for (RESTPropertyTagV1 property : properties.getItems())
 				{
 					if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID))
 					{
@@ -356,7 +354,7 @@ public class RESTWriter
 				}
 
 				// The property tag should never match a pre tag
-				IPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+				RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
 				typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
 				typePropertyTag.setAddItem(true);
 
@@ -365,7 +363,7 @@ public class RESTWriter
 				// If the DTD has changed then it needs to be re-added
 				if (newDTD)
 				{
-					IPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
+					RESTPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
 					dtdPropertyTag.explicitSetValue(dtd);
 					dtdPropertyTag.setAddItem(true);
 
@@ -378,8 +376,8 @@ public class RESTWriter
 			contentSpec = client.updateJSONTopic("", contentSpec);
 			if (contentSpec != null)
 			{
-				entityCache.expire(ITopicV1.class, id);
-				collectionsCache.expire(ITopicV1.class);
+				entityCache.expire(RESTTopicV1.class, id);
+				collectionsCache.expire(RESTTopicV1.class);
 				return true;
 			}
 		}
@@ -397,19 +395,19 @@ public class RESTWriter
 	{
 		try
 		{
-			ITopicV1 contentSpec = reader.getContentSpecById(id, null);
+			RESTTopicV1 contentSpec = reader.getContentSpecById(id, null);
 			if (contentSpec == null)
 				return false;
 
 			contentSpec.explicitSetXml(postContentSpec);
 
 			// Update Content Spec Type
-			BaseRestCollectionV1<IPropertyTagV1> properties = contentSpec.getProperties();
+			BaseRestCollectionV1<RESTPropertyTagV1> properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 
 				// Loop through and remove the type
-				for (IPropertyTagV1 property : properties.getItems())
+				for (RESTPropertyTagV1 property : properties.getItems())
 				{
 					if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID))
 					{
@@ -417,7 +415,7 @@ public class RESTWriter
 					}
 				}
 
-				IPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+				RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
 				typePropertyTag.explicitSetValue(CSConstants.CSP_POST_PROCESSED_STRING);
 				typePropertyTag.setAddItem(true);
 
@@ -429,8 +427,8 @@ public class RESTWriter
 			contentSpec = client.updateJSONTopic("", contentSpec);
 			if (contentSpec != null)
 			{
-				entityCache.expire(ITopicV1.class, id);
-				collectionsCache.expire(ITopicV1.class);
+				entityCache.expire(RESTTopicV1.class, id);
+				collectionsCache.expire(RESTTopicV1.class);
 				return true;
 			}
 		}
@@ -449,8 +447,8 @@ public class RESTWriter
 		try
 		{
 			client.deleteJSONTopic(id, null);
-			entityCache.expire(ITopicV1.class, id);
-			collectionsCache.expire(ITopicV1.class);
+			entityCache.expire(RESTTopicV1.class, id);
+			collectionsCache.expire(RESTTopicV1.class);
 			return true;
 		}
 		catch (Exception e)

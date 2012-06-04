@@ -17,14 +17,16 @@ import com.redhat.contentspec.entities.*;
 import com.redhat.contentspec.rest.utils.RESTCollectionCache;
 import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.ComponentTagV1;
+import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.ImageV1;
 import com.redhat.topicindex.rest.entities.UserV1;
-import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.ICategoryV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITopicSourceUrlV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITranslatedTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTopicSourceUrlV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 import com.redhat.topicindex.rest.expand.ExpandDataDetails;
 import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
@@ -54,17 +56,17 @@ public class RESTReader
 	 * Gets a specific category tuple from the database as specified by the
 	 * categories ID.
 	 */
-	public ICategoryV1 getCategoryById(int id)
+	public RESTCategoryV1 getCategoryById(int id)
 	{
 		try
 		{
-			if (entityCache.containsKeyValue(ICategoryV1.class, id))
+			if (entityCache.containsKeyValue(RESTCategoryV1.class, id))
 			{
-				return entityCache.get(ICategoryV1.class, id);
+				return entityCache.get(RESTCategoryV1.class, id);
 			}
 			else
 			{
-				ICategoryV1 category = client.getJSONCategory(id, null);
+				RESTCategoryV1 category = client.getJSONCategory(id, null);
 				entityCache.add(category);
 				return category;
 			}
@@ -80,14 +82,14 @@ public class RESTReader
 	/*
 	 * Gets a List of all categories tuples for a specified name.
 	 */
-	public List<ICategoryV1> getCategoriesByName(String name)
+	public List<RESTCategoryV1> getCategoriesByName(String name)
 	{
-		final List<ICategoryV1> output = new ArrayList<ICategoryV1>();
+		final List<RESTCategoryV1> output = new ArrayList<RESTCategoryV1>();
 
 		try
 		{
 
-			BaseRestCollectionV1<ICategoryV1> categories = collectionsCache.get(ICategoryV1.class);
+			BaseRestCollectionV1<RESTCategoryV1> categories = collectionsCache.get(RESTCategoryV1.class);
 			if (categories.getItems() == null)
 			{
 				/* We need to expand the Categories collection */
@@ -98,12 +100,12 @@ public class RESTReader
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 				categories = client.getJSONCategories(expandEncodedString);
-				collectionsCache.add(ICategoryV1.class, categories);
+				collectionsCache.add(RESTCategoryV1.class, categories);
 			}
 
 			if (categories != null)
 			{
-				for (ICategoryV1 cat : categories.getItems())
+				for (RESTCategoryV1 cat : categories.getItems())
 				{
 					if (cat.getName().equals(name))
 					{
@@ -124,9 +126,9 @@ public class RESTReader
 	/*
 	 * Gets a Category item assuming that tags can only have one category
 	 */
-	public ICategoryV1 getCategoryByTagId(int tagId)
+	public RESTCategoryV1 getCategoryByTagId(int tagId)
 	{
-		ITagV1 tag = getTagById(tagId);
+		RESTTagV1 tag = getTagById(tagId);
 		if (tag == null)
 			return null;
 
@@ -138,13 +140,13 @@ public class RESTReader
 	/*
 	 * Gets a specific tag tuple from the database as specified by the tags ID.
 	 */
-	public ITagV1 getTagById(int id)
+	public RESTTagV1 getTagById(int id)
 	{
 		try
 		{
-			if (entityCache.containsKeyValue(ITagV1.class, id))
+			if (entityCache.containsKeyValue(RESTTagV1.class, id))
 			{
-				return entityCache.get(ITagV1.class, id);
+				return entityCache.get(RESTTagV1.class, id);
 			}
 			else
 			{
@@ -157,7 +159,7 @@ public class RESTReader
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				ITagV1 tag = client.getJSONTag(id, expandEncodedString);
+				RESTTagV1 tag = client.getJSONTag(id, expandEncodedString);
 				entityCache.add(tag);
 				return tag;
 			}
@@ -172,14 +174,14 @@ public class RESTReader
 	/*
 	 * Gets a List of all tag tuples for a specified name.
 	 */
-	public List<ITagV1> getTagsByName(String name)
+	public List<RESTTagV1> getTagsByName(String name)
 	{
-		List<ITagV1> output = new ArrayList<ITagV1>();
+		List<RESTTagV1> output = new ArrayList<RESTTagV1>();
 
 		try
 		{
 
-			BaseRestCollectionV1<ITagV1> tags = collectionsCache.get(ITagV1.class);
+			BaseRestCollectionV1<RESTTagV1> tags = collectionsCache.get(RESTTagV1.class);
 			if (tags.getItems() == null)
 			{
 				/* We need to expand the Tags & Categories collection */
@@ -192,14 +194,14 @@ public class RESTReader
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 				tags = client.getJSONTags(expandEncodedString);
-				collectionsCache.add(ITagV1.class, tags);
+				collectionsCache.add(RESTTagV1.class, tags);
 			}
 
 			// Iterate through the list of tags and check if the tag is a Type
 			// and matches the name.
 			if (tags != null)
 			{
-				for (ITagV1 tag : tags.getItems())
+				for (RESTTagV1 tag : tags.getItems())
 				{
 					if (tag.getName().equals(name))
 					{
@@ -221,12 +223,12 @@ public class RESTReader
 	 * Gets a List of Tag tuples for a specified its TopicID relationship
 	 * through TopicToTag.
 	 */
-	public List<ITagV1> getTagsByTopicId(int topicId)
+	public List<RESTTagV1> getTagsByTopicId(int topicId)
 	{
-		final ITopicV1 topic;
-		if (entityCache.containsKeyValue(ITopicV1.class, topicId))
+		final RESTTopicV1 topic;
+		if (entityCache.containsKeyValue(RESTTopicV1.class, topicId))
 		{
-			topic = entityCache.get(ITopicV1.class, topicId);
+			topic = entityCache.get(RESTTopicV1.class, topicId);
 		}
 		else
 		{
@@ -241,14 +243,14 @@ public class RESTReader
 	/*
 	 * Gets a specific tag tuple from the database as specified by the tags ID.
 	 */
-	public ITopicV1 getTopicById(int id, Integer rev)
+	public RESTTopicV1 getTopicById(int id, Integer rev)
 	{
 		try
 		{
-			ITopicV1 topic = null;
-			if (entityCache.containsKeyValue(ITopicV1.class, id, rev))
+			RESTTopicV1 topic = null;
+			if (entityCache.containsKeyValue(RESTTopicV1.class, id, rev))
 			{
-				topic = entityCache.get(ITopicV1.class, id, rev);
+				topic = entityCache.get(RESTTopicV1.class, id, rev);
 			}
 			else
 			{
@@ -284,26 +286,26 @@ public class RESTReader
 	/*
 	 * Gets a collection of topics based on the list of ids passed.
 	 */
-	public BaseRestCollectionV1<ITopicV1> getTopicsByIds(List<Integer> ids)
+	public BaseRestCollectionV1<RESTTopicV1> getTopicsByIds(List<Integer> ids)
 	{
 		if (ids.isEmpty())
 			return null;
 
 		try
 		{
-			final BaseRestCollectionV1<ITopicV1> topics = new BaseRestCollectionV1<ITopicV1>();
+			final BaseRestCollectionV1<RESTTopicV1> topics = new BaseRestCollectionV1<RESTTopicV1>();
 			final StringBuffer urlVars = new StringBuffer("query;topicIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
 			for (Integer id : ids)
 			{
-				if (!entityCache.containsKeyValue(ITopicV1.class, id))
+				if (!entityCache.containsKeyValue(RESTTopicV1.class, id))
 				{
 					urlVars.append(id + encodedComma);
 				}
 				else
 				{
-					topics.addItem(entityCache.get(ITopicV1.class, id));
+					topics.addItem(entityCache.get(RESTTopicV1.class, id));
 				}
 			}
 
@@ -321,11 +323,11 @@ public class RESTReader
 
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails("topics"));
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(IBaseTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
 				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
 				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships"));
-				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(ITopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
 
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
@@ -336,13 +338,13 @@ public class RESTReader
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				BaseRestCollectionV1<ITopicV1> downloadedTopics = client.getJSONTopicsWithQuery(path, expandEncodedString);
+				BaseRestCollectionV1<RESTTopicV1> downloadedTopics = client.getJSONTopicsWithQuery(path, expandEncodedString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
 				if (downloadedTopics != null && downloadedTopics.getItems() != null)
 				{
-					for (ITopicV1 item : downloadedTopics.getItems())
+					for (RESTTopicV1 item : downloadedTopics.getItems())
 					{
 						topics.addItem(item);
 					}
@@ -368,10 +370,10 @@ public class RESTReader
 		try
 		{
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("revisions", "topic" + topicId);
-			final BaseRestCollectionV1<ITopicV1> topicRevisions;
-			if (collectionsCache.containsKey(ITopicV1.class, additionalKeys))
+			final BaseRestCollectionV1<RESTTopicV1> topicRevisions;
+			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topicRevisions = collectionsCache.get(ITopicV1.class, additionalKeys);
+				topicRevisions = collectionsCache.get(RESTTopicV1.class, additionalKeys);
 			}
 			else
 			{
@@ -387,15 +389,15 @@ public class RESTReader
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
-				final ITopicV1 topic = client.getJSONTopic(topicId, expandEncodedString);
-				collectionsCache.add(ITopicV1.class, topic.getRevisions(), additionalKeys, true);
+				final RESTTopicV1 topic = client.getJSONTopic(topicId, expandEncodedString);
+				collectionsCache.add(RESTTopicV1.class, topic.getRevisions(), additionalKeys, true);
 				topicRevisions = topic.getRevisions();
 			}
 
 			// Create the custom revisions list
 			if (topicRevisions != null && topicRevisions.getItems() != null)
 			{
-				for (ITopicV1 topicRev : topicRevisions.getItems())
+				for (RESTTopicV1 topicRev : topicRevisions.getItems())
 				{
 					Object[] revision = new Object[2];
 					revision[0] = topicRev.getRevision();
@@ -417,12 +419,12 @@ public class RESTReader
 	 * Gets a List of TopicSourceUrl tuples for a specified its TopicID
 	 * relationship through TopicToTopicSourceUrl.
 	 */
-	public List<ITopicSourceUrlV1> getSourceUrlsByTopicId(int topicId)
+	public List<RESTTopicSourceUrlV1> getSourceUrlsByTopicId(int topicId)
 	{
-		final ITopicV1 topic;
-		if (entityCache.containsKeyValue(ITopicV1.class, topicId))
+		final RESTTopicV1 topic;
+		if (entityCache.containsKeyValue(RESTTopicV1.class, topicId))
 		{
-			topic = entityCache.get(ITopicV1.class, topicId);
+			topic = entityCache.get(RESTTopicV1.class, topicId);
 		}
 		else
 		{
@@ -437,26 +439,26 @@ public class RESTReader
 	 * Gets a collection of translated topics based on the list of topic ids
 	 * passed.
 	 */
-	public BaseRestCollectionV1<ITranslatedTopicV1> getTranslatedTopicsByTopicIds(List<Integer> ids, String locale)
+	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopicsByTopicIds(List<Integer> ids, String locale)
 	{
 		if (ids.isEmpty())
 			return null;
 
 		try
 		{
-			final BaseRestCollectionV1<ITranslatedTopicV1> topics = new BaseRestCollectionV1<ITranslatedTopicV1>();
+			final BaseRestCollectionV1<RESTTranslatedTopicV1> topics = new BaseRestCollectionV1<RESTTranslatedTopicV1>();
 			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;topicIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
 			for (Integer id : ids)
 			{
-				if (!entityCache.containsKeyValue(ITranslatedTopicV1.class, id))
+				if (!entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id))
 				{
 					urlVars.append(id + encodedComma);
 				}
 				else
 				{
-					topics.addItem(entityCache.get(ITranslatedTopicV1.class, id));
+					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, id));
 				}
 			}
 
@@ -479,13 +481,13 @@ public class RESTReader
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 
 				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
-				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(ITopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(IBaseTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
 				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
-				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(ITranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
-				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(ITranslatedTopicV1.TOPIC_NAME));
+				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
@@ -499,13 +501,13 @@ public class RESTReader
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				BaseRestCollectionV1<ITranslatedTopicV1> downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				BaseRestCollectionV1<RESTTranslatedTopicV1> downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
 				if (downloadedTopics != null && downloadedTopics.getItems() != null)
 				{
-					for (ITranslatedTopicV1 item : downloadedTopics.getItems())
+					for (RESTTranslatedTopicV1 item : downloadedTopics.getItems())
 					{
 						topics.addItem(item);
 					}
@@ -524,11 +526,11 @@ public class RESTReader
 	/*
 	 * Gets a translated topic based on a topic id and locale
 	 */
-	public ITranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final String locale)
+	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final String locale)
 	{
 		try
 		{
-			final BaseRestCollectionV1<ITranslatedTopicV1> topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
+			final BaseRestCollectionV1<RESTTranslatedTopicV1> topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
 
 			return topics != null && topics.getItems() != null && topics.getItems().size() == 1 ? topics.getItems().get(0) : null;
 		}
@@ -618,13 +620,13 @@ public class RESTReader
 	/*
 	 * Gets a ContentSpec tuple for a specified id.
 	 */
-	public ITopicV1 getContentSpecById(int id, Integer rev)
+	public RESTTopicV1 getContentSpecById(int id, Integer rev)
 	{
-		ITopicV1 cs = getTopicById(id, rev);
+		RESTTopicV1 cs = getTopicById(id, rev);
 		if (cs == null)
 			return null;
-		List<ITagV1> topicTypes = cs.returnTagsInCategoriesByID(CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
-		for (ITagV1 type : topicTypes)
+		List<RESTTagV1> topicTypes = ComponentTopicV1.returnTagsInCategoriesByID(cs, CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
+		for (RESTTagV1 type : topicTypes)
 		{
 			if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
 				return cs;
@@ -642,10 +644,10 @@ public class RESTReader
 		try
 		{
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("revision", "topic" + csId);
-			final BaseRestCollectionV1<ITopicV1> topicRevisions;
-			if (collectionsCache.containsKey(ITopicV1.class, additionalKeys))
+			final BaseRestCollectionV1<RESTTopicV1> topicRevisions;
+			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topicRevisions = collectionsCache.get(ITopicV1.class, additionalKeys);
+				topicRevisions = collectionsCache.get(RESTTopicV1.class, additionalKeys);
 			}
 			else
 			{
@@ -661,20 +663,20 @@ public class RESTReader
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
-				final ITopicV1 topic = client.getJSONTopic(csId, expandEncodedString);
+				final RESTTopicV1 topic = client.getJSONTopic(csId, expandEncodedString);
 				// Check that the topic is a content spec
-				if (!topic.hasTag(CSConstants.CONTENT_SPEC_TAG_ID))
+				if (!ComponentTopicV1.hasTag(topic, CSConstants.CONTENT_SPEC_TAG_ID))
 					return null;
 
 				// Add the content spec revisions to the cache
-				collectionsCache.add(ITopicV1.class, topic.getRevisions(), additionalKeys, true);
+				collectionsCache.add(RESTTopicV1.class, topic.getRevisions(), additionalKeys, true);
 				topicRevisions = topic.getRevisions();
 			}
 
 			// Create the unique array from the revisions
 			if (topicRevisions != null && topicRevisions.getItems() != null)
 			{
-				for (ITopicV1 topicRev : topicRevisions.getItems())
+				for (RESTTopicV1 topicRev : topicRevisions.getItems())
 				{
 					Object[] revision = new Object[2];
 					revision[0] = topicRev.getRevision();
@@ -695,22 +697,22 @@ public class RESTReader
 	 * Gets a list of all content specifications in the database or the first 50
 	 * if limit is set
 	 */
-	public List<ITopicV1> getContentSpecs(Integer startPos, Integer limit)
+	public List<RESTTopicV1> getContentSpecs(Integer startPos, Integer limit)
 	{
-		List<ITopicV1> results = new ArrayList<ITopicV1>();
+		List<RESTTopicV1> results = new ArrayList<RESTTopicV1>();
 
 		try
 		{
-			BaseRestCollectionV1<ITopicV1> topics;
+			BaseRestCollectionV1<RESTTopicV1> topics;
 
 			// Set the startPos and limit to zero if they are null
 			startPos = startPos == null ? 0 : startPos;
 			limit = limit == null ? 0 : limit;
 
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("start-" + startPos, "end-" + (startPos + limit));
-			if (collectionsCache.containsKey(ITopicV1.class, additionalKeys))
+			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topics = collectionsCache.get(ITopicV1.class, additionalKeys);
+				topics = collectionsCache.get(RESTTopicV1.class, additionalKeys);
 			}
 			else
 			{
@@ -738,7 +740,7 @@ public class RESTReader
 
 				PathSegment path = new PathSegmentImpl("query;tag" + CSConstants.CONTENT_SPEC_TAG_ID + "=1;", false);
 				topics = client.getJSONTopicsWithQuery(path, expandEncodedString);
-				collectionsCache.add(ITopicV1.class, topics, additionalKeys);
+				collectionsCache.add(RESTTopicV1.class, topics, additionalKeys);
 			}
 
 			return topics.getItems();
@@ -756,7 +758,7 @@ public class RESTReader
 	 */
 	public Integer getLatestCSRevById(final Integer csId)
 	{
-		ITopicV1 cs = getTopicById(csId, null);
+		RESTTopicV1 cs = getTopicById(csId, null);
 		if (cs != null)
 		{
 			return cs.getRevision();
@@ -767,9 +769,9 @@ public class RESTReader
 	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public ITopicV1 getPreContentSpecById(final Integer id, final Integer revision)
+	public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision)
 	{
-		ITopicV1 cs = getContentSpecById(id, revision);
+		RESTTopicV1 cs = getContentSpecById(id, revision);
 		List<Object[]> specRevisions = getContentSpecRevisionsById(id);
 
 		if (specRevisions == null)
@@ -790,12 +792,12 @@ public class RESTReader
 			return null;
 
 		// Find the Pre Content Spec from the revisions
-		ITopicV1 preContentSpec = null;
+		RESTTopicV1 preContentSpec = null;
 		Integer specRev = sortedSpecRevisions.last();
 		while (specRev != null)
 		{
-			ITopicV1 contentSpecRev = getContentSpecById(id, specRev);
-			if (contentSpecRev.returnProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.returnProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING))
+			RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
+			if (ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING))
 			{
 				preContentSpec = contentSpecRev;
 				break;
@@ -808,9 +810,9 @@ public class RESTReader
 	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public ITopicV1 getPostContentSpecById(Integer id, Integer revision)
+	public RESTTopicV1 getPostContentSpecById(Integer id, Integer revision)
 	{
-		ITopicV1 cs = getContentSpecById(id, revision);
+		RESTTopicV1 cs = getContentSpecById(id, revision);
 		List<Object[]> specRevisions = getContentSpecRevisionsById(id);
 
 		if (specRevisions == null)
@@ -831,12 +833,12 @@ public class RESTReader
 			return null;
 
 		// Find the Pre Content Spec from the revisions
-		ITopicV1 postContentSpec = null;
+		RESTTopicV1 postContentSpec = null;
 		Integer specRev = sortedSpecRevisions.last();
 		while (specRev != null)
 		{
-			ITopicV1 contentSpecRev = getContentSpecById(id, specRev);
-			if (contentSpecRev.returnProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.returnProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
+			RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
+			if (ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
 			{
 				postContentSpec = contentSpecRev;
 				break;
@@ -851,17 +853,17 @@ public class RESTReader
 	/*
 	 * Gets a List of all type tuples for a specified name.
 	 */
-	public ITagV1 getTypeByName(String name)
+	public RESTTagV1 getTypeByName(String name)
 	{
-		List<ITagV1> tags = getTagsByName(name);
+		List<RESTTagV1> tags = getTagsByName(name);
 
 		// Iterate through the list of tags and check if the tag is a Type and
 		// matches the name.
 		if (tags != null)
 		{
-			for (ITagV1 tag : tags)
+			for (RESTTagV1 tag : tags)
 			{
-				if (tag.containedInCategory(CSConstants.TYPE_CATEGORY_ID) && tag.getName().equals(name))
+				if (ComponentTagV1.containedInCategory(tag, CSConstants.TYPE_CATEGORY_ID) && tag.getName().equals(name))
 				{
 					return tag;
 				}
@@ -891,32 +893,32 @@ public class RESTReader
 	/*
 	 * Gets the Author Tag for a specific topic
 	 */
-	public ITagV1 getAuthorForTopic(int topicId, Integer rev)
+	public RESTTagV1 getAuthorForTopic(int topicId, Integer rev)
 	{
 		if (rev == null)
 		{
 
-			final List<ITagV1> tags = this.getTagsByTopicId(topicId);
+			final List<RESTTagV1> tags = this.getTagsByTopicId(topicId);
 
 			if (tags != null)
 			{
-				for (ITagV1 tag : tags)
+				for (RESTTagV1 tag : tags)
 				{
-					if (tag.containedInCategory(CSConstants.WRITER_CATEGORY_ID))
+					if (ComponentTagV1.containedInCategory(tag, CSConstants.WRITER_CATEGORY_ID))
 						return tag;
 				}
 			}
 		}
 		else
 		{
-			final ITopicV1 topic = this.getTopicById(topicId, rev);
+			final RESTTopicV1 topic = this.getTopicById(topicId, rev);
 			if (topic != null)
 			{
-				for (ITopicV1 topicRevision : topic.getRevisions().getItems())
+				for (RESTTopicV1 topicRevision : topic.getRevisions().getItems())
 				{
 					if (topicRevision.getRevision().equals(rev))
 					{
-						List<ITagV1> writerTags = topicRevision.returnTagsInCategoriesByID(CollectionUtilities.toArrayList(CSConstants.WRITER_CATEGORY_ID));
+						List<RESTTagV1> writerTags = ComponentTopicV1.returnTagsInCategoriesByID(topicRevision, CollectionUtilities.toArrayList(CSConstants.WRITER_CATEGORY_ID));
 						if (writerTags.size() == 1)
 							return writerTags.get(0);
 						break;
@@ -934,22 +936,22 @@ public class RESTReader
 	{
 		AuthorInformation authInfo = new AuthorInformation();
 		authInfo.setAuthorId(authorId);
-		ITagV1 tag = getTagById(authorId);
-		if (tag != null && tag.returnProperty(CSConstants.FIRST_NAME_PROPERTY_TAG_ID) != null && tag.returnProperty(CSConstants.LAST_NAME_PROPERTY_TAG_ID) != null)
+		RESTTagV1 tag = getTagById(authorId);
+		if (tag != null && ComponentTagV1.returnProperty(tag, CSConstants.FIRST_NAME_PROPERTY_TAG_ID) != null && ComponentTagV1.returnProperty(tag, CSConstants.LAST_NAME_PROPERTY_TAG_ID) != null)
 		{
-			authInfo.setFirstName(tag.returnProperty(CSConstants.FIRST_NAME_PROPERTY_TAG_ID).getValue());
-			authInfo.setLastName(tag.returnProperty(CSConstants.LAST_NAME_PROPERTY_TAG_ID).getValue());
-			if (tag.returnProperty(CSConstants.EMAIL_PROPERTY_TAG_ID) != null)
+			authInfo.setFirstName(ComponentTagV1.returnProperty(tag, CSConstants.FIRST_NAME_PROPERTY_TAG_ID).getValue());
+			authInfo.setLastName(ComponentTagV1.returnProperty(tag, CSConstants.LAST_NAME_PROPERTY_TAG_ID).getValue());
+			if (ComponentTagV1.returnProperty(tag, CSConstants.EMAIL_PROPERTY_TAG_ID) != null)
 			{
-				authInfo.setEmail(tag.returnProperty(CSConstants.EMAIL_PROPERTY_TAG_ID).getValue());
+				authInfo.setEmail(ComponentTagV1.returnProperty(tag, CSConstants.EMAIL_PROPERTY_TAG_ID).getValue());
 			}
-			if (tag.returnProperty(CSConstants.ORGANIZATION_PROPERTY_TAG_ID) != null)
+			if (ComponentTagV1.returnProperty(tag, CSConstants.ORGANIZATION_PROPERTY_TAG_ID) != null)
 			{
-				authInfo.setOrganization(tag.returnProperty(CSConstants.ORGANIZATION_PROPERTY_TAG_ID).getValue());
+				authInfo.setOrganization(ComponentTagV1.returnProperty(tag, CSConstants.ORGANIZATION_PROPERTY_TAG_ID).getValue());
 			}
-			if (tag.returnProperty(CSConstants.ORG_DIVISION_PROPERTY_TAG_ID) != null)
+			if (ComponentTagV1.returnProperty(tag, CSConstants.ORG_DIVISION_PROPERTY_TAG_ID) != null)
 			{
-				authInfo.setOrgDivision(tag.returnProperty(CSConstants.ORG_DIVISION_PROPERTY_TAG_ID).getValue());
+				authInfo.setOrgDivision(ComponentTagV1.returnProperty(tag, CSConstants.ORG_DIVISION_PROPERTY_TAG_ID).getValue());
 			}
 			return authInfo;
 		}
@@ -961,7 +963,7 @@ public class RESTReader
 	 */
 	public int getNumberOfContentSpecs()
 	{
-		List<ITopicV1> contentSpecs = getContentSpecs(0, 0);
+		List<RESTTopicV1> contentSpecs = getContentSpecs(0, 0);
 		return contentSpecs.size();
 	}
 

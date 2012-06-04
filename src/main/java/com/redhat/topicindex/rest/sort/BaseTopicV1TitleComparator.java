@@ -2,9 +2,9 @@ package com.redhat.topicindex.rest.sort;
 
 import java.util.Comparator;
 
-import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
-public class BaseTopicV1TitleComparator<T extends IBaseTopicV1<T>> implements Comparator<T>
+public class BaseTopicV1TitleComparator<T extends RESTBaseTopicV1<T>> implements Comparator<T>
 {
 	public int compare(final T o1, final T o2)
 	{

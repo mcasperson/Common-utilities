@@ -1,9 +1,11 @@
 package com.redhat.topicindex.rest.entities;
 
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
+
 /**
  * A REST representation of the StringConstants database entity
  */
-public class StringConstantV1 extends BaseRESTEntityV1<StringConstantV1>
+public class StringConstantV1 extends RESTBaseEntityV1<StringConstantV1>
 {
 	public static final String ID_NAME = "id";
 	public static final String NAME_NAME = "name";

@@ -1,9 +1,11 @@
 package com.redhat.topicindex.rest.entities;
 
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
+
 /**
  * A REST representation of the ImageFile database entity
  */
-public class ImageV1 extends BaseRESTEntityV1<ImageV1>
+public class ImageV1 extends RESTBaseEntityV1<ImageV1>
 {
 	public static final String FILENAME_NAME = "filename";
 	public static final String IMAGEDATA_NAME = "imageData";

@@ -14,7 +14,8 @@ import com.redhat.contentspec.constants.CSConstants;
 import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITopicV1;
+import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
 import com.redhat.topicindex.rest.exceptions.InvalidParameterException;
 import com.redhat.topicindex.rest.expand.ExpandDataDetails;
@@ -25,8 +26,8 @@ public class TopicPool {
 	
 	private static final Logger log = Logger.getLogger(TopicPool.class);
 
-	private BaseRestCollectionV1<ITopicV1> newTopicPool = new BaseRestCollectionV1<ITopicV1>();
-	private BaseRestCollectionV1<ITopicV1> updatedTopicPool = new BaseRestCollectionV1<ITopicV1>();
+	private BaseRestCollectionV1<RESTTopicV1> newTopicPool = new BaseRestCollectionV1<RESTTopicV1>();
+	private BaseRestCollectionV1<RESTTopicV1> updatedTopicPool = new BaseRestCollectionV1<RESTTopicV1>();
 	private final RESTInterfaceV1 client;
 	private final ObjectMapper mapper = new ObjectMapper();
 	private boolean initialised = false;
@@ -35,11 +36,11 @@ public class TopicPool {
 		this.client = client;
 	}
 	
-	public void addNewTopic(final ITopicV1 topic) {
+	public void addNewTopic(final RESTTopicV1 topic) {
 		newTopicPool.addItem(topic);
 	}
 	
-	public void addUpdatedTopic(final ITopicV1 topic) {
+	public void addUpdatedTopic(final RESTTopicV1 topic) {
 		updatedTopicPool.addItem(topic);
 	}
 	
@@ -59,7 +60,7 @@ public class TopicPool {
 			
 			// Save the new topics
 			if (!(newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty())) {
-				BaseRestCollectionV1<ITopicV1> response = client.createJSONTopics(expandEncodedString, newTopicPool);
+				BaseRestCollectionV1<RESTTopicV1> response = client.createJSONTopics(expandEncodedString, newTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null) return false;
 				if (response.getItems() == null) return false;
@@ -69,7 +70,7 @@ public class TopicPool {
 			
 			// Update the existing topics
 			if (!(updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty())) {
-				BaseRestCollectionV1<ITopicV1> response = client.updateJSONTopics(expandEncodedString, updatedTopicPool);
+				BaseRestCollectionV1<RESTTopicV1> response = client.updateJSONTopics(expandEncodedString, updatedTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null) return false;
 				if (response.getItems() == null) return false;
@@ -86,9 +87,9 @@ public class TopicPool {
 	
 	public SpecTopic initialiseFromPool(SpecTopic specTopic) {
 		if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty()) {
-			for (ITopicV1 topic: newTopicPool.getItems()) {
-				if (topic.returnProperty(CSConstants.CSP_PROPERTY_ID) != null ) {
-					if (topic.returnProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
+			for (RESTTopicV1 topic: newTopicPool.getItems()) {
+				if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null ) {
+					if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
 						specTopic.setDBId(topic.getId());
 						return specTopic;
 					}
@@ -96,9 +97,9 @@ public class TopicPool {
 			}
 		}
 		if (updatedTopicPool.getItems() != null && !updatedTopicPool.getItems().isEmpty()) {
-			for (ITopicV1 topic: updatedTopicPool.getItems()) {
-				if (topic.returnProperty(CSConstants.CSP_PROPERTY_ID) != null ) {
-					if (topic.returnProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
+			for (RESTTopicV1 topic: updatedTopicPool.getItems()) {
+				if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null ) {
+					if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
 						specTopic.setDBId(topic.getId());
 						return specTopic;
 					}
@@ -120,7 +121,7 @@ public class TopicPool {
 	public void rollbackPool() {
 		if (newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty()) return;
 		PathSegment path = new PathSegmentImpl("ids", false);
-		for (ITopicV1 topic: newTopicPool.getItems()) {
+		for (RESTTopicV1 topic: newTopicPool.getItems()) {
 			path.getMatrixParameters().put(   
                     topic.getId().toString(), 
                     new ArrayList<String>(){{add("");}});

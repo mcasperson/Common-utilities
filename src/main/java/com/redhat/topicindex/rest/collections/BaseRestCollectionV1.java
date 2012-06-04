@@ -5,12 +5,12 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
 /**
  * The base class for all collections used in the REST interface.
  */
-public class BaseRestCollectionV1<T extends IBaseRESTEntityV1<T>>
+public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T>>
 {
 	private Integer size = 0;
 	private String expand = null;

@@ -1,8 +1,9 @@
 package com.redhat.topicindex.rest.entities;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
-public class RoleV1 extends BaseRESTEntityV1<RoleV1>
+public class RoleV1 extends RESTBaseEntityV1<RoleV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";

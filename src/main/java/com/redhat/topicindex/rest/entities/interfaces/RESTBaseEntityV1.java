@@ -1,18 +1,14 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.IBaseRESTEntityV1;
 
-/**
- * The base class for all entities used by the REST interface.
- */
-public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implements IBaseRESTEntityV1<T>
+public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T>>
 {
+	public static final String REVISIONS_NAME = "revisions";
+	
 	/** The id of the entity */
 	private Integer id;
 	/** The revision of the entity */
@@ -36,7 +32,7 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 	/** A list of the Envers revision numbers */
 	private BaseRestCollectionV1<T> revisions = null;
 	
-	public void cloneInto(final IBaseRESTEntityV1<T> clone, final boolean deepCopy)
+	public void cloneInto(final RESTBaseEntityV1<T> clone, final boolean deepCopy)
 	{
 		clone.setId(new Integer(this.id));
 		clone.setRevision(this.revision);
@@ -84,8 +80,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.setAddLink(baseUrl + "/1/" + restBasePath + "/post/" + dataType + "/" + id);
 		this.setEditLink(baseUrl + "/1/" + restBasePath + "/put/" + dataType + "/" + id);
 	}
-
-	@XmlElement
 	public String getSelfLink()
 	{
 		return selfLink;
@@ -95,8 +89,7 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 	{
 		this.selfLink = selfLink;
 	}
-
-	@XmlElement
+	
 	public String getEditLink()
 	{
 		return editLink;
@@ -107,7 +100,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.editLink = editLink;
 	}
 
-	@XmlElement
 	public String getDeleteLink()
 	{
 		return deleteLink;
@@ -118,7 +110,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.deleteLink = deleteLink;
 	}
 
-	@XmlElement
 	public String getAddLink()
 	{
 		return addLink;
@@ -129,7 +120,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.addLink = addLink;
 	}
 
-	@XmlElement
 	public List<String> getExpand()
 	{
 		return expand;
@@ -140,7 +130,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.expand = expand;
 	}
 
-	@XmlElement
 	public boolean getAddItem()
 	{
 		return addItem;
@@ -151,7 +140,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.addItem = addItem;
 	}
 
-	@XmlElement
 	public boolean getRemoveItem()
 	{
 		return removeItem;
@@ -162,7 +150,6 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 		this.removeItem = removeItem;
 	}
 
-	@XmlElement
 	public List<String> getConfiguredParameters()
 	{
 		return configuredParameters;
@@ -202,6 +189,4 @@ public abstract class BaseRESTEntityV1<T extends IBaseRESTEntityV1<T>> implement
 	{
 		this.revisions = revisions;
 	}
-
-
 }

@@ -1,22 +1,22 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.IProjectV1;
-import com.redhat.topicindex.rest.entities.interfaces.ITagV1;
 
-/**
- * A REST representation of the Project database entity
- */
-public class ProjectV1 extends BaseRESTEntityV1<IProjectV1> implements IProjectV1
+
+public class RESTProjectV1 extends RESTBaseEntityV1<RESTProjectV1>
 {
+	public static final String NAME_NAME = "name";
+	public static final String DESCRIPTION_NAME = "description";
+	public static final String TAGS_NAME = "tags";
+	
 	private String name = null;
 	private String description = null;
-	private BaseRestCollectionV1<ITagV1> tags = null;
+	private BaseRestCollectionV1<RESTTagV1> tags = null;
 	
 	@Override
-	public IProjectV1 clone(boolean deepCopy)
+	public RESTProjectV1 clone(boolean deepCopy)
 	{
-		final ProjectV1 retValue = new ProjectV1();
+		final RESTProjectV1 retValue = new RESTProjectV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		
@@ -67,20 +67,19 @@ public class ProjectV1 extends BaseRESTEntityV1<IProjectV1> implements IProjectV
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<ITagV1> getTags()
+	public BaseRestCollectionV1<RESTTagV1> getTags()
 	{
 		return tags;
 	}
 
-	public void setTags(final BaseRestCollectionV1<ITagV1> tags)
+	public void setTags(final BaseRestCollectionV1<RESTTagV1> tags)
 	{
 		this.tags = tags;
 	}
 	
-	public void setTagsExplicit(final BaseRestCollectionV1<ITagV1> tags)
+	public void setTagsExplicit(final BaseRestCollectionV1<RESTTagV1> tags)
 	{
 		this.tags = tags;
 		this.setParamaterToConfigured(TAGS_NAME);
 	}
-
 }

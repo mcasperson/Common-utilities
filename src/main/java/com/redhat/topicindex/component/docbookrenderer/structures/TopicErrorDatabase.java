@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.IBaseTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
 /**
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase<T extends IBaseTopicV1<T>>
+public class TopicErrorDatabase<T extends RESTBaseTopicV1<T>>
 {
 	public static final Integer ERROR = 1;
 	public static final Integer WARNING = 5;
@@ -73,11 +75,11 @@ public class TopicErrorDatabase<T extends IBaseTopicV1<T>>
 		for (final String locale : errors.keySet())
 			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
 			{
-				if (topic.returnIsDummyTopic())
+				if (ComponentBaseTopicV1.returnIsDummyTopic(topic))
 				{
-					if (topic.getClass() == TranslatedTopicV1.class && topicErrorData.getTopic() instanceof TranslatedTopicV1)
+					if (topic.getClass() == RESTTranslatedTopicV1.class && topicErrorData.getTopic() instanceof RESTTranslatedTopicV1)
 					{
-						if (((TranslatedTopicV1) topicErrorData.getTopic()).getTopicId().equals(((TranslatedTopicV1) topic).getTopicId()))
+						if (((RESTTranslatedTopicV1) topicErrorData.getTopic()).getTopicId().equals(((RESTTranslatedTopicV1) topic).getTopicId()))
 							return topicErrorData;
 					}
 				}
