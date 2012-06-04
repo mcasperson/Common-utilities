@@ -51,7 +51,7 @@ public class RESTTranslatedTopicStringV1 extends RESTBaseEntityV1<RESTTranslated
 		this.originalString = originalString;
 	}
 	
-	public void setOriginalStringExplicit(final String originalString)
+	public void explicitSetOriginalString(final String originalString)
 	{
 		this.originalString = originalString;
 		this.setParamaterToConfigured(ORIGINALSTRING_NAME);
@@ -67,7 +67,7 @@ public class RESTTranslatedTopicStringV1 extends RESTBaseEntityV1<RESTTranslated
 		this.translatedString = translatedString;
 	}
 	
-	public void setTranslatedStringExplicit(final String translatedString)
+	public void explicitSetTranslatedString(final String translatedString)
 	{
 		this.translatedString = translatedString;
 		this.setParamaterToConfigured(TRANSLATEDSTRING_NAME);
