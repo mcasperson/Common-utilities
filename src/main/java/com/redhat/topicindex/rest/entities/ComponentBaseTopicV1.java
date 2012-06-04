@@ -22,6 +22,10 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
 import com.redhat.topicindex.rest.sort.TagV1NameComparator;
 
+/**
+ * This component contains methods that can be applied against all topic entities
+ * @author Matthew Casperson
+ */
 public class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends ComponentBaseRESTEntityWithPropertiesV1<T>
 {
 	final T source;

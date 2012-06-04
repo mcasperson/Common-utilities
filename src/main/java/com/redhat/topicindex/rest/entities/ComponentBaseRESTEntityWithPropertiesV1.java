@@ -4,7 +4,7 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityWithProperti
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 
 /**
- * This is the base class for all entities that have Property Tags
+ * This component provides methods that relate to database entities that have properties attached to them.
  */
 public class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBaseEntityWithPropertiesV1<T>> 
 {

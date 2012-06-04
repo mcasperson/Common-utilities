@@ -7,7 +7,8 @@ import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 
 /**
- * A REST representation of the Topic entity
+ * This component contains methods that can be applied against topics
+ * @author Matthew Casperson
  */
 public class ComponentTopicV1 extends ComponentBaseTopicV1<RESTTopicV1>
 {
