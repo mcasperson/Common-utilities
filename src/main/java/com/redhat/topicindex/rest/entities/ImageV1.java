@@ -25,10 +25,25 @@ public class ImageV1 extends RESTBaseEntityV1<ImageV1>
 		this.cloneInto(retValue, deepCopy);
 		
 		retValue.filename = this.filename;
-		retValue.imageData = imageData.clone();
-		retValue.thumbnail = this.thumbnail.clone();
-		retValue.imageDataBase64 = this.imageDataBase64.clone();
 		retValue.description = this.description;
+		
+		if (deepCopy)
+		{
+			/* use arraycopy() as a GWT compatible alternative to clone() */
+			
+			retValue.imageData = new byte[this.imageData.length]; 
+			System.arraycopy(this.imageData, 0, retValue.imageData, 0, imageData.length);
+			retValue.thumbnail = new byte[this.thumbnail.length];
+			System.arraycopy(this.thumbnail, 0, retValue.thumbnail, 0, thumbnail.length);
+			retValue.imageDataBase64 = new byte[this.imageDataBase64.length];
+			System.arraycopy(this.imageDataBase64, 0, retValue.imageDataBase64, 0, imageDataBase64.length);
+		}
+		else
+		{
+			retValue.imageData = this.imageData;
+			retValue.thumbnail = this.thumbnail;
+			retValue.imageDataBase64 = this.imageDataBase64;
+		}
 		
 		return retValue;
 	}
