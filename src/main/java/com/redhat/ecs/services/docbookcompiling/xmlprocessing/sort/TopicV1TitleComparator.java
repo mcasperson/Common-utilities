@@ -2,7 +2,6 @@ package com.redhat.ecs.services.docbookcompiling.xmlprocessing.sort;
 
 import java.util.Comparator;
 
-import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 
 public class TopicV1TitleComparator implements Comparator<RESTTopicV1>

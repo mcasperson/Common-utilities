@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,7 +14,6 @@ import org.xml.sax.SAXException;
 import com.redhat.ecs.commonstructures.NameIDSortMap;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.ecs.commonutils.XMLUtilities;
-import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
@@ -26,7 +23,7 @@ import com.redhat.topicindex.rest.sort.TagV1NameComparator;
  * This component contains methods that can be applied against all topic entities
  * @author Matthew Casperson
  */
-public class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends ComponentBaseRESTEntityWithPropertiesV1<T>
+public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends ComponentBaseRESTEntityWithPropertiesV1<T>
 {
 	final T source;
 	
@@ -243,30 +240,6 @@ public class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends Componen
 		return retValue;
 	}
 
-	public T returnRelatedTopicByID(final Integer id)
-	{
-		return returnRelatedTopicByID(source, id);
-	}
-	
-	static public <T extends RESTBaseTopicV1<T>> T returnRelatedTopicByID(final T source, final Integer id)
-	{
-		if (source.getOutgoingRelationships() != null && source.getOutgoingRelationships().getItems() != null)
-			for (final T topic : source.getOutgoingRelationships().getItems())
-				if (topic.getId().equals(id))
-					return topic;
-		return null;
-	}
-
-	public boolean hasRelationshipTo(final Integer id)
-	{
-		return hasRelationshipTo(source, id);
-	}
-	
-	static public <T extends RESTBaseTopicV1<T>> boolean hasRelationshipTo(final T source, final Integer id)
-	{
-		return returnRelatedTopicByID(source, id) != null;
-	}
-
 	public boolean hasTag(final Integer tagID)
 	{
 		return hasTag(source, tagID);
@@ -296,23 +269,12 @@ public class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends Componen
 		return source.getId() == null || source.getId() < 0;
 	}
 	
-	public String returnInternalURL()
-	{
-		return returnInternalURL(source);
-	}
-	
-	static public <T extends RESTBaseTopicV1<T>> String returnInternalURL(final T source)
-	{
-		return "Topic.seam?topicTopicId=" + source.getId() + "&selectedTab=Rendered+View";
-	}
-
-	public String returnErrorXRefID()
-	{
-		return returnErrorXRefID(source);
-	}
-	
-	static public <T extends RESTBaseTopicV1<T>> String returnErrorXRefID(final T source)
-	{
-		return DocbookBuilderConstants.ERROR_XREF_ID_PREFIX + source.getId();
-	}
+	public abstract boolean hasRelationshipTo(final Integer id);
+	public abstract String returnBugzillaBuildId();
+	public abstract String returnSkynetURL();
+	public abstract String returnInternalURL();
+	public abstract RESTBaseTopicV1<T> returnRelatedTopicByID(final Integer id);
+	public abstract String returnErrorXRefID();
+	public abstract String returnXrefPropertyOrId(final Integer propertyTagId);
+	public abstract String returnXRefID();
 }

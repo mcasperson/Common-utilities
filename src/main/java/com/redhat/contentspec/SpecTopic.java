@@ -20,7 +20,10 @@ import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.ecs.commonutils.StringUtilities;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
 public class SpecTopic extends SpecNode
 {
@@ -740,10 +743,24 @@ public class SpecTopic extends SpecNode
 	public String getUniqueLinkId(final boolean useFixedUrls)
 	{
 		final String topicXRefId;
-		if (useFixedUrls)
-			topicXRefId = ComponentTopicV1.<RESTBaseTopicV1>returnXrefPropertyOrId(topic, CommonConstants.FIXED_URL_PROP_TAG_ID);
+		if (topic instanceof RESTTranslatedTopicV1)
+		{
+			if (useFixedUrls)
+				topicXRefId = ComponentTranslatedTopicV1.returnXrefPropertyOrId((RESTTranslatedTopicV1) topic, CommonConstants.FIXED_URL_PROP_TAG_ID);
+			else
+			{
+				topicXRefId = ComponentTranslatedTopicV1.returnXRefID((RESTTranslatedTopicV1) topic);
+			}
+		}
 		else
-			topicXRefId = ComponentTopicV1.<RESTBaseTopicV1>returnXRefID(topic);
+		{
+			if (useFixedUrls)
+				topicXRefId = ComponentTopicV1.returnXrefPropertyOrId((RESTTopicV1) topic, CommonConstants.FIXED_URL_PROP_TAG_ID);
+			else
+			{
+				topicXRefId = ComponentTopicV1.returnXRefID((RESTTopicV1) topic);
+			}
+		}
 
 		return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
 	}

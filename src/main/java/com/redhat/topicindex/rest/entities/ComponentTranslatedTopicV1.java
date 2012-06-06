@@ -2,6 +2,7 @@ package com.redhat.topicindex.rest.entities;
 
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
+import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
 /**
@@ -69,7 +70,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		return returnInternalURL(source);
 	}
 	
-	public String returnInternalURL(final RESTTranslatedTopicV1 source)
+	static public String returnInternalURL(final RESTTranslatedTopicV1 source)
 	{
 		/*
 		 * If the topic isn't a dummy then link to the translated counterpart. If the topic is a dummy URL and the locale doesn't match the historical topic's
@@ -80,13 +81,13 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		{
 			return "TranslatedTopic.seam?translatedTopicId=" + source.getTranslatedTopicId() + "&locale=" + source.getLocale() + "&selectedTab=Rendered+View";
 		}
-		else if (hasBeenPushedForTranslation())
+		else if (hasBeenPushedForTranslation(source))
 		{
 			return "TranslatedTopic.seam?translatedTopicId=" + returnPushedTranslationTopicId(source) + "&locale=" + source.getTopic().getLocale() + "&selectedTab=Rendered+View";
 		}
 		else
 		{
-			return ComponentBaseTopicV1.returnInternalURL(source.getTopic());
+			return ComponentTopicV1.returnInternalURL(source.getTopic());
 		}
 	}
 
@@ -129,7 +130,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		else if (hasBeenPushedForTranslation(source))
 			return "TranslatedTopicID" + returnPushedTranslationTopicId(source);
 		else
-			return ComponentBaseTopicV1.returnErrorXRefID(source.getTopic());
+			return ComponentTopicV1.returnErrorXRefID(source.getTopic());
 	}
 
 	public String returnErrorXRefID()
@@ -189,5 +190,34 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		}
 
 		return baseTranslationExists;
+	}
+	
+	public boolean hasRelationshipTo(final Integer id)
+	{
+		return hasRelationshipTo(source, id);
+	}
+	
+	static public boolean hasRelationshipTo(final RESTTranslatedTopicV1 source, final Integer id)
+	{
+		return returnRelatedTopicByID(source, id) != null;
+	}
+	
+
+	public String returnXrefPropertyOrId(final Integer propertyTagId)
+	{
+		return returnXrefPropertyOrId(source, propertyTagId);
+	}
+	
+	static public String returnXrefPropertyOrId(final RESTTranslatedTopicV1 source, final Integer propertyTagId)
+	{
+		final RESTPropertyTagV1 propTag = returnProperty(source, propertyTagId);
+		if (propTag != null)
+		{
+			return propTag.getValue();
+		}
+		else
+		{
+			return returnXRefID(source);
+		}
 	}
 }
