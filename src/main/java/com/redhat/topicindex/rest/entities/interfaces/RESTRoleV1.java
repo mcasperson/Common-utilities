@@ -1,9 +1,8 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
-public class RoleV1 extends RESTBaseEntityV1<RoleV1>
+public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -15,14 +14,14 @@ public class RoleV1 extends RESTBaseEntityV1<RoleV1>
 	private String relationshipDescription;
 	private String name;
 	private String description;
-	private BaseRestCollectionV1<UserV1> users;
-	private BaseRestCollectionV1<RoleV1> childRoles;
-	private BaseRestCollectionV1<RoleV1> parentRoles;
+	private BaseRestCollectionV1<RESTUserV1> users;
+	private BaseRestCollectionV1<RESTRoleV1> childRoles;
+	private BaseRestCollectionV1<RESTRoleV1> parentRoles;
 	
 	@Override
-	public RoleV1 clone(boolean deepCopy)
+	public RESTRoleV1 clone(boolean deepCopy)
 	{
-		final RoleV1 retValue = new RoleV1();
+		final RESTRoleV1 retValue = new RESTRoleV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		
@@ -57,7 +56,7 @@ public class RoleV1 extends RESTBaseEntityV1<RoleV1>
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -73,55 +72,55 @@ public class RoleV1 extends RESTBaseEntityV1<RoleV1>
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<UserV1> getUsers()
+	public BaseRestCollectionV1<RESTUserV1> getUsers()
 	{
 		return users;
 	}
 
-	public void setUsers(final BaseRestCollectionV1<UserV1> users)
+	public void setUsers(final BaseRestCollectionV1<RESTUserV1> users)
 	{
 		this.users = users;
 	}
 	
-	public void setUsersExplicit(final BaseRestCollectionV1<UserV1> users)
+	public void explicitSetUsers(final BaseRestCollectionV1<RESTUserV1> users)
 	{
 		this.users = users;
 		this.setParamaterToConfigured(USERS_NAME);
 	}
 
-	public BaseRestCollectionV1<RoleV1> getChildRoles()
+	public BaseRestCollectionV1<RESTRoleV1> getChildRoles()
 	{
 		return childRoles;
 	}
 
-	public void setChildRoles(final BaseRestCollectionV1<RoleV1> childRoles)
+	public void setChildRoles(final BaseRestCollectionV1<RESTRoleV1> childRoles)
 	{
 		this.childRoles = childRoles;
 	}
 	
-	public void setChildRolesExplicit(final BaseRestCollectionV1<RoleV1> childRoles)
+	public void explicitSetChildRoles(final BaseRestCollectionV1<RESTRoleV1> childRoles)
 	{
 		this.childRoles = childRoles;
 		this.setParamaterToConfigured(CHILDROLES_NAME);
 	}
 
-	public BaseRestCollectionV1<RoleV1> getParentRoles()
+	public BaseRestCollectionV1<RESTRoleV1> getParentRoles()
 	{
 		return parentRoles;
 	}
 
-	public void setParentRoles(final BaseRestCollectionV1<RoleV1> parentRoles)
+	public void setParentRoles(final BaseRestCollectionV1<RESTRoleV1> parentRoles)
 	{
 		this.parentRoles = parentRoles;
 	}
 	
-	public void setParentRolesExplicit(final BaseRestCollectionV1<RoleV1> parentRoles)
+	public void explicitSetParentRoles(final BaseRestCollectionV1<RESTRoleV1> parentRoles)
 	{
 		this.parentRoles = parentRoles;
 		this.setParamaterToConfigured(PARENTROLES_NAME);

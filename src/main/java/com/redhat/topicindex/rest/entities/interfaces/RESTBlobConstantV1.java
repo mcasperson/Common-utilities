@@ -1,11 +1,10 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
 /**
  * A REST representation of the BlobConstants database entity
  */
-public class BlobConstantV1 extends RESTBaseEntityV1<BlobConstantV1>
+public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String VALUE_NAME = "value";
@@ -14,14 +13,23 @@ public class BlobConstantV1 extends RESTBaseEntityV1<BlobConstantV1>
 	private byte[] value;
 	
 	@Override
-	public BlobConstantV1 clone(boolean deepCopy)
+	public RESTBlobConstantV1 clone(boolean deepCopy)
 	{
-		final BlobConstantV1 retValue = new BlobConstantV1();
+		final RESTBlobConstantV1 retValue = new RESTBlobConstantV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		
 		retValue.name = this.name;
-		retValue.value = value.clone();
+		
+		if (deepCopy)
+		{
+			retValue.value = new byte[value.length];
+			System.arraycopy(value, 0, retValue.value, 0, value.length);
+		}
+		else
+		{
+			retValue.value = value;
+		}
 		return retValue;
 	}
 
@@ -35,7 +43,7 @@ public class BlobConstantV1 extends RESTBaseEntityV1<BlobConstantV1>
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -51,11 +59,9 @@ public class BlobConstantV1 extends RESTBaseEntityV1<BlobConstantV1>
 		this.value = value;
 	}
 	
-	public void setValueExplicit(final byte[] value)
+	public void explicitSetValue(final byte[] value)
 	{
 		this.value = value;
 		this.setParamaterToConfigured(VALUE_NAME);
 	}
-
-	
 }

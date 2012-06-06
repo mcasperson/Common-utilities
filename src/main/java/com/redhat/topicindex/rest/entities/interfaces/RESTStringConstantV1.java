@@ -1,11 +1,10 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
 /**
  * A REST representation of the StringConstants database entity
  */
-public class StringConstantV1 extends RESTBaseEntityV1<StringConstantV1>
+public class RESTStringConstantV1 extends RESTBaseEntityV1<RESTStringConstantV1>
 {
 	public static final String ID_NAME = "id";
 	public static final String NAME_NAME = "name";
@@ -15,9 +14,9 @@ public class StringConstantV1 extends RESTBaseEntityV1<StringConstantV1>
 	private String value;
 	
 	@Override
-	public StringConstantV1 clone(boolean deepCopy)
+	public RESTStringConstantV1 clone(boolean deepCopy)
 	{
-		final StringConstantV1 retValue = new StringConstantV1();
+		final RESTStringConstantV1 retValue = new RESTStringConstantV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		
@@ -37,7 +36,7 @@ public class StringConstantV1 extends RESTBaseEntityV1<StringConstantV1>
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -53,7 +52,7 @@ public class StringConstantV1 extends RESTBaseEntityV1<StringConstantV1>
 		this.value = value;
 	}
 	
-	public void setValueExplicit(final String value)
+	public void explicitSetValue(final String value)
 	{
 		this.value = value;
 		this.setParamaterToConfigured(VALUE_NAME);

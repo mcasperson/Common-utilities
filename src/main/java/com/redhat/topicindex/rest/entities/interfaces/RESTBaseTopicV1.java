@@ -24,7 +24,7 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 	protected BaseRestCollectionV1<RESTTagV1> tags = null;
 	protected BaseRestCollectionV1<T> outgoingRelationships = null;
 	protected BaseRestCollectionV1<T> incomingRelationships = null;
-	protected BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls = null;
+	protected BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls_OTM = null;
 	
 	public void cloneInto(final RESTBaseTopicV1<T> clone, final boolean deepCopy)
 	{
@@ -42,14 +42,14 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 			clone.tags = this.tags == null ? null: this.tags.clone(deepCopy);
 			clone.outgoingRelationships = this.outgoingRelationships == null ? null : this.outgoingRelationships.clone(deepCopy);
 			clone.incomingRelationships = this.incomingRelationships == null ? null : this.incomingRelationships.clone(deepCopy);
-			clone.sourceUrls = this.sourceUrls == null ? null : this.sourceUrls.clone(deepCopy);
+			clone.sourceUrls_OTM = this.sourceUrls_OTM == null ? null : this.sourceUrls_OTM.clone(deepCopy);
 		}
 		else
 		{
 			clone.tags = this.tags;
 			clone.outgoingRelationships = this.outgoingRelationships;
 			clone.incomingRelationships = this.incomingRelationships;
-			clone.sourceUrls = this.sourceUrls;
+			clone.sourceUrls_OTM = this.sourceUrls_OTM;
 		}
 	}
 	
@@ -179,12 +179,12 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 
 	public BaseRestCollectionV1<RESTTopicSourceUrlV1> getSourceUrls_OTM()
 	{
-		return sourceUrls;
+		return sourceUrls_OTM;
 	}
 
 	public void setSourceUrls_OTM(final BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls)
 	{
-		this.sourceUrls = sourceUrls;		
+		this.sourceUrls_OTM = sourceUrls;		
 	}
 	
 	public void explicitSetSourceUrls_OTM(final BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls)

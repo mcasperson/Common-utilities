@@ -1,9 +1,8 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
-public class UserV1 extends RESTBaseEntityV1<UserV1>
+public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -11,12 +10,12 @@ public class UserV1 extends RESTBaseEntityV1<UserV1>
 
 	private String name;
 	private String description;
-	private BaseRestCollectionV1<RoleV1> roles = null;
+	private BaseRestCollectionV1<RESTRoleV1> roles = null;
 	
 	@Override
-	public UserV1 clone(boolean deepCopy)
+	public RESTUserV1 clone(boolean deepCopy)
 	{
-		final UserV1 retValue = new UserV1();
+		final RESTUserV1 retValue = new RESTUserV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		
@@ -45,7 +44,7 @@ public class UserV1 extends RESTBaseEntityV1<UserV1>
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -61,23 +60,23 @@ public class UserV1 extends RESTBaseEntityV1<UserV1>
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<RoleV1> getRoles()
+	public BaseRestCollectionV1<RESTRoleV1> getRoles()
 	{
 		return roles;
 	}
 
-	public void setRoles(final BaseRestCollectionV1<RoleV1> roles)
+	public void setRoles(final BaseRestCollectionV1<RESTRoleV1> roles)
 	{
 		this.roles = roles;
 	}
 	
-	public void setRolesExplicit(final BaseRestCollectionV1<RoleV1> roles)
+	public void explicitSetRoles(final BaseRestCollectionV1<RESTRoleV1> roles)
 	{
 		this.roles = roles;
 		this.setParamaterToConfigured(ROLES_NAME);

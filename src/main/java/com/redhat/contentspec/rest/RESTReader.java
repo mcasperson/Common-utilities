@@ -19,14 +19,14 @@ import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentTagV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
-import com.redhat.topicindex.rest.entities.ImageV1;
-import com.redhat.topicindex.rest.entities.UserV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTImageV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicSourceUrlV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTUserV1;
 import com.redhat.topicindex.rest.expand.ExpandDataDetails;
 import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
@@ -546,17 +546,17 @@ public class RESTReader
 	/*
 	 * Gets a List of all User tuples for a specified name.
 	 */
-	public List<UserV1> getUsersByName(String userName)
+	public List<RESTUserV1> getUsersByName(String userName)
 	{
-		List<UserV1> output = new ArrayList<UserV1>();
+		List<RESTUserV1> output = new ArrayList<RESTUserV1>();
 
 		try
 		{
 
-			final BaseRestCollectionV1<UserV1> users;
-			if (collectionsCache.containsKey(UserV1.class))
+			final BaseRestCollectionV1<RESTUserV1> users;
+			if (collectionsCache.containsKey(RESTUserV1.class))
 			{
-				users = collectionsCache.get(UserV1.class);
+				users = collectionsCache.get(RESTUserV1.class);
 			}
 			else
 			{
@@ -567,12 +567,12 @@ public class RESTReader
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 				users = client.getJSONUsers(expandEncodedString);
-				collectionsCache.add(UserV1.class, users);
+				collectionsCache.add(RESTUserV1.class, users);
 			}
 
 			if (users != null)
 			{
-				for (UserV1 user : users.getItems())
+				for (RESTUserV1 user : users.getItems())
 				{
 					if (user.getName().equals(userName))
 					{
@@ -593,17 +593,17 @@ public class RESTReader
 	/*
 	 * Gets a specific User tuple from the database as specified by the tags ID.
 	 */
-	public UserV1 getUserById(int id)
+	public RESTUserV1 getUserById(int id)
 	{
 		try
 		{
-			if (entityCache.containsKeyValue(UserV1.class, id))
+			if (entityCache.containsKeyValue(RESTUserV1.class, id))
 			{
-				return entityCache.get(UserV1.class, id);
+				return entityCache.get(RESTUserV1.class, id);
 			}
 			else
 			{
-				UserV1 user = client.getJSONUser(id, null);
+				RESTUserV1 user = client.getJSONUser(id, null);
 				entityCache.add(user);
 				return user;
 			}
@@ -875,7 +875,7 @@ public class RESTReader
 	/*
 	 * Gets an Image File for a specific ID
 	 */
-	public ImageV1 getImageById(int id)
+	public RESTImageV1 getImageById(int id)
 	{
 		try
 		{

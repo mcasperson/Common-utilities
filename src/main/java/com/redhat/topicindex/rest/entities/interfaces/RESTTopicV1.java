@@ -13,8 +13,8 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 	protected String description = null;
 	protected Date created = null;
 	protected Date lastModified = null;
-	protected BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs = null;
-	protected BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics = null;
+	protected BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs_OTM = null;
+	protected BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics_OTM = null;
 	
 	@Override
 	public RESTTopicV1 clone(final boolean deepCopy)
@@ -29,13 +29,13 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 		
 		if (deepCopy)
 		{
-			retValue.bugzillaBugs = this.bugzillaBugs == null ? null : this.bugzillaBugs.clone(deepCopy);
-			retValue.translatedTopics = this.translatedTopics == null ? null : this.translatedTopics.clone(deepCopy);
+			retValue.bugzillaBugs_OTM = this.bugzillaBugs_OTM == null ? null : this.bugzillaBugs_OTM.clone(deepCopy);
+			retValue.translatedTopics_OTM = this.translatedTopics_OTM == null ? null : this.translatedTopics_OTM.clone(deepCopy);
 		}
 		else
 		{
-			retValue.bugzillaBugs = this.bugzillaBugs;
-			retValue.translatedTopics = this.translatedTopics;
+			retValue.bugzillaBugs_OTM = this.bugzillaBugs_OTM;
+			retValue.translatedTopics_OTM = this.translatedTopics_OTM;
 		}
 		return retValue;
 		
@@ -97,12 +97,12 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 	
 	public BaseRestCollectionV1<RESTBugzillaBugV1> getBugzillaBugs_OTM()
 	{
-		return bugzillaBugs;
+		return bugzillaBugs_OTM;
 	}
 
 	public void setBugzillaBugs_OTM(final BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs)
 	{
-		this.bugzillaBugs = bugzillaBugs;
+		this.bugzillaBugs_OTM = bugzillaBugs;
 	}
 	
 	public void explicitSetBugzillaBugs_OTM(final BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs)
@@ -125,17 +125,17 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 	
 	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopics_OTM()
 	{
-		return translatedTopics;
+		return translatedTopics_OTM;
 	}
 
 	public void setTranslatedTopics_OTM(final BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics)
 	{
-		this.translatedTopics = translatedTopics;
+		this.translatedTopics_OTM = translatedTopics;
 	}
 	
 	public void explicitSetTranslatedTopics_OTM(final BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics)
 	{
-		this.translatedTopics = translatedTopics;
+		this.translatedTopics_OTM = translatedTopics;
 		setParamaterToConfigured(TRANSLATEDTOPICS_NAME);
 	}
 	
