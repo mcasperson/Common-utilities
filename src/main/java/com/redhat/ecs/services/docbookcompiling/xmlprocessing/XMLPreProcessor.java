@@ -735,7 +735,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		}
 	}
 
-	public static void processInternalImageFiles(final Document xmlDoc)
+	public static void processInternalImageFiles(final Document xmlDoc, final SpecTopic topic)
 	{
 		if (xmlDoc == null)
 			return;
@@ -758,7 +758,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 				 * ImageFileDisplay class.
 				 */
 
-				filerefAttribute.setTextContent("ImageFileDisplay.seam?imageFileId=" + imageId);
+				filerefAttribute.setTextContent("ImageFileDisplay.seam?imageFileId=" + imageId + "&language=" + topic.getTopic().getLocale());
 			}
 		}
 	}
