@@ -15,6 +15,20 @@ public class StringUtilities
 		return "\"" + input.replaceAll("\"", "\"\"") + "\"";
 	}
 	
+	public static String uncapatiliseFirstCharatcer(final String input)
+	{
+		if (input == null)
+			return null;
+		
+		if (input.isEmpty())
+			return "";
+		
+		final String firstChar = input.substring(0, 1).toLowerCase();
+		final String remaining = input.length() > 1 ? input.substring(1) : "";
+		
+		return firstChar + remaining;
+	}
+	
 	/**
 	 * @param input The original string
 	 * @return A string with special characters that break Publican stripped out
