@@ -1,19 +1,14 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+
 public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 {
-	public static final String FILENAME_NAME = "filename";
-	public static final String IMAGEDATA_NAME = "imageData";
-	public static final String IMAGEDATABASE64_NAME = "imageDataBase64";
-	public static final String THUMBNAIL_NAME = "thumbnail";
 	public static final String DESCRIPTION_NAME = "description";
-	
-	private String filename;
-	private byte[] imageData;
-	private byte[] thumbnail;
-	private byte[] imageDataBase64;
+	public static final String LANGUAGEIMAGES_NAME = "languageimages";
+
 	private String description;
-	private String mimeType;
+	private BaseRestCollectionV1<RESTLanguageImageV1> languageImages_OTM = null;
 	
 	@Override
 	public RESTImageV1 clone(boolean deepCopy)
@@ -21,83 +16,19 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 		final RESTImageV1 retValue = new RESTImageV1();
 		
 		this.cloneInto(retValue, deepCopy);
-		
-		retValue.filename = this.filename;
+				
 		retValue.description = this.description;
 		
 		if (deepCopy)
 		{
-			/* use arraycopy as a GWT compatible alternative to clone() */
-			
-			retValue.imageData = new byte[this.imageData.length];
-			System.arraycopy(this.imageData, 0, retValue.imageData, 0, this.imageData.length);
-			
-			retValue.thumbnail = new byte[this.thumbnail.length];
-			System.arraycopy(this.thumbnail, 0, retValue.thumbnail, 0, this.thumbnail.length);
-			
-			retValue.imageDataBase64 = new byte[this.imageDataBase64.length];
-			System.arraycopy(this.imageDataBase64, 0, retValue.imageDataBase64, 0, this.imageDataBase64.length);
+			retValue.languageImages_OTM = this.languageImages_OTM.clone(deepCopy);
 		}
 		else
 		{
-			retValue.imageData = this.imageData;
-			retValue.thumbnail = this.thumbnail;
-			retValue.imageDataBase64 = this.imageDataBase64;
+			retValue.languageImages_OTM = this.languageImages_OTM;
 		}
-		
+				
 		return retValue;
-	}
-
-	public String getFilename()
-	{
-		return filename;
-	}
-
-	public void setFilename(final String filename)
-	{
-		this.filename = filename;
-	}
-	
-	public void explicitSetFilename(final String filename)
-	{
-		this.filename = filename;
-		this.setParamaterToConfigured(FILENAME_NAME);
-	}
-
-	public byte[] getImageData()
-	{
-		return imageData;
-	}
-
-	public void setImageData(final byte[] imageData)
-	{
-		this.imageData = imageData;
-	}
-	
-	public void explicitSetImageData(final byte[] imageData)
-	{
-		this.imageData = imageData;
-		this.setParamaterToConfigured(IMAGEDATA_NAME);
-	}
-
-	public byte[] getThumbnail()
-	{
-		return thumbnail;
-	}
-
-	public void setThumbnail(final byte[] thumbnail)
-	{
-		this.thumbnail = thumbnail;
-	}
-
-	public byte[] getImageDataBase64()
-	{
-		return imageDataBase64;
-	}
-
-	public void setImageDataBase64(final byte[] imageDataBase64)
-	{
-		this.imageDataBase64 = imageDataBase64;
 	}
 
 	public String getDescription()
@@ -114,5 +45,21 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
+	}
+
+	public BaseRestCollectionV1<RESTLanguageImageV1> getLanguageImages_OTM()
+	{
+		return languageImages_OTM;
+	}
+
+	public void setLanguageImages_OTM(BaseRestCollectionV1<RESTLanguageImageV1> languageImages_OTM)
+	{
+		this.languageImages_OTM = languageImages_OTM;
+	}
+	
+	public void explicitSetLanguageImages_OTM(BaseRestCollectionV1<RESTLanguageImageV1> languageImages_OTM)
+	{
+		this.languageImages_OTM = languageImages_OTM;
+		this.setParamaterToConfigured(LANGUAGEIMAGES_NAME);
 	}
 }
