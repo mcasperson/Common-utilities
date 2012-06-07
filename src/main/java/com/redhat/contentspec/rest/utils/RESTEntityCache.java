@@ -44,7 +44,7 @@ public class RESTEntityCache
 		add(value, false);
 	}
 
-	public <T extends RESTBaseEntityV1<T>> void add(T value, boolean isRevision)
+	public <T extends RESTBaseEntityV1<T>> void add(T value, final Integer id, boolean isRevision)
 	{
 		// Add the map if one doesn't exist for the current class
 		if (!singleEntities.containsKey(value.getClass()))
@@ -54,12 +54,17 @@ public class RESTEntityCache
 
 		// Add the entity
 		if (isRevision)
-			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + value.getId() + "-" + value.getRevision(), value);
+			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id + "-" + value.getRevision(), value);
 		else
-			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + value.getId(), value);
+			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id, value);
 
 		// Add any revisions to the cache
 		add(value.getRevisions(), true);
+	}
+	
+	public <T extends RESTBaseEntityV1<T>> void add(T value, boolean isRevision)
+	{
+		add(value, value.getId(), isRevision);
 	}
 
 	public <T extends RESTBaseEntityV1<T>> BaseRestCollectionV1<T> get(Class<T> clazz)

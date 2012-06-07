@@ -439,7 +439,7 @@ public class RESTReader
 	 * Gets a collection of translated topics based on the list of topic ids
 	 * passed.
 	 */
-	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopicsByTopicIds(List<Integer> ids, String locale)
+	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopicsByTopicIds(final List<Integer> ids, final String locale)
 	{
 		if (ids.isEmpty())
 			return null;
@@ -509,6 +509,7 @@ public class RESTReader
 				{
 					for (RESTTranslatedTopicV1 item : downloadedTopics.getItems())
 					{
+						entityCache.add(item, item.getTopicId(), false);
 						topics.addItem(item);
 					}
 				}
