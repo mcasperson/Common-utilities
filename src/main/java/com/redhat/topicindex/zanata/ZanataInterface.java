@@ -21,29 +21,36 @@ import com.redhat.ecs.constants.CommonConstants;
 
 public class ZanataInterface
 {
-	private static final ZanataDetails details = new ZanataDetails();
-	private static final ZanataInterface zanataInterface = new ZanataInterface();
-	
-	public static final ZanataInterface getInstance()
-	{
-		return zanataInterface;
-	}
-	
+	private final ZanataDetails details = new ZanataDetails();
 	private final ZanataProxyFactory proxyFactory;
-	
-	public ZanataInterface() {
+
+	public ZanataInterface()
+	{
 		URI URI = null;
-		try {
+		try
+		{
 			URI = new URI(details.getServer());
-		} catch (URISyntaxException e) {
+		}
+		catch (URISyntaxException e)
+		{
 		}
 		final VersionInfo versionInfo = VersionUtility.getVersionInfo(ZanataProxyFactory.class);
 		if (versionInfo.getVersionNo() == null || versionInfo.getVersionNo().isEmpty() || versionInfo.getVersionNo().equals("unknown"))
 			versionInfo.setVersionNo("1.5.0");
-				
+
 		proxyFactory = new ZanataProxyFactory(URI, details.getUsername(), details.getToken(), versionInfo);
 	}
 	
+	/**
+	 * Constructs the interface with a custom project
+	 * @param projectOverride The name of the Zanata project to work with, which override the default specidie
+	 */
+	public ZanataInterface(final String projectOverride)
+	{
+		this();
+		this.details.setProject(projectOverride);
+	}
+
 	public boolean getZanataResourceExists(final String id)
 	{
 		try
@@ -52,7 +59,7 @@ public class ZanataInterface
 			final ClientResponse<Resource> response = client.getResource(id, null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			return status == Response.Status.OK;
 
 		}
@@ -63,7 +70,7 @@ public class ZanataInterface
 
 		return false;
 	}
-	
+
 	public Resource getZanataResource(final String id)
 	{
 		try
@@ -72,7 +79,7 @@ public class ZanataInterface
 			final ClientResponse<Resource> response = client.getResource(id, null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			if (status == Response.Status.OK)
 			{
 				final Resource entity = response.getEntity();
@@ -90,7 +97,7 @@ public class ZanataInterface
 
 		return null;
 	}
-	
+
 	public List<ResourceMeta> getZanataResources()
 	{
 		try
@@ -99,7 +106,7 @@ public class ZanataInterface
 			final ClientResponse<List<ResourceMeta>> response = client.get(null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			if (status == Response.Status.OK)
 			{
 				final List<ResourceMeta> entities = response.getEntity();
@@ -124,9 +131,9 @@ public class ZanataInterface
 		{
 			final IFixedTranslationResources client = proxyFactory.getFixedTranslationResources(details.getProject(), details.getVersion());
 			final ClientResponse<String> response = client.post(details.getUsername(), details.getToken(), resource, null, true);
-			
+
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			if (status == Response.Status.CREATED)
 			{
 				final String entity = response.getEntity();
@@ -137,15 +144,14 @@ public class ZanataInterface
 			{
 				System.out.println("REST call to createResource() did not complete successfully. HTTP response code was " + status.getStatusCode() + ". Reason was " + status.getReasonPhrase());
 			}
-			
-			
+
 		}
 		catch (final Exception ex)
 		{
 			ExceptionUtilities.handleException(ex);
 		}
 	}
-	
+
 	public boolean getTranslationsExists(final String id, final LocaleId locale)
 	{
 		try
@@ -154,7 +160,7 @@ public class ZanataInterface
 			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			return status == Response.Status.OK;
 
 		}
@@ -186,16 +192,16 @@ public class ZanataInterface
 
 		return null;
 	}
-	
+
 	public TranslationsResource deleteResource(final String id)
 	{
 		try
 		{
 			final IFixedTranslationResources client = proxyFactory.getFixedTranslationResources(details.getProject(), details.getVersion());
 			final ClientResponse<String> response = client.deleteResource(details.getUsername(), details.getToken(), id);
-			
+
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			if (status == Response.Status.OK)
 			{
 				final String entity = response.getEntity();
