@@ -24,7 +24,7 @@ public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1>
 		
 		if (deepCopy)
 		{
-			retValue.roles = this.roles.clone(deepCopy);
+			retValue.roles = this.roles == null ? null : this.roles.clone(deepCopy);
 		}
 		else
 		{

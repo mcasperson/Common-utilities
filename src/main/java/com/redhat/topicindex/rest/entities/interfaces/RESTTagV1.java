@@ -30,10 +30,10 @@ public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1>
 		
 		if (deepCopy)
 		{
-			retValue.categories = this.categories.clone(deepCopy);
-			retValue.parentTags = this.parentTags.clone(deepCopy);
-			retValue.childTags = this.childTags.clone(deepCopy);
-			retValue.projects = this.projects.clone(deepCopy);
+			retValue.categories = this.categories == null ? null : this.categories.clone(deepCopy);
+			retValue.parentTags = this.parentTags == null ? null : this.parentTags.clone(deepCopy);
+			retValue.childTags = this.childTags == null ? null : this.childTags.clone(deepCopy);
+			retValue.projects = this.projects == null ? null : this.projects.clone(deepCopy);
 		}
 		else
 		{

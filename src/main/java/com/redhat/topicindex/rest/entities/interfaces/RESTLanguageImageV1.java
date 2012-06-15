@@ -31,14 +31,35 @@ public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1>
 		{
 			/* use arraycopy as a GWT compatible alternative to clone() */
 
-			retValue.imageData = new byte[this.imageData.length];
-			System.arraycopy(this.imageData, 0, retValue.imageData, 0, this.imageData.length);
+			if (imageData != null)
+			{
+				retValue.imageData = new byte[this.imageData.length];
+				System.arraycopy(this.imageData, 0, retValue.imageData, 0, this.imageData.length);
+			}
+			else
+			{
+				retValue.imageData = null;
+			}
 
-			retValue.thumbnail = new byte[this.thumbnail.length];
-			System.arraycopy(this.thumbnail, 0, retValue.thumbnail, 0, this.thumbnail.length);
+			if (thumbnail != null)
+			{
+				retValue.thumbnail = new byte[this.thumbnail.length];
+				System.arraycopy(this.thumbnail, 0, retValue.thumbnail, 0, this.thumbnail.length);
+			}
+			else
+			{
+				retValue.thumbnail = null;
+			}
 
-			retValue.imageDataBase64 = new byte[this.imageDataBase64.length];
-			System.arraycopy(this.imageDataBase64, 0, retValue.imageDataBase64, 0, this.imageDataBase64.length);
+			if (imageDataBase64 != null)
+			{
+				retValue.imageDataBase64 = new byte[this.imageDataBase64.length];
+				System.arraycopy(this.imageDataBase64, 0, retValue.imageDataBase64, 0, this.imageDataBase64.length);
+			}
+			else
+			{
+				retValue.imageDataBase64 = null;
+			}
 		}
 		else
 		{

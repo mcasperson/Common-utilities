@@ -21,7 +21,7 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 		
 		if (deepCopy)
 		{
-			retValue.languageImages_OTM = this.languageImages_OTM.clone(deepCopy);
+			retValue.languageImages_OTM = this.languageImages_OTM == null ? null : this.languageImages_OTM.clone(deepCopy);
 		}
 		else
 		{

@@ -24,7 +24,14 @@ public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1>
 		if (deepCopy)
 		{
 			retValue.value = new byte[value.length];
-			System.arraycopy(value, 0, retValue.value, 0, value.length);
+			if (value != null)
+			{
+				System.arraycopy(value, 0, retValue.value, 0, value.length);
+			}
+			else
+			{
+				retValue.value = null;
+			}
 		}
 		else
 		{

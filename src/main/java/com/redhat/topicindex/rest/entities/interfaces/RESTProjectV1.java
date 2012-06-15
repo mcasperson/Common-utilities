@@ -25,7 +25,7 @@ public class RESTProjectV1 extends RESTBaseEntityV1<RESTProjectV1>
 
 		if (deepCopy)
 		{
-			retValue.tags = this.tags.clone(deepCopy);
+			retValue.tags = this.tags == null ? null : this.tags.clone(deepCopy);
 		}
 		else
 		{
