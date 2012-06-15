@@ -8,6 +8,7 @@ public class BugzillaOptions {
 	private String product = null;
 	private String component = null;
 	private String version = null;
+	private String urlComponent = null;
 	private boolean injectLinks = true;
 
 	/**
@@ -34,7 +35,7 @@ public class BugzillaOptions {
 	/**
 	 * @param component the component to set
 	 */
-	public void setComponent(String component) {
+	public void setComponent(final String component) {
 		this.component = component;
 	}
 
@@ -48,27 +49,53 @@ public class BugzillaOptions {
 	/**
 	 * @param version the version to set
 	 */
-	public void setVersion(String version) {
+	public void setVersion(final String version)
+	{
 		this.version = version;
 	}
 	
-	public boolean isBugzillaLinksEnabled() {
+	public boolean isBugzillaLinksEnabled()
+	{
 		return injectLinks;
 	}
 	
 	/**
 	 * @param enabled Whether bug links should be injected
 	 */
-	public void setBugzillaLinksEnabled(boolean enabled) {
+	public void setBugzillaLinksEnabled(final boolean enabled)
+	{
 		this.injectLinks = enabled;
 	}
 	
-	public String createBugzillUrl(String bugzillaUrl) {
+	public String createBugzillUrl(final String bugzillaUrl)
+	{
 		try {
 			return bugzillaUrl + (bugzillaUrl.endsWith("/") ? "" : "/") + "enter_bug.cgi?product=" + URLEncoder.encode(product, "UTF-8") + "&amp;component=" + URLEncoder.encode(component, "UTF-8") + (version == null ? "" : ("&amp;version=" + URLEncoder.encode(version, "UTF-8")));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Get the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @return The BZURL component for the content specification.
+	 */
+	public String getUrlComponent()
+	{
+		return urlComponent;
+	}
+
+	/**
+	 * Set the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @param urlComponent The BZURL component to be used when building.
+	 */
+	public void setUrlComponent(final String urlComponent)
+	{
+		this.urlComponent = urlComponent;
 	}
 }

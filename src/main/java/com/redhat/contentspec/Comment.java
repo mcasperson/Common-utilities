@@ -74,7 +74,8 @@ public class Comment extends Node {
 	}
 	
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String spacer = "";
 		for (int i = 1; i < (parent != null ? getColumn() : 0); i++) {
 			spacer += "  ";

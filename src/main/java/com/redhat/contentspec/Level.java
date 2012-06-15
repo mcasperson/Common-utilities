@@ -386,6 +386,9 @@ public class Level extends SpecNode {
 							// Add the target id if one exists
 							targetId == null ? "" : (" [" + targetId + "]")
 						) + (
+							// Add the external target id if one exists
+							externalTargetId == null ? "" : (" [" + externalTargetId + "]")
+						) + (
 							// Add any options
 							options.equals("") ? "" : (" [" + options + "]")
 						)
@@ -401,7 +404,8 @@ public class Level extends SpecNode {
 	 * Returns a String Representation of the Level.
 	 */
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		if (hasSpecTopics())
 		{
 			String spacer = "";

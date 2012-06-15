@@ -3,7 +3,9 @@ package com.redhat.contentspec.rest.utils;
 import java.util.HashMap;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
 public class RESTEntityCache
 {
@@ -21,7 +23,15 @@ public class RESTEntityCache
 		{
 			for (T item : value.getItems())
 			{
-				add(item, isRevisions);
+				if (item.getClass() == RESTTranslatedTopicV1.class)
+				{
+					add(item, ((RESTTranslatedTopicV1) item).getTopicId(), isRevisions);
+					add(item, ComponentTranslatedTopicV1.returnZanataId(((RESTTranslatedTopicV1) item)), isRevisions);
+				}
+				else
+				{
+					add(item, isRevisions);
+				}
 			}
 		}
 	}
@@ -44,7 +54,12 @@ public class RESTEntityCache
 		add(value, false);
 	}
 
-	public <T extends RESTBaseEntityV1<T>> void add(T value, final Integer id, boolean isRevision)
+	public <T extends RESTBaseEntityV1<T>> void add(T value, final Number id, boolean isRevision)
+	{
+		add(value, id.toString(), isRevision);
+	}
+	
+	public <T extends RESTBaseEntityV1<T>> void add(T value, final String id, boolean isRevision)
 	{
 		// Add the map if one doesn't exist for the current class
 		if (!singleEntities.containsKey(value.getClass()))
@@ -64,7 +79,7 @@ public class RESTEntityCache
 	
 	public <T extends RESTBaseEntityV1<T>> void add(T value, boolean isRevision)
 	{
-		add(value, value.getId(), isRevision);
+		add(value, value.getId().toString(), isRevision);
 	}
 
 	public <T extends RESTBaseEntityV1<T>> BaseRestCollectionV1<T> get(Class<T> clazz)

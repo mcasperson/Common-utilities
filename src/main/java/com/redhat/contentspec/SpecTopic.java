@@ -39,6 +39,7 @@ public class SpecTopic extends SpecNode
 	private String duplicateId = null;
 	private RESTBaseTopicV1<? extends RESTBaseTopicV1<?>> topic = null;
 	private Document xmlDocument = null;
+	private Integer revision = null;
 
 	/**
 	 * Constructor
@@ -109,12 +110,22 @@ public class SpecTopic extends SpecNode
 
 	// Start of the basic getter/setter methods for this Topic.
 
+	/**
+	 * Get the underlying topic that this Spec Topic represents.
+	 * 
+	 * @return The underlying topic if it has been set otherwise null.
+	 */
 	public RESTBaseTopicV1<? extends RESTBaseTopicV1<?>> getTopic()
 	{
 		return topic;
 	}
 
-	public <T extends RESTBaseTopicV1<T>> void setTopic(RESTBaseTopicV1<T> topic)
+	/**
+	 * Set the underlying topic that this spec topic represents.
+	 * 
+	 * @param topic The underlying topic.
+	 */
+	public <T extends RESTBaseTopicV1<T>> void setTopic(final RESTBaseTopicV1<T> topic)
 	{
 		this.topic = topic;
 	}
@@ -125,7 +136,7 @@ public class SpecTopic extends SpecNode
 	 * @param id
 	 *            The Content Specification Topic ID.
 	 */
-	public void setId(String id)
+	public void setId(final String id)
 	{
 		// Set the DBId as well if it isn't a new id
 		if (id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
@@ -183,6 +194,29 @@ public class SpecTopic extends SpecNode
 	public int getDBId()
 	{
 		return DBId;
+	}
+
+	/**
+	 * Get the revision number of the topic that the Spec Topic represents. 
+	 * 
+	 * @return The revision number for the underlying topic or null if the 
+	 * Spec Topic represents the latest copy.
+	 */
+	public Integer getRevision()
+	{
+		return revision;
+	}
+
+	/**
+	 * Set the revision number for the underlying topic that the Spec Topic
+	 * represents.
+	 * 
+	 * @param revision The underlying topic revision number or null if its 
+	 * the latest revision.
+	 */
+	public void setRevision(final Integer revision)
+	{
+		this.revision = revision;
 	}
 
 	/**
@@ -641,43 +675,44 @@ public class SpecTopic extends SpecNode
 	@Override
 	public String getText()
 	{
-		if (text == null)
+		String output = "";
+		if (DBId == 0)
 		{
-			String output = "";
-			if (DBId == 0)
-			{
-				String options = getOptionsString();
-				output += title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]";
-			}
-			else
-			{
-				output += title + " [" + id + "]";
-			}
-			if (!getRelatedRelationships().isEmpty())
-			{
-				ArrayList<String> relatedIds = new ArrayList<String>();
-				for (Relationship related : getRelatedRelationships())
-				{
-					relatedIds.add(related.getSecondaryRelationshipTopicId());
-				}
-				output += " [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
-			}
-			if (!getPrerequisiteRelationships().isEmpty())
-			{
-				ArrayList<String> relatedIds = new ArrayList<String>();
-				for (Relationship related : getPrerequisiteRelationships())
-				{
-					relatedIds.add(related.getSecondaryRelationshipTopicId());
-				}
-				output += " [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
-			}
-			setText(output);
-			return output;
+			String options = getOptionsString();
+			output += title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]";
 		}
 		else
 		{
-			return text;
+			output += title + " [" + id + (revision == null ? "" : (", rev: " + revision)) + "]";
 		}
+		
+		if (targetId != null)
+		{
+			output += " [" + targetId + "]";
+		}
+		
+		if (!getRelatedRelationships().isEmpty())
+		{
+			ArrayList<String> relatedIds = new ArrayList<String>();
+			for (Relationship related : getRelatedRelationships())
+			{
+				relatedIds.add(related.getSecondaryRelationshipTopicId());
+			}
+			output += " [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
+		}
+		
+		if (!getPrerequisiteRelationships().isEmpty())
+		{
+			ArrayList<String> relatedIds = new ArrayList<String>();
+			for (Relationship related : getPrerequisiteRelationships())
+			{
+				relatedIds.add(related.getSecondaryRelationshipTopicId());
+			}
+			output += " [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
+		}
+		
+		setText(output);
+		return output;
 	}
 
 	@Override

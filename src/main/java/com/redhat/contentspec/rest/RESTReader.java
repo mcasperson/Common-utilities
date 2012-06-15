@@ -19,6 +19,7 @@ import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentTagV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTImageV1;
@@ -258,8 +259,8 @@ public class RESTReader
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
 				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
-				expand.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails(
-						"incomingRelationships"))));
+				expand.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")),
+						new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
@@ -270,7 +271,7 @@ public class RESTReader
 				}
 				else
 				{
-					topic = client.getJSONTopic(id, expandEncodedString);
+					topic = client.getJSONTopicRevision(id, rev, expandEncodedString);
 					entityCache.add(topic, true);
 				}
 			}
@@ -286,7 +287,7 @@ public class RESTReader
 	/*
 	 * Gets a collection of topics based on the list of ids passed.
 	 */
-	public BaseRestCollectionV1<RESTTopicV1> getTopicsByIds(List<Integer> ids)
+	public BaseRestCollectionV1<RESTTopicV1> getTopicsByIds(final List<Integer> ids, final boolean expandTranslations)
 	{
 		if (ids.isEmpty())
 			return null;
@@ -332,8 +333,11 @@ public class RESTReader
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
 				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
-				topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
-
+				if (expandTranslations)
+					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
+				else
+					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls"))));
+				
 				expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
 
 				final String expandString = mapper.writeValueAsString(expand);
@@ -382,8 +386,9 @@ public class RESTReader
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
 				final ExpandDataTrunk expandRevs = new ExpandDataTrunk(new ExpandDataDetails("revisions"));
 				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
-				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails(
-						"incomingRelationships"))));
+				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), 
+						new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), 
+						new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
 				expand.setBranches(CollectionUtilities.toArrayList(expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
@@ -450,11 +455,15 @@ public class RESTReader
 			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;topicIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
-			for (Integer id : ids)
+			for (final Integer id : ids)
 			{
-				if (!entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id))
+				if (!entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id) && !entityCache.containsKeyValue(RESTTranslatedTopicV1.class, (id * -1)))
 				{
 					urlVars.append(id + encodedComma);
+				}
+				else if (entityCache.containsKeyValue(RESTTranslatedTopicV1.class, (id * -1)))
+				{
+					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, (id * -1)));
 				}
 				else
 				{
@@ -510,6 +519,95 @@ public class RESTReader
 					for (RESTTranslatedTopicV1 item : downloadedTopics.getItems())
 					{
 						entityCache.add(item, item.getTopicId(), false);
+						topics.addItem(item);
+					}
+				}
+			}
+
+			return topics;
+		}
+		catch (Exception e)
+		{
+			log.error(ExceptionUtilities.getStackTrace(e));
+		}
+		return null;
+	}
+	
+	/*
+	 * Gets a collection of translated topics based on the list of topic ids
+	 * passed.
+	 */
+	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopicsByZanataIds(final List<Integer> ids, final String locale)
+	{
+		if (ids.isEmpty())
+			return null;
+
+		try
+		{
+			final BaseRestCollectionV1<RESTTranslatedTopicV1> topics = new BaseRestCollectionV1<RESTTranslatedTopicV1>();
+			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;zanataIds=");
+			final String encodedComma = URLEncoder.encode(",", "UTF-8");
+
+			for (Integer id : ids)
+			{
+				if (!entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id))
+				{
+					urlVars.append(id + encodedComma);
+				}
+				else
+				{
+					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, id));
+				}
+			}
+
+			String query = urlVars.toString();
+
+			if (query.length() != "query;latestTranslations=true;zanataIds=".length())
+			{
+				query = query.substring(0, query.length() - encodedComma.length());
+
+				/* Add the locale to the query if one was passed */
+				if (locale != null && !locale.isEmpty())
+					query += ";locale1=" + locale + "1";
+
+				PathSegment path = new PathSegmentImpl(query, false);
+
+				/*
+				 * We need to expand the all the items in the translatedtopic
+				 * collection
+				 */
+				final ExpandDataTrunk expand = new ExpandDataTrunk();
+
+				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
+				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
+				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
+
+				/* We need to expand the categories collection on the topic tags */
+				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+
+				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
+
+				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+
+				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
+
+				final String expandString = mapper.writeValueAsString(expand);
+				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				BaseRestCollectionV1<RESTTranslatedTopicV1> downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				entityCache.add(downloadedTopics);
+
+				/* Transfer the downloaded data to the current topic list */
+				if (downloadedTopics != null && downloadedTopics.getItems() != null)
+				{
+					for (RESTTranslatedTopicV1 item : downloadedTopics.getItems())
+					{
+						entityCache.add(item, ComponentTranslatedTopicV1.returnZanataId(item), false);
 						topics.addItem(item);
 					}
 				}
@@ -811,10 +909,10 @@ public class RESTReader
 	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public RESTTopicV1 getPostContentSpecById(Integer id, Integer revision)
+	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision)
 	{
-		RESTTopicV1 cs = getContentSpecById(id, revision);
-		List<Object[]> specRevisions = getContentSpecRevisionsById(id);
+		final RESTTopicV1 cs = getContentSpecById(id, revision);
+		final List<Object[]> specRevisions = getContentSpecRevisionsById(id);
 
 		if (specRevisions == null)
 			return null;
@@ -822,7 +920,7 @@ public class RESTReader
 		// Create a sorted set of revision ids that are less the the current
 		// revision
 		SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
-		for (Object[] specRev : specRevisions)
+		for (final Object[] specRev : specRevisions)
 		{
 			if ((Integer) specRev[0] <= cs.getRevision())
 			{

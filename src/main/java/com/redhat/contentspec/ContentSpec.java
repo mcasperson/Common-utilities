@@ -40,6 +40,7 @@ public class ContentSpec {
 	private String bugzillaProduct = null;
 	private String bugzillaComponent = null;
 	private String bugzillaVersion = null;
+	private String bugzillaURL = null;
 	private boolean injectBugLinks = true;
 	private boolean injectSurveyLinks = false;
 	private String locale = null;
@@ -722,7 +723,8 @@ public class ContentSpec {
 	 * 
 	 * @param line The Line to be added.
 	 */
-	public void appendPreProcessedLine(String line) {
+	public void appendPreProcessedLine(final String line)
+	{
 		this.text.add(line);
 	}
 
@@ -733,36 +735,44 @@ public class ContentSpec {
 	 * @param text The text to be appended.
 	 * @param line The line number of the original text that the new text should be appended to.
 	 */
-	public void appendPreProcessedLineText (String text, int line) {
+	public void appendPreProcessedLineText (final String text, final int line)
+	{
 		String temp = this.text.get(line-1) + text;
 		this.text.set(line-1, temp);
 	}
 	
-	public List<SpecTopic> getSpecTopics() {
+	public List<SpecTopic> getSpecTopics()
+	{
 		return getLevelSpecTopics(level);
 	}
 	
-	private List<SpecTopic> getLevelSpecTopics(Level level) {
-		List<SpecTopic> specTopics = level.getSpecTopics();
-		for (Level childLevel: level.getChildLevels()) {
+	private List<SpecTopic> getLevelSpecTopics(final Level level)
+	{
+		final List<SpecTopic> specTopics = level.getSpecTopics();
+		for (final Level childLevel: level.getChildLevels())
+		{
 			specTopics.addAll(getLevelSpecTopics(childLevel));
 		}
 		return specTopics;
 	}
 
-	public String getBugzillaProduct() {
+	public String getBugzillaProduct()
+	{
 		return bugzillaProduct;
 	}
 
-	public void setBugzillaProduct(String bugzillaProduct) {
+	public void setBugzillaProduct(final String bugzillaProduct)
+	{
 		this.bugzillaProduct = bugzillaProduct;
 	}
 
-	public String getBugzillaComponent() {
+	public String getBugzillaComponent()
+	{
 		return bugzillaComponent;
 	}
 
-	public void setBugzillaComponent(String bugzillaComponent) {
+	public void setBugzillaComponent(final String bugzillaComponent)
+	{
 		this.bugzillaComponent = bugzillaComponent;
 	}
 
@@ -770,27 +780,55 @@ public class ContentSpec {
 		return bugzillaVersion;
 	}
 
-	public void setBugzillaVersion(String bugzillaVersion) {
+	public void setBugzillaVersion(final String bugzillaVersion)
+	{
 		this.bugzillaVersion = bugzillaVersion;
+	}
+	
+	/**
+	 * Get the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @return The BZURL component for the content specification.
+	 */
+	public String getBugzillaURL()
+	{
+		return bugzillaURL;
+	}
+
+	/**
+	 * Set the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @param bugzillaURL The BZURL component to be used when building.
+	 */
+	public void setBugzillaURL(final String bugzillaURL)
+	{
+		this.bugzillaURL = bugzillaURL;
 	}
 	
 	public boolean isInjectBugLinks() {
 		return injectBugLinks;
 	}
 
-	public void setInjectBugLinks(boolean injectBugLinks) {
+	public void setInjectBugLinks(boolean injectBugLinks)
+	{
 		this.injectBugLinks = injectBugLinks;
 	}
 
-	public boolean isInjectSurveyLinks() {
+	public boolean isInjectSurveyLinks()
+	{
 		return injectSurveyLinks;
 	}
 
-	public void setInjectSurveyLinks(boolean injectSurveyLinks) {
+	public void setInjectSurveyLinks(boolean injectSurveyLinks)
+	{
 		this.injectSurveyLinks = injectSurveyLinks;
 	}
 
-	public BugzillaOptions getBugzillaOptions() {
+	
+	public BugzillaOptions getBugzillaOptions()
+	{
 		final BugzillaOptions bzOption = new BugzillaOptions();
 		bzOption.setProduct(bugzillaProduct);
 		bzOption.setComponent(bugzillaComponent);
@@ -798,12 +836,13 @@ public class ContentSpec {
 		bzOption.setBugzillaLinksEnabled(injectBugLinks);
 		return bzOption;
 	}
-
+	
 	/**
 	 * Returns a String representation of the Content Specification. 
 	 */
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		String output = "";
 		for (Comment baseComment: baseComments) {
 			output += baseComment.toString();
@@ -811,7 +850,8 @@ public class ContentSpec {
 		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
 		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) +
 				(bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) +
-				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"));
+				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n")) +
+				(bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n"));
 		
 		String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) +
 				(allowEmptyLevels == null  || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
@@ -827,7 +867,7 @@ public class ContentSpec {
 				(pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n")) +
 				(description == null ? "" : ("Abstract = " + description + "\n")) +
 				(allowDetails.isEmpty() ? "" : allowDetails) +
-				(outputStyle == null ? "" : ("Output Style = " + outputStyle + "\n")) +
+				(outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTOUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n")) +
 				(locale == null ? "" : ("Translation Locale = " + locale + "\n")) +
 				"\n" + bugzillaDetails +
 				(injectSurveyLinks ? "Survey Links = On\n" : "") + 
