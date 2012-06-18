@@ -19,13 +19,14 @@ import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.ecs.commonutils.StringUtilities;
 import com.redhat.ecs.constants.CommonConstants;
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
-public class SpecTopic extends SpecNode
+public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends SpecNode
 {
 	private String id;
 	private int DBId = 0;
@@ -37,7 +38,7 @@ public class SpecTopic extends SpecNode
 	private int preProcessedLineNumber = 0;
 	private String title = null;
 	private String duplicateId = null;
-	private RESTBaseTopicV1<? extends RESTBaseTopicV1<?>> topic = null;
+	private RESTBaseTopicV1<T, U> topic = null;
 	private Document xmlDocument = null;
 	private Integer revision = null;
 
@@ -115,7 +116,7 @@ public class SpecTopic extends SpecNode
 	 * 
 	 * @return The underlying topic if it has been set otherwise null.
 	 */
-	public RESTBaseTopicV1<? extends RESTBaseTopicV1<?>> getTopic()
+	public RESTBaseTopicV1<T, U> getTopic()
 	{
 		return topic;
 	}
@@ -125,7 +126,7 @@ public class SpecTopic extends SpecNode
 	 * 
 	 * @param topic The underlying topic.
 	 */
-	public <T extends RESTBaseTopicV1<T>> void setTopic(final RESTBaseTopicV1<T> topic)
+	public void setTopic(final RESTBaseTopicV1<T, U> topic)
 	{
 		this.topic = topic;
 	}

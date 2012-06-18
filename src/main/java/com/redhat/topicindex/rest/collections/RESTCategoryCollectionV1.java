@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
  * @author Matthew Casperson
  *
  */
-public class RESTCategoryCollectionV1 extends BaseRestCollectionV1<RESTCategoryV1>
+public class RESTCategoryCollectionV1 extends BaseRestCollectionV1<RESTCategoryV1, RESTCategoryCollectionV1>
 {
+	private List<RESTCategoryV1> items;
+	
+	@Override
 	public List<RESTCategoryV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTCategoryV1> items)
 	{
 		this.items = items;

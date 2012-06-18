@@ -3,7 +3,7 @@ package com.redhat.topicindex.rest.entities.interfaces;
 import com.redhat.topicindex.rest.collections.RESTRoleCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTUserCollectionV1;
 
-public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
+public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1, RESTRoleCollectionV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -18,6 +18,20 @@ public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
 	private RESTUserCollectionV1 users;
 	private RESTRoleCollectionV1 childRoles;
 	private RESTRoleCollectionV1 parentRoles;
+	/** A list of the Envers revision numbers */
+	private RESTRoleCollectionV1 revisions = null;
+	
+	@Override
+	public RESTRoleCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTRoleCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTRoleV1 clone(boolean deepCopy)

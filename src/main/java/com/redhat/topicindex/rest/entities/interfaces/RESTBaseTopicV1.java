@@ -4,7 +4,7 @@ import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTopicSourceUrlCollectionV1;
 
-public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T>> extends RESTBaseEntityWithPropertiesV1<T>
+public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends RESTBaseEntityWithPropertiesV1<T, U>
 {
 	public static final String TITLE_NAME = "title";
 	public static final String XML_NAME = "xml";
@@ -25,20 +25,13 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 	protected String locale = null;
 	protected RESTTagCollectionV1 tags = null;
 	protected RESTTopicSourceUrlCollectionV1 sourceUrls_OTM = null;
-	protected BaseRestCollectionV1<T> outgoingRelationships = null;
-	protected BaseRestCollectionV1<T> incomingRelationships = null;
 	
-	public BaseRestCollectionV1<T> returnIncomingRelationships()
-	{
-		return incomingRelationships;
-	}
+	abstract public U getIncomingRelationships();
+	abstract public void setIncomingRelationships(final U incomingRelationships);
+	abstract public U getOutgoingRelationships();
+	abstract public void setOutgoingRelationships(final U outgoingRelationships);
 
-	public BaseRestCollectionV1<T> returnOutgoingRelationships()
-	{
-		return outgoingRelationships;
-	}
-
-	public void cloneInto(final RESTBaseTopicV1<T> clone, final boolean deepCopy)
+	public void cloneInto(final RESTBaseTopicV1<T, U> clone, final boolean deepCopy)
 	{
 		super.cloneInto(clone, deepCopy);
 		

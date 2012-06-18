@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
  * @author Matthew Casperson
  *
  */
-public class RESTPropertyTagCollectionV1 extends BaseRestCollectionV1<RESTPropertyTagV1>
+public class RESTPropertyTagCollectionV1 extends BaseRestCollectionV1<RESTPropertyTagV1, RESTPropertyTagCollectionV1>
 {
+	private List<RESTPropertyTagV1> items;
+	
+	@Override
 	public List<RESTPropertyTagV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTPropertyTagV1> items)
 	{
 		this.items = items;

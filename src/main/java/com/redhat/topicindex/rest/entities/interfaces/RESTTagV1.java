@@ -1,11 +1,10 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTProjectCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 
-public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1>
+public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1, RESTTagCollectionV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -20,6 +19,20 @@ public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1>
 	protected RESTTagCollectionV1 parentTags = new RESTTagCollectionV1();
 	protected RESTTagCollectionV1 childTags = new RESTTagCollectionV1();
 	protected RESTProjectCollectionV1 projects = new RESTProjectCollectionV1();
+	/** A list of the Envers revision numbers */
+	private RESTTagCollectionV1 revisions = null;
+	
+	@Override
+	public RESTTagCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTTagCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTTagV1 clone(boolean deepCopy)

@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTopicSourceUrlV1;
  * @author Matthew Casperson
  *
  */
-public class RESTTopicSourceUrlCollectionV1 extends BaseRestCollectionV1<RESTTopicSourceUrlV1>
+public class RESTTopicSourceUrlCollectionV1 extends BaseRestCollectionV1<RESTTopicSourceUrlV1, RESTTopicSourceUrlCollectionV1>
 {
+	private List<RESTTopicSourceUrlV1> items;
+	
+	@Override
 	public List<RESTTopicSourceUrlV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTTopicSourceUrlV1> items)
 	{
 		this.items = items;

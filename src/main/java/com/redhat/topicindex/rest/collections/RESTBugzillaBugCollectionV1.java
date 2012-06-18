@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBugzillaBugV1;
  * @author Matthew Casperson
  *
  */
-public class RESTBugzillaBugCollectionV1 extends BaseRestCollectionV1<RESTBugzillaBugV1>
+public class RESTBugzillaBugCollectionV1 extends BaseRestCollectionV1<RESTBugzillaBugV1, RESTBugzillaBugCollectionV1>
 {
+	private List<RESTBugzillaBugV1> items;
+	
+	@Override
 	public List<RESTBugzillaBugV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTBugzillaBugV1> items)
 	{
 		this.items = items;

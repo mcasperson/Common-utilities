@@ -14,7 +14,7 @@ import com.redhat.contentspec.enums.LevelType;
 import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.contentspec.rest.RESTReader;
 import com.redhat.contentspec.utils.ContentSpecUtilities;
-import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 
 /**
@@ -257,7 +257,7 @@ public class Process extends Level
 				if (topic != null)
 				{
 					// Add relationships if the topic is a task
-					if (ComponentTopicV1.hasTag(topic, CSConstants.TASK_TAG_ID))
+					if (ComponentBaseTopicV1.hasTag(topic, CSConstants.TASK_TAG_ID))
 					{
 						String topicTargetId;
 						// Create a target if one doesn't already exist

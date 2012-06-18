@@ -9,15 +9,21 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBlobConstantV1;
  * @author Matthew Casperson
  *
  */
-public class RESTBlobConstantCollectionV1 extends BaseRestCollectionV1<RESTBlobConstantV1>
+public class RESTBlobConstantCollectionV1 extends BaseRestCollectionV1<RESTBlobConstantV1, RESTBlobConstantCollectionV1>
 {
+	private List<RESTBlobConstantV1> items;
+	
+	@Override
 	public List<RESTBlobConstantV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTBlobConstantV1> items)
 	{
 		this.items = items;
 	}
+
+
 }

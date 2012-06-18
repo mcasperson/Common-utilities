@@ -2,11 +2,10 @@ package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.Date;
 
-import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicStringCollectionV1;
 
-public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1>
+public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1, RESTTranslatedTopicCollectionV1>
 {
 	public static final String TOPICID_NAME = "topicid";
 	public static final String TOPICREVISION_NAME = "topicrevision";
@@ -30,6 +29,20 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 	protected RESTTranslatedTopicCollectionV1 incomingTranslatedRelationships = null;
 	protected RESTTranslatedTopicCollectionV1 outgoingRelationships = null;
 	protected RESTTranslatedTopicCollectionV1 incomingRelationships = null;
+	/** A list of the Envers revision numbers */
+	private RESTTranslatedTopicCollectionV1 revisions = null;
+	
+	@Override
+	public RESTTranslatedTopicCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTTranslatedTopicCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 
 	@Override
 	public RESTTranslatedTopicV1 clone(final boolean deepCopy)
@@ -211,11 +224,13 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 		this.incomingTranslatedRelationships = incomingTranslatedRelationships;
 	}
 	
+	@Override
 	public RESTTranslatedTopicCollectionV1 getOutgoingRelationships()
 	{
 		return outgoingRelationships;
 	}
 
+	@Override
 	public void setOutgoingRelationships(final RESTTranslatedTopicCollectionV1 outgoingRelationships)
 	{
 		this.outgoingRelationships = outgoingRelationships;
@@ -227,11 +242,13 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 		setParamaterToConfigured(OUTGOING_NAME);
 	}
 
+	@Override
 	public RESTTranslatedTopicCollectionV1 getIncomingRelationships()
 	{
 		return incomingRelationships;
 	}
 
+	@Override
 	public void setIncomingRelationships(final RESTTranslatedTopicCollectionV1 incomingRelationships)
 	{
 		this.incomingRelationships = incomingRelationships;

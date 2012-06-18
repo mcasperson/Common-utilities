@@ -17,10 +17,14 @@ import com.redhat.contentspec.entities.*;
 import com.redhat.contentspec.rest.utils.RESTCollectionCache;
 import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTUserCollectionV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseRESTEntityWithPropertiesV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
 import com.redhat.topicindex.rest.entities.ComponentTagV1;
-import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
@@ -92,8 +96,8 @@ public class RESTReader
 		try
 		{
 
-			BaseRestCollectionV1<RESTCategoryV1> categories = collectionsCache.get(RESTCategoryV1.class);
-			if (categories.returnItems() == null)
+			BaseRestCollectionV1<RESTCategoryV1, RESTCategoryCollectionV1> categories = collectionsCache.get(RESTCategoryV1.class, RESTCategoryCollectionV1.class);
+			if (categories.getItems() == null)
 			{
 				/* We need to expand the Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
@@ -108,7 +112,7 @@ public class RESTReader
 
 			if (categories != null)
 			{
-				for (RESTCategoryV1 cat : categories.returnItems())
+				for (RESTCategoryV1 cat : categories.getItems())
 				{
 					if (cat.getName().equals(name))
 					{
@@ -184,8 +188,8 @@ public class RESTReader
 		try
 		{
 
-			BaseRestCollectionV1<RESTTagV1> tags = collectionsCache.get(RESTTagV1.class);
-			if (tags.returnItems() == null)
+			BaseRestCollectionV1<RESTTagV1, RESTTagCollectionV1> tags = collectionsCache.get(RESTTagV1.class, RESTTagCollectionV1.class);
+			if (tags.getItems() == null)
 			{
 				/* We need to expand the Tags & Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
@@ -204,7 +208,7 @@ public class RESTReader
 			// and matches the name.
 			if (tags != null)
 			{
-				for (RESTTagV1 tag : tags.returnItems())
+				for (RESTTagV1 tag : tags.getItems())
 				{
 					if (tag.getName().equals(name))
 					{
@@ -376,10 +380,10 @@ public class RESTReader
 		try
 		{
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("revisions", "topic" + topicId);
-			final BaseRestCollectionV1<RESTTopicV1> topicRevisions;
+			final BaseRestCollectionV1<RESTTopicV1, RESTTopicCollectionV1> topicRevisions;
 			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topicRevisions = collectionsCache.get(RESTTopicV1.class, additionalKeys);
+				topicRevisions = collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
 			}
 			else
 			{
@@ -402,9 +406,9 @@ public class RESTReader
 			}
 
 			// Create the custom revisions list
-			if (topicRevisions != null && topicRevisions.returnItems() != null)
+			if (topicRevisions != null && topicRevisions.getItems() != null)
 			{
-				for (RESTTopicV1 topicRev : topicRevisions.returnItems())
+				for (RESTTopicV1 topicRev : topicRevisions.getItems())
 				{
 					Object[] revision = new Object[2];
 					revision[0] = topicRev.getRevision();
@@ -654,10 +658,10 @@ public class RESTReader
 		try
 		{
 
-			final BaseRestCollectionV1<RESTUserV1> users;
+			final BaseRestCollectionV1<RESTUserV1, RESTUserCollectionV1> users;
 			if (collectionsCache.containsKey(RESTUserV1.class))
 			{
-				users = collectionsCache.get(RESTUserV1.class);
+				users = collectionsCache.get(RESTUserV1.class, RESTUserCollectionV1.class);
 			}
 			else
 			{
@@ -673,7 +677,7 @@ public class RESTReader
 
 			if (users != null)
 			{
-				for (RESTUserV1 user : users.returnItems())
+				for (RESTUserV1 user : users.getItems())
 				{
 					if (user.getName().equals(userName))
 					{
@@ -726,7 +730,7 @@ public class RESTReader
 		RESTTopicV1 cs = getTopicById(id, rev);
 		if (cs == null)
 			return null;
-		List<RESTTagV1> topicTypes = ComponentTopicV1.returnTagsInCategoriesByID(cs, CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
+		List<RESTTagV1> topicTypes = ComponentBaseTopicV1.returnTagsInCategoriesByID(cs, CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
 		for (RESTTagV1 type : topicTypes)
 		{
 			if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
@@ -745,10 +749,10 @@ public class RESTReader
 		try
 		{
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("revision", "topic" + csId);
-			final BaseRestCollectionV1<RESTTopicV1> topicRevisions;
+			final BaseRestCollectionV1<RESTTopicV1, RESTTopicCollectionV1> topicRevisions;
 			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topicRevisions = collectionsCache.get(RESTTopicV1.class, additionalKeys);
+				topicRevisions = collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
 			}
 			else
 			{
@@ -766,7 +770,7 @@ public class RESTReader
 
 				final RESTTopicV1 topic = client.getJSONTopic(csId, expandEncodedString);
 				// Check that the topic is a content spec
-				if (!ComponentTopicV1.hasTag(topic, CSConstants.CONTENT_SPEC_TAG_ID))
+				if (!ComponentBaseTopicV1.hasTag(topic, CSConstants.CONTENT_SPEC_TAG_ID))
 					return null;
 
 				// Add the content spec revisions to the cache
@@ -775,9 +779,9 @@ public class RESTReader
 			}
 
 			// Create the unique array from the revisions
-			if (topicRevisions != null && topicRevisions.returnItems() != null)
+			if (topicRevisions != null && topicRevisions.getItems() != null)
 			{
-				for (RESTTopicV1 topicRev : topicRevisions.returnItems())
+				for (RESTTopicV1 topicRev : topicRevisions.getItems())
 				{
 					Object[] revision = new Object[2];
 					revision[0] = topicRev.getRevision();
@@ -804,7 +808,7 @@ public class RESTReader
 
 		try
 		{
-			BaseRestCollectionV1<RESTTopicV1> topics;
+			BaseRestCollectionV1<RESTTopicV1, RESTTopicCollectionV1> topics;
 
 			// Set the startPos and limit to zero if they are null
 			startPos = startPos == null ? 0 : startPos;
@@ -813,7 +817,7 @@ public class RESTReader
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("start-" + startPos, "end-" + (startPos + limit));
 			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topics = collectionsCache.get(RESTTopicV1.class, additionalKeys);
+				topics = collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
 			}
 			else
 			{
@@ -844,7 +848,7 @@ public class RESTReader
 				collectionsCache.add(RESTTopicV1.class, topics, additionalKeys);
 			}
 
-			return topics.returnItems();
+			return topics.getItems();
 		}
 		catch (Exception e)
 		{
@@ -898,7 +902,7 @@ public class RESTReader
 		while (specRev != null)
 		{
 			RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
-			if (ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING))
+			if (ComponentBaseRESTEntityWithPropertiesV1.<RESTTopicV1, RESTTopicCollectionV1>returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING))
 			{
 				preContentSpec = contentSpecRev;
 				break;
@@ -939,7 +943,7 @@ public class RESTReader
 		while (specRev != null)
 		{
 			RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
-			if (ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentTopicV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
+			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
 			{
 				postContentSpec = contentSpecRev;
 				break;
@@ -1015,11 +1019,11 @@ public class RESTReader
 			final RESTTopicV1 topic = this.getTopicById(topicId, rev);
 			if (topic != null)
 			{
-				for (RESTTopicV1 topicRevision : topic.getRevisions().returnItems())
+				for (RESTTopicV1 topicRevision : topic.getRevisions().getItems())
 				{
 					if (topicRevision.getRevision().equals(rev))
 					{
-						List<RESTTagV1> writerTags = ComponentTopicV1.returnTagsInCategoriesByID(topicRevision, CollectionUtilities.toArrayList(CSConstants.WRITER_CATEGORY_ID));
+						List<RESTTagV1> writerTags = ComponentBaseTopicV1.returnTagsInCategoriesByID(topicRevision, CollectionUtilities.toArrayList(CSConstants.WRITER_CATEGORY_ID));
 						if (writerTags.size() == 1)
 							return writerTags.get(0);
 						break;
@@ -1038,21 +1042,21 @@ public class RESTReader
 		AuthorInformation authInfo = new AuthorInformation();
 		authInfo.setAuthorId(authorId);
 		RESTTagV1 tag = getTagById(authorId);
-		if (tag != null && ComponentTagV1.returnProperty(tag, CSConstants.FIRST_NAME_PROPERTY_TAG_ID) != null && ComponentTagV1.returnProperty(tag, CSConstants.LAST_NAME_PROPERTY_TAG_ID) != null)
+		if (tag != null && ComponentBaseRESTEntityWithPropertiesV1.<RESTTagV1, RESTTagCollectionV1>returnProperty(tag, CSConstants.FIRST_NAME_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.LAST_NAME_PROPERTY_TAG_ID) != null)
 		{
-			authInfo.setFirstName(ComponentTagV1.returnProperty(tag, CSConstants.FIRST_NAME_PROPERTY_TAG_ID).getValue());
-			authInfo.setLastName(ComponentTagV1.returnProperty(tag, CSConstants.LAST_NAME_PROPERTY_TAG_ID).getValue());
-			if (ComponentTagV1.returnProperty(tag, CSConstants.EMAIL_PROPERTY_TAG_ID) != null)
+			authInfo.setFirstName(ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.FIRST_NAME_PROPERTY_TAG_ID).getValue());
+			authInfo.setLastName(ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.LAST_NAME_PROPERTY_TAG_ID).getValue());
+			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.EMAIL_PROPERTY_TAG_ID) != null)
 			{
-				authInfo.setEmail(ComponentTagV1.returnProperty(tag, CSConstants.EMAIL_PROPERTY_TAG_ID).getValue());
+				authInfo.setEmail(ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.EMAIL_PROPERTY_TAG_ID).getValue());
 			}
-			if (ComponentTagV1.returnProperty(tag, CSConstants.ORGANIZATION_PROPERTY_TAG_ID) != null)
+			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.ORGANIZATION_PROPERTY_TAG_ID) != null)
 			{
-				authInfo.setOrganization(ComponentTagV1.returnProperty(tag, CSConstants.ORGANIZATION_PROPERTY_TAG_ID).getValue());
+				authInfo.setOrganization(ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.ORGANIZATION_PROPERTY_TAG_ID).getValue());
 			}
-			if (ComponentTagV1.returnProperty(tag, CSConstants.ORG_DIVISION_PROPERTY_TAG_ID) != null)
+			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.ORG_DIVISION_PROPERTY_TAG_ID) != null)
 			{
-				authInfo.setOrgDivision(ComponentTagV1.returnProperty(tag, CSConstants.ORG_DIVISION_PROPERTY_TAG_ID).getValue());
+				authInfo.setOrgDivision(ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CSConstants.ORG_DIVISION_PROPERTY_TAG_ID).getValue());
 			}
 			return authInfo;
 		}

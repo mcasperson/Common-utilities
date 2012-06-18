@@ -6,7 +6,7 @@ import com.redhat.topicindex.rest.collections.RESTBugzillaBugCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 
-public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
+public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1, RESTTopicCollectionV1>
 {
 	public static final String DESCRIPTION_NAME = "description";
 	public static final String BUGZILLABUGS_NAME = "bugzillabugs_OTM";
@@ -17,6 +17,22 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 	protected Date lastModified = null;
 	protected RESTBugzillaBugCollectionV1 bugzillaBugs_OTM = null;
 	protected RESTTranslatedTopicCollectionV1 translatedTopics_OTM = null;
+	protected RESTTopicCollectionV1 outgoingRelationships = null;
+	protected RESTTopicCollectionV1 incomingRelationships = null;
+	/** A list of the Envers revision numbers */
+	private RESTTopicCollectionV1 revisions = null;
+	
+	@Override
+	public RESTTopicCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTTopicCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTTopicV1 clone(final boolean deepCopy)
@@ -160,11 +176,13 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 		setParamaterToConfigured(TRANSLATEDTOPICS_NAME);
 	}
 	
+	@Override
 	public RESTTopicCollectionV1 getOutgoingRelationships()
 	{
-		return (RESTTopicCollectionV1)outgoingRelationships;
+		return outgoingRelationships;
 	}
 
+	@Override
 	public void setOutgoingRelationships(final RESTTopicCollectionV1 outgoingRelationships)
 	{
 		this.outgoingRelationships = outgoingRelationships;
@@ -176,11 +194,13 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 		setParamaterToConfigured(OUTGOING_NAME);
 	}
 
+	@Override
 	public RESTTopicCollectionV1 getIncomingRelationships()
 	{
-		return (RESTTopicCollectionV1)incomingRelationships;
+		return incomingRelationships;
 	}
 
+	@Override
 	public void setIncomingRelationships(final RESTTopicCollectionV1 incomingRelationships)
 	{
 		this.incomingRelationships = incomingRelationships;

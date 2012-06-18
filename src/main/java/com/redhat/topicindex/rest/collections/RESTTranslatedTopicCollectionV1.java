@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
  * @author Matthew Casperson
  *
  */
-public class RESTTranslatedTopicCollectionV1 extends BaseRestCollectionV1<RESTTranslatedTopicV1>
+public class RESTTranslatedTopicCollectionV1 extends BaseRestCollectionV1<RESTTranslatedTopicV1, RESTTranslatedTopicCollectionV1>
 {
+	private List<RESTTranslatedTopicV1> items;
+	
+	@Override
 	public List<RESTTranslatedTopicV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTTranslatedTopicV1> items)
 	{
 		this.items = items;

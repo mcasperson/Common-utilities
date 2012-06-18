@@ -1,14 +1,30 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
+import com.redhat.topicindex.rest.collections.RESTImageCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTLanguageImageCollectionV1;
 
-public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
+public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1, RESTImageCollectionV1>
 {
 	public static final String DESCRIPTION_NAME = "description";
 	public static final String LANGUAGEIMAGES_NAME = "languageimages";
 
 	private String description;
 	private RESTLanguageImageCollectionV1 languageImages_OTM = null;
+	/** A list of the Envers revision numbers */
+	private RESTImageCollectionV1 revisions = null;
+	
+	@Override
+	public RESTImageCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTImageCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
+	
 	
 	@Override
 	public RESTImageV1 clone(boolean deepCopy)
@@ -25,10 +41,20 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 				retValue.languageImages_OTM = null;
 			else
 				this.languageImages_OTM.cloneInto(retValue.languageImages_OTM, deepCopy);
+			
+
+			if (this.getRevisions() == null)
+				retValue.revisions = null;
+			else
+			{
+				retValue.revisions = new RESTImageCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}			
 		}
 		else
 		{
 			retValue.languageImages_OTM = this.languageImages_OTM;
+			retValue.revisions = this.revisions;
 		}
 				
 		return retValue;

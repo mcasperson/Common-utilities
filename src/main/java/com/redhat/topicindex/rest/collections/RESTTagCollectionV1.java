@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
  * @author Matthew Casperson
  *
  */
-public class RESTTagCollectionV1 extends BaseRestCollectionV1<RESTTagV1>
+public class RESTTagCollectionV1 extends BaseRestCollectionV1<RESTTagV1, RESTTagCollectionV1>
 {
+	private List<RESTTagV1> items;
+	
+	@Override
 	public List<RESTTagV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTTagV1> items)
 	{
 		this.items = items;

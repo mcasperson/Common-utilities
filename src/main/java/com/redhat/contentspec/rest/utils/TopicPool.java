@@ -13,9 +13,8 @@ import com.redhat.contentspec.SpecTopic;
 import com.redhat.contentspec.constants.CSConstants;
 import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
-import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseRESTEntityWithPropertiesV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
 import com.redhat.topicindex.rest.exceptions.InvalidParameterException;
@@ -89,8 +88,8 @@ public class TopicPool {
 	public SpecTopic initialiseFromPool(SpecTopic specTopic) {
 		if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty()) {
 			for (RESTTopicV1 topic: newTopicPool.getItems()) {
-				if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null ) {
-					if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
+				if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null ) {
+					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
 						specTopic.setDBId(topic.getId());
 						return specTopic;
 					}
@@ -99,8 +98,8 @@ public class TopicPool {
 		}
 		if (updatedTopicPool.getItems() != null && !updatedTopicPool.getItems().isEmpty()) {
 			for (RESTTopicV1 topic: updatedTopicPool.getItems()) {
-				if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null ) {
-					if (ComponentTopicV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
+				if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null ) {
+					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
 						specTopic.setDBId(topic.getId());
 						return specTopic;
 					}

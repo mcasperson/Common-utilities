@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
  * @author Matthew Casperson
  *
  */
-public class RESTTopicCollectionV1 extends BaseRestCollectionV1<RESTTopicV1>
+public class RESTTopicCollectionV1 extends BaseRestCollectionV1<RESTTopicV1, RESTTopicCollectionV1>
 {
+	private List<RESTTopicV1> items;
+	
+	@Override
 	public List<RESTTopicV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTTopicV1> items)
 	{
 		this.items = items;

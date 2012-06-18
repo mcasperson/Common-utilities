@@ -1,5 +1,6 @@
 package com.redhat.topicindex.rest.entities;
 
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
 
@@ -7,7 +8,7 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
  * This component contains methods that can be applied against tags
  * @author Matthew Casperson
  */
-public class ComponentTagV1 extends ComponentBaseRESTEntityWithPropertiesV1<RESTTagV1>
+public class ComponentTagV1 extends ComponentBaseRESTEntityWithPropertiesV1<RESTTagV1, RESTTagCollectionV1>
 {
 	final RESTTagV1 source;
 	

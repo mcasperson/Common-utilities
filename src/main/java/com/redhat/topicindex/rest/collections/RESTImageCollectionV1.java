@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTImageV1;
  * @author Matthew Casperson
  *
  */
-public class RESTImageCollectionV1 extends BaseRestCollectionV1<RESTImageV1>
+public class RESTImageCollectionV1 extends BaseRestCollectionV1<RESTImageV1, RESTImageCollectionV1>
 {
+	private List<RESTImageV1> items;
+	
+	@Override
 	public List<RESTImageV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTImageV1> items)
 	{
 		this.items = items;

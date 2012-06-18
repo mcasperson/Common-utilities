@@ -9,13 +9,17 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTUserV1;
  * @author Matthew Casperson
  *
  */
-public class RESTUserCollectionV1 extends BaseRestCollectionV1<RESTUserV1>
+public class RESTUserCollectionV1 extends BaseRestCollectionV1<RESTUserV1, RESTUserCollectionV1>
 {
+	private List<RESTUserV1> items;
+	
+	@Override
 	public List<RESTUserV1> getItems()
 	{
 		return this.items;
 	}
 	
+	@Override
 	public void setItems(final List<RESTUserV1> items)
 	{
 		this.items = items;
