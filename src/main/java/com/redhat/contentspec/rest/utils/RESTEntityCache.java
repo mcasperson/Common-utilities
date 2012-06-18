@@ -19,9 +19,9 @@ public class RESTEntityCache
 
 	public <T extends RESTBaseEntityV1<T>> void add(BaseRestCollectionV1<T> value, boolean isRevisions)
 	{
-		if (value != null && value.getItems() != null)
+		if (value != null && value.returnItems() != null)
 		{
-			for (T item : value.getItems())
+			for (T item : value.returnItems())
 			{
 				if (item.getClass() == RESTTranslatedTopicV1.class)
 				{

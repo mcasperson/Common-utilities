@@ -492,7 +492,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 					/*
 					 * get the outgoing relationships
 					 */
-					final List<T> relatedTopics = (List<T>) topic.getTopic().getOutgoingRelationships().getItems();
+					final List<T> relatedTopics = (List<T>) topic.getTopic().returnOutgoingRelationships().returnItems();
 
 					/*
 					 * Create a TocTopicDatabase to hold the related topics. The TocTopicDatabase provides a convenient way to access these topics
@@ -611,9 +611,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		final GenericInjectionPointDatabase<T> relatedLists = new GenericInjectionPointDatabase<T>();
 
 		/* wrap each related topic in a listitem tag */
-		if (topic.getTopic().getOutgoingRelationships() != null && topic.getTopic().getOutgoingRelationships().getItems() != null)
+		if (topic.getTopic().returnOutgoingRelationships() != null && topic.getTopic().returnOutgoingRelationships().returnItems() != null)
 		{
-			for (final RESTBaseTopicV1 relatedTopic : topic.getTopic().getOutgoingRelationships().getItems())
+			for (final RESTBaseTopicV1 relatedTopic : topic.getTopic().returnOutgoingRelationships().returnItems())
 			{
 
 				final Integer topicId;

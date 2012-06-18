@@ -1,6 +1,6 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTRoleCollectionV1;
 
 public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1>
 {
@@ -10,7 +10,7 @@ public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1>
 
 	private String name;
 	private String description;
-	private BaseRestCollectionV1<RESTRoleV1> roles = null;
+	private RESTRoleCollectionV1 roles = null;
 	
 	@Override
 	public RESTUserV1 clone(boolean deepCopy)
@@ -24,7 +24,10 @@ public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1>
 		
 		if (deepCopy)
 		{
-			retValue.roles = this.roles == null ? null : this.roles.clone(deepCopy);
+			if (this.roles == null)
+				retValue.roles = null;
+			else
+				this.roles.cloneInto(retValue.roles, deepCopy);
 		}
 		else
 		{
@@ -66,17 +69,17 @@ public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1>
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTRoleV1> getRoles()
+	public RESTRoleCollectionV1 getRoles()
 	{
 		return roles;
 	}
 
-	public void setRoles(final BaseRestCollectionV1<RESTRoleV1> roles)
+	public void setRoles(final RESTRoleCollectionV1 roles)
 	{
 		this.roles = roles;
 	}
 	
-	public void explicitSetRoles(final BaseRestCollectionV1<RESTRoleV1> roles)
+	public void explicitSetRoles(final RESTRoleCollectionV1 roles)
 	{
 		this.roles = roles;
 		this.setParamaterToConfigured(ROLES_NAME);

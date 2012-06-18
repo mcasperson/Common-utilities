@@ -118,7 +118,7 @@ public class ContentSpecGenerator
 			/* and add the tags required to be displayed at this level */
 			requirements.merge(displayRequirements);
 
-			for (final T topic : topics.getItems())
+			for (final T topic : topics.returnItems())
 			{
 				boolean doesMatch = true;
 				for (final RESTTagV1 andTag : requirements.getMatchAllOf())

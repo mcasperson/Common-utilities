@@ -17,6 +17,8 @@ import com.redhat.contentspec.entities.*;
 import com.redhat.contentspec.rest.utils.RESTCollectionCache;
 import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentTagV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
@@ -91,7 +93,7 @@ public class RESTReader
 		{
 
 			BaseRestCollectionV1<RESTCategoryV1> categories = collectionsCache.get(RESTCategoryV1.class);
-			if (categories.getItems() == null)
+			if (categories.returnItems() == null)
 			{
 				/* We need to expand the Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
@@ -106,7 +108,7 @@ public class RESTReader
 
 			if (categories != null)
 			{
-				for (RESTCategoryV1 cat : categories.getItems())
+				for (RESTCategoryV1 cat : categories.returnItems())
 				{
 					if (cat.getName().equals(name))
 					{
@@ -183,7 +185,7 @@ public class RESTReader
 		{
 
 			BaseRestCollectionV1<RESTTagV1> tags = collectionsCache.get(RESTTagV1.class);
-			if (tags.getItems() == null)
+			if (tags.returnItems() == null)
 			{
 				/* We need to expand the Tags & Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
@@ -202,7 +204,7 @@ public class RESTReader
 			// and matches the name.
 			if (tags != null)
 			{
-				for (RESTTagV1 tag : tags.getItems())
+				for (RESTTagV1 tag : tags.returnItems())
 				{
 					if (tag.getName().equals(name))
 					{
@@ -287,14 +289,14 @@ public class RESTReader
 	/*
 	 * Gets a collection of topics based on the list of ids passed.
 	 */
-	public BaseRestCollectionV1<RESTTopicV1> getTopicsByIds(final List<Integer> ids, final boolean expandTranslations)
+	public RESTTopicCollectionV1 getTopicsByIds(final List<Integer> ids, final boolean expandTranslations)
 	{
 		if (ids.isEmpty())
 			return null;
 
 		try
 		{
-			final BaseRestCollectionV1<RESTTopicV1> topics = new BaseRestCollectionV1<RESTTopicV1>();
+			final RESTTopicCollectionV1 topics = new RESTTopicCollectionV1();
 			final StringBuffer urlVars = new StringBuffer("query;topicIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
@@ -342,7 +344,7 @@ public class RESTReader
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				BaseRestCollectionV1<RESTTopicV1> downloadedTopics = client.getJSONTopicsWithQuery(path, expandEncodedString);
+				RESTTopicCollectionV1 downloadedTopics = client.getJSONTopicsWithQuery(path, expandEncodedString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
@@ -400,9 +402,9 @@ public class RESTReader
 			}
 
 			// Create the custom revisions list
-			if (topicRevisions != null && topicRevisions.getItems() != null)
+			if (topicRevisions != null && topicRevisions.returnItems() != null)
 			{
-				for (RESTTopicV1 topicRev : topicRevisions.getItems())
+				for (RESTTopicV1 topicRev : topicRevisions.returnItems())
 				{
 					Object[] revision = new Object[2];
 					revision[0] = topicRev.getRevision();
@@ -444,14 +446,14 @@ public class RESTReader
 	 * Gets a collection of translated topics based on the list of topic ids
 	 * passed.
 	 */
-	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopicsByTopicIds(final List<Integer> ids, final String locale)
+	public RESTTranslatedTopicCollectionV1 getTranslatedTopicsByTopicIds(final List<Integer> ids, final String locale)
 	{
 		if (ids.isEmpty())
 			return null;
 
 		try
 		{
-			final BaseRestCollectionV1<RESTTranslatedTopicV1> topics = new BaseRestCollectionV1<RESTTranslatedTopicV1>();
+			final RESTTranslatedTopicCollectionV1 topics = new RESTTranslatedTopicCollectionV1();
 			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;topicIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
@@ -510,7 +512,7 @@ public class RESTReader
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				BaseRestCollectionV1<RESTTranslatedTopicV1> downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				RESTTranslatedTopicCollectionV1 downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
@@ -537,14 +539,14 @@ public class RESTReader
 	 * Gets a collection of translated topics based on the list of topic ids
 	 * passed.
 	 */
-	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopicsByZanataIds(final List<Integer> ids, final String locale)
+	public RESTTranslatedTopicCollectionV1 getTranslatedTopicsByZanataIds(final List<Integer> ids, final String locale)
 	{
 		if (ids.isEmpty())
 			return null;
 
 		try
 		{
-			final BaseRestCollectionV1<RESTTranslatedTopicV1> topics = new BaseRestCollectionV1<RESTTranslatedTopicV1>();
+			final RESTTranslatedTopicCollectionV1 topics = new RESTTranslatedTopicCollectionV1();
 			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;zanataIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
@@ -599,7 +601,7 @@ public class RESTReader
 
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				BaseRestCollectionV1<RESTTranslatedTopicV1> downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				RESTTranslatedTopicCollectionV1 downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
@@ -629,7 +631,7 @@ public class RESTReader
 	{
 		try
 		{
-			final BaseRestCollectionV1<RESTTranslatedTopicV1> topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
+			final RESTTranslatedTopicCollectionV1 topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
 
 			return topics != null && topics.getItems() != null && topics.getItems().size() == 1 ? topics.getItems().get(0) : null;
 		}
@@ -671,7 +673,7 @@ public class RESTReader
 
 			if (users != null)
 			{
-				for (RESTUserV1 user : users.getItems())
+				for (RESTUserV1 user : users.returnItems())
 				{
 					if (user.getName().equals(userName))
 					{
@@ -773,9 +775,9 @@ public class RESTReader
 			}
 
 			// Create the unique array from the revisions
-			if (topicRevisions != null && topicRevisions.getItems() != null)
+			if (topicRevisions != null && topicRevisions.returnItems() != null)
 			{
-				for (RESTTopicV1 topicRev : topicRevisions.getItems())
+				for (RESTTopicV1 topicRev : topicRevisions.returnItems())
 				{
 					Object[] revision = new Object[2];
 					revision[0] = topicRev.getRevision();
@@ -842,7 +844,7 @@ public class RESTReader
 				collectionsCache.add(RESTTopicV1.class, topics, additionalKeys);
 			}
 
-			return topics.getItems();
+			return topics.returnItems();
 		}
 		catch (Exception e)
 		{
@@ -1013,7 +1015,7 @@ public class RESTReader
 			final RESTTopicV1 topic = this.getTopicById(topicId, rev);
 			if (topic != null)
 			{
-				for (RESTTopicV1 topicRevision : topic.getRevisions().getItems())
+				for (RESTTopicV1 topicRevision : topic.getRevisions().returnItems())
 				{
 					if (topicRevision.getRevision().equals(rev))
 					{

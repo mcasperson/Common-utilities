@@ -2,7 +2,9 @@ package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.Date;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTBugzillaBugCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 
 public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 {
@@ -13,8 +15,8 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 	protected String description = null;
 	protected Date created = null;
 	protected Date lastModified = null;
-	protected BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs_OTM = null;
-	protected BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics_OTM = null;
+	protected RESTBugzillaBugCollectionV1 bugzillaBugs_OTM = null;
+	protected RESTTranslatedTopicCollectionV1 translatedTopics_OTM = null;
 	
 	@Override
 	public RESTTopicV1 clone(final boolean deepCopy)
@@ -29,13 +31,32 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 		
 		if (deepCopy)
 		{
-			retValue.bugzillaBugs_OTM = this.bugzillaBugs_OTM == null ? null : this.bugzillaBugs_OTM.clone(deepCopy);
-			retValue.translatedTopics_OTM = this.translatedTopics_OTM == null ? null : this.translatedTopics_OTM.clone(deepCopy);
+			if (this.bugzillaBugs_OTM == null)
+				retValue.bugzillaBugs_OTM = null;
+			else
+				this.bugzillaBugs_OTM.cloneInto(retValue.bugzillaBugs_OTM, deepCopy);
+			
+			if (this.translatedTopics_OTM == null)
+				retValue.translatedTopics_OTM = null;
+			else
+				this.translatedTopics_OTM.cloneInto(retValue.translatedTopics_OTM, deepCopy);
+			
+			if (this.outgoingRelationships == null)
+				retValue.outgoingRelationships = null;
+			else
+				this.outgoingRelationships.cloneInto(retValue.outgoingRelationships, deepCopy);
+			
+			if (this.incomingRelationships == null)
+				retValue.incomingRelationships = null;
+			else
+				this.incomingRelationships.cloneInto(retValue.incomingRelationships, deepCopy);
 		}
 		else
 		{
 			retValue.bugzillaBugs_OTM = this.bugzillaBugs_OTM;
 			retValue.translatedTopics_OTM = this.translatedTopics_OTM;
+			retValue.outgoingRelationships = this.outgoingRelationships;
+			retValue.incomingRelationships = this.incomingRelationships;
 		}
 		return retValue;
 		
@@ -95,17 +116,17 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 		this.lastModified = lastModified;
 	}
 	
-	public BaseRestCollectionV1<RESTBugzillaBugV1> getBugzillaBugs_OTM()
+	public RESTBugzillaBugCollectionV1 getBugzillaBugs_OTM()
 	{
 		return bugzillaBugs_OTM;
 	}
 
-	public void setBugzillaBugs_OTM(final BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs)
+	public void setBugzillaBugs_OTM(final RESTBugzillaBugCollectionV1 bugzillaBugs)
 	{
 		this.bugzillaBugs_OTM = bugzillaBugs;
 	}
 	
-	public void explicitSetBugzillaBugs_OTM(final BaseRestCollectionV1<RESTBugzillaBugV1> bugzillaBugs)
+	public void explicitSetBugzillaBugs_OTM(final RESTBugzillaBugCollectionV1 bugzillaBugs)
 	{
 		setBugzillaBugs_OTM(bugzillaBugs);
 		setParamaterToConfigured(BUGZILLABUGS_NAME);
@@ -123,21 +144,51 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1>
 		setParamaterToConfigured(XML_ERRORS_NAME);
 	}
 	
-	public BaseRestCollectionV1<RESTTranslatedTopicV1> getTranslatedTopics_OTM()
+	public RESTTranslatedTopicCollectionV1 getTranslatedTopics_OTM()
 	{
 		return translatedTopics_OTM;
 	}
 
-	public void setTranslatedTopics_OTM(final BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics)
+	public void setTranslatedTopics_OTM(final RESTTranslatedTopicCollectionV1 translatedTopics)
 	{
 		this.translatedTopics_OTM = translatedTopics;
 	}
 	
-	public void explicitSetTranslatedTopics_OTM(final BaseRestCollectionV1<RESTTranslatedTopicV1> translatedTopics)
+	public void explicitSetTranslatedTopics_OTM(final RESTTranslatedTopicCollectionV1 translatedTopics)
 	{
 		this.translatedTopics_OTM = translatedTopics;
 		setParamaterToConfigured(TRANSLATEDTOPICS_NAME);
 	}
 	
+	public RESTTopicCollectionV1 getOutgoingRelationships()
+	{
+		return (RESTTopicCollectionV1)outgoingRelationships;
+	}
 
+	public void setOutgoingRelationships(final RESTTopicCollectionV1 outgoingRelationships)
+	{
+		this.outgoingRelationships = outgoingRelationships;
+	}
+	
+	public void explicitSetOutgoingRelationships(final RESTTopicCollectionV1 outgoingRelationships)
+	{
+		setOutgoingRelationships(outgoingRelationships);
+		setParamaterToConfigured(OUTGOING_NAME);
+	}
+
+	public RESTTopicCollectionV1 getIncomingRelationships()
+	{
+		return (RESTTopicCollectionV1)incomingRelationships;
+	}
+
+	public void setIncomingRelationships(final RESTTopicCollectionV1 incomingRelationships)
+	{
+		this.incomingRelationships = incomingRelationships;
+	}
+	
+	public void explicitSetIncomingRelationships(final RESTTopicCollectionV1 incomingRelationships)
+	{
+		setIncomingRelationships(incomingRelationships);
+		setParamaterToConfigured(INCOMING_NAME);
+	}
 }

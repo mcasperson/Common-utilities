@@ -2,7 +2,9 @@ package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.Date;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTranslatedTopicStringCollectionV1;
 
 public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1>
 {
@@ -23,9 +25,11 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 	protected Integer topicRevision;
 	protected Integer translationPercentage;
 	protected Date htmlUpdated;
-	protected BaseRestCollectionV1<RESTTranslatedTopicStringV1> translatedTopicStrings = null;
-	protected BaseRestCollectionV1<RESTTranslatedTopicV1> outgoingTranslatedRelationships = null;
-	protected BaseRestCollectionV1<RESTTranslatedTopicV1> incomingTranslatedRelationships = null;
+	protected RESTTranslatedTopicStringCollectionV1 translatedTopicStrings = null;
+	protected RESTTranslatedTopicCollectionV1 outgoingTranslatedRelationships = null;
+	protected RESTTranslatedTopicCollectionV1 incomingTranslatedRelationships = null;
+	protected RESTTranslatedTopicCollectionV1 outgoingRelationships = null;
+	protected RESTTranslatedTopicCollectionV1 incomingRelationships = null;
 
 	@Override
 	public RESTTranslatedTopicV1 clone(final boolean deepCopy)
@@ -41,13 +45,29 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 		
 		if (deepCopy)
 		{
-			retValue.setTranslatedTopicStrings_OTM(this.getTranslatedTopicStrings_OTM() != null ? this.getTranslatedTopicStrings_OTM().clone(deepCopy) : null);
+			if (this.translatedTopicStrings == null)
+				retValue.translatedTopicStrings = null;
+			else
+				this.translatedTopicStrings.cloneInto(retValue.translatedTopicStrings, deepCopy);
+			
+			if (this.outgoingTranslatedRelationships == null)
+				retValue.outgoingTranslatedRelationships = null;
+			else
+				this.outgoingTranslatedRelationships.cloneInto(retValue.outgoingTranslatedRelationships, deepCopy);
+			
+			if (this.incomingTranslatedRelationships == null)
+				retValue.incomingTranslatedRelationships = null;
+			else
+				this.incomingTranslatedRelationships.cloneInto(retValue.incomingTranslatedRelationships, deepCopy);
+
 			retValue.setTopic(this.topic != null ? this.topic.clone(deepCopy) : null);
 		}
 		else
 		{
 			retValue.setTranslatedTopicStrings_OTM(this.getTranslatedTopicStrings_OTM());
 			retValue.topic = this.topic;
+			retValue.outgoingTranslatedRelationships = this.outgoingTranslatedRelationships;
+			retValue.incomingTranslatedRelationships = this.incomingTranslatedRelationships;
 		}
 		return retValue;
 	}
@@ -133,17 +153,17 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 		this.setParamaterToConfigured(TRANSLATIONPERCENTAGE_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTTranslatedTopicStringV1> getTranslatedTopicStrings_OTM()
+	public RESTTranslatedTopicStringCollectionV1 getTranslatedTopicStrings_OTM()
 	{
 		return translatedTopicStrings;
 	}
 
-	public void setTranslatedTopicStrings_OTM(final BaseRestCollectionV1<RESTTranslatedTopicStringV1> translatedTopicStrings)
+	public void setTranslatedTopicStrings_OTM(final RESTTranslatedTopicStringCollectionV1 translatedTopicStrings)
 	{
 		this.translatedTopicStrings = translatedTopicStrings;
 	}
 	
-	public void explicitSetTranslatedTopicString_OTM(final BaseRestCollectionV1<RESTTranslatedTopicStringV1> translatedTopicStrings)
+	public void explicitSetTranslatedTopicString_OTM(final RESTTranslatedTopicStringCollectionV1 translatedTopicStrings)
 	{
 		this.translatedTopicStrings = translatedTopicStrings;
 		this.setParamaterToConfigured(TRANSLATEDTOPICSTRING_NAME);
@@ -171,23 +191,55 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 		setParamaterToConfigured(LOCALE_NAME);
 	}
 	
-	public BaseRestCollectionV1<RESTTranslatedTopicV1> getOutgoingTranslatedRelationships()
+	public RESTTranslatedTopicCollectionV1 getOutgoingTranslatedRelationships()
 	{
 		return outgoingTranslatedRelationships;
 	}
 	
-	public void setOutgoingTranslatedRelationships(final BaseRestCollectionV1<RESTTranslatedTopicV1> outgoingTranslatedRelationships)
+	public void setOutgoingTranslatedRelationships(final RESTTranslatedTopicCollectionV1 outgoingTranslatedRelationships)
 	{
 		this.outgoingTranslatedRelationships = outgoingTranslatedRelationships;
 	}
 	
-	public BaseRestCollectionV1<RESTTranslatedTopicV1> getIncomingTranslatedRelationships()
+	public RESTTranslatedTopicCollectionV1 getIncomingTranslatedRelationships()
 	{
 		return incomingTranslatedRelationships;
 	}
 	
-	public void setIncomingTranslatedRelationships(final BaseRestCollectionV1<RESTTranslatedTopicV1> incomingTranslatedRelationships)
+	public void setIncomingTranslatedRelationships(final RESTTranslatedTopicCollectionV1 incomingTranslatedRelationships)
 	{
 		this.incomingTranslatedRelationships = incomingTranslatedRelationships;
+	}
+	
+	public RESTTranslatedTopicCollectionV1 getOutgoingRelationships()
+	{
+		return outgoingRelationships;
+	}
+
+	public void setOutgoingRelationships(final RESTTranslatedTopicCollectionV1 outgoingRelationships)
+	{
+		this.outgoingRelationships = outgoingRelationships;
+	}
+	
+	public void explicitSetOutgoingRelationships(final RESTTranslatedTopicCollectionV1 outgoingRelationships)
+	{
+		setOutgoingRelationships(outgoingRelationships);
+		setParamaterToConfigured(OUTGOING_NAME);
+	}
+
+	public RESTTranslatedTopicCollectionV1 getIncomingRelationships()
+	{
+		return incomingRelationships;
+	}
+
+	public void setIncomingRelationships(final RESTTranslatedTopicCollectionV1 incomingRelationships)
+	{
+		this.incomingRelationships = incomingRelationships;
+	}
+	
+	public void explicitSetIncomingRelationships(final RESTTranslatedTopicCollectionV1 incomingRelationships)
+	{
+		setIncomingRelationships(incomingRelationships);
+		setParamaterToConfigured(INCOMING_NAME);
 	}
 }

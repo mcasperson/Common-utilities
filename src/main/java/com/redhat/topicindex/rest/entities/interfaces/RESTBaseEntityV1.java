@@ -46,7 +46,10 @@ public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T>>
 		
 		if (deepCopy)
 		{
-			clone.setRevisions(this.revisions == null ? null : this.revisions.clone(deepCopy));
+			if (this.revisions == null)
+				clone.revisions = null;
+			else
+				this.revisions.cloneInto(clone.revisions, deepCopy);
 		}
 		else
 		{

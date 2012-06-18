@@ -14,6 +14,7 @@ import com.redhat.contentspec.constants.CSConstants;
 import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
@@ -26,8 +27,8 @@ public class TopicPool {
 	
 	private static final Logger log = Logger.getLogger(TopicPool.class);
 
-	private BaseRestCollectionV1<RESTTopicV1> newTopicPool = new BaseRestCollectionV1<RESTTopicV1>();
-	private BaseRestCollectionV1<RESTTopicV1> updatedTopicPool = new BaseRestCollectionV1<RESTTopicV1>();
+	private RESTTopicCollectionV1 newTopicPool = new RESTTopicCollectionV1();
+	private RESTTopicCollectionV1 updatedTopicPool = new RESTTopicCollectionV1();
 	private final RESTInterfaceV1 client;
 	private final ObjectMapper mapper = new ObjectMapper();
 	private boolean initialised = false;
@@ -60,7 +61,7 @@ public class TopicPool {
 			
 			// Save the new topics
 			if (!(newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty())) {
-				BaseRestCollectionV1<RESTTopicV1> response = client.createJSONTopics(expandEncodedString, newTopicPool);
+				RESTTopicCollectionV1 response = client.createJSONTopics(expandEncodedString, newTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null) return false;
 				if (response.getItems() == null) return false;
@@ -70,7 +71,7 @@ public class TopicPool {
 			
 			// Update the existing topics
 			if (!(updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty())) {
-				BaseRestCollectionV1<RESTTopicV1> response = client.updateJSONTopics(expandEncodedString, updatedTopicPool);
+				RESTTopicCollectionV1 response = client.updateJSONTopics(expandEncodedString, updatedTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null) return false;
 				if (response.getItems() == null) return false;

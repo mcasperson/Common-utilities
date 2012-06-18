@@ -1,6 +1,6 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTLanguageImageCollectionV1;
 
 public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 {
@@ -8,7 +8,7 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 	public static final String LANGUAGEIMAGES_NAME = "languageimages";
 
 	private String description;
-	private BaseRestCollectionV1<RESTLanguageImageV1> languageImages_OTM = null;
+	private RESTLanguageImageCollectionV1 languageImages_OTM = null;
 	
 	@Override
 	public RESTImageV1 clone(boolean deepCopy)
@@ -21,7 +21,10 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 		
 		if (deepCopy)
 		{
-			retValue.languageImages_OTM = this.languageImages_OTM == null ? null : this.languageImages_OTM.clone(deepCopy);
+			if (this.languageImages_OTM == null)
+				retValue.languageImages_OTM = null;
+			else
+				this.languageImages_OTM.cloneInto(retValue.languageImages_OTM, deepCopy);
 		}
 		else
 		{
@@ -47,17 +50,17 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1>
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTLanguageImageV1> getLanguageImages_OTM()
+	public RESTLanguageImageCollectionV1 getLanguageImages_OTM()
 	{
 		return languageImages_OTM;
 	}
 
-	public void setLanguageImages_OTM(BaseRestCollectionV1<RESTLanguageImageV1> languageImages_OTM)
+	public void setLanguageImages_OTM(RESTLanguageImageCollectionV1 languageImages_OTM)
 	{
 		this.languageImages_OTM = languageImages_OTM;
 	}
 	
-	public void explicitSetLanguageImages_OTM(BaseRestCollectionV1<RESTLanguageImageV1> languageImages_OTM)
+	public void explicitSetLanguageImages_OTM(RESTLanguageImageCollectionV1 languageImages_OTM)
 	{
 		this.languageImages_OTM = languageImages_OTM;
 		this.setParamaterToConfigured(LANGUAGEIMAGES_NAME);

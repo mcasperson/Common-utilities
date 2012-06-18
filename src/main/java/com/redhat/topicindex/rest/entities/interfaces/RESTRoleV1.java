@@ -1,6 +1,7 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTRoleCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTUserCollectionV1;
 
 public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
 {
@@ -14,9 +15,9 @@ public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
 	private String relationshipDescription;
 	private String name;
 	private String description;
-	private BaseRestCollectionV1<RESTUserV1> users;
-	private BaseRestCollectionV1<RESTRoleV1> childRoles;
-	private BaseRestCollectionV1<RESTRoleV1> parentRoles;
+	private RESTUserCollectionV1 users;
+	private RESTRoleCollectionV1 childRoles;
+	private RESTRoleCollectionV1 parentRoles;
 	
 	@Override
 	public RESTRoleV1 clone(boolean deepCopy)
@@ -32,9 +33,20 @@ public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
 		
 		if (deepCopy)
 		{
-			retValue.users = this.users == null ? null : this.users.clone(deepCopy);
-			retValue.childRoles = this.childRoles == null ? null : this.childRoles.clone(deepCopy);
-			retValue.parentRoles = this.parentRoles == null ? null :this.parentRoles.clone(deepCopy);
+			if (this.users == null)
+				retValue.users = null;
+			else
+				this.users.cloneInto(retValue.users, deepCopy);
+			
+			if (this.childRoles == null)
+				retValue.childRoles = null;
+			else
+				this.childRoles.cloneInto(retValue.childRoles, deepCopy);
+			
+			if (this.parentRoles == null)
+				retValue.parentRoles = null;
+			else
+				this.parentRoles.cloneInto(retValue.parentRoles, deepCopy);
 		}
 		else
 		{
@@ -78,49 +90,49 @@ public class RESTRoleV1 extends RESTBaseEntityV1<RESTRoleV1>
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTUserV1> getUsers()
+	public RESTUserCollectionV1 getUsers()
 	{
 		return users;
 	}
 
-	public void setUsers(final BaseRestCollectionV1<RESTUserV1> users)
+	public void setUsers(final RESTUserCollectionV1 users)
 	{
 		this.users = users;
 	}
 	
-	public void explicitSetUsers(final BaseRestCollectionV1<RESTUserV1> users)
+	public void explicitSetUsers(final RESTUserCollectionV1 users)
 	{
 		this.users = users;
 		this.setParamaterToConfigured(USERS_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTRoleV1> getChildRoles()
+	public RESTRoleCollectionV1 getChildRoles()
 	{
 		return childRoles;
 	}
 
-	public void setChildRoles(final BaseRestCollectionV1<RESTRoleV1> childRoles)
+	public void setChildRoles(final RESTRoleCollectionV1 childRoles)
 	{
 		this.childRoles = childRoles;
 	}
 	
-	public void explicitSetChildRoles(final BaseRestCollectionV1<RESTRoleV1> childRoles)
+	public void explicitSetChildRoles(final RESTRoleCollectionV1 childRoles)
 	{
 		this.childRoles = childRoles;
 		this.setParamaterToConfigured(CHILDROLES_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTRoleV1> getParentRoles()
+	public RESTRoleCollectionV1 getParentRoles()
 	{
 		return parentRoles;
 	}
 
-	public void setParentRoles(final BaseRestCollectionV1<RESTRoleV1> parentRoles)
+	public void setParentRoles(final RESTRoleCollectionV1 parentRoles)
 	{
 		this.parentRoles = parentRoles;
 	}
 	
-	public void explicitSetParentRoles(final BaseRestCollectionV1<RESTRoleV1> parentRoles)
+	public void explicitSetParentRoles(final RESTRoleCollectionV1 parentRoles)
 	{
 		this.parentRoles = parentRoles;
 		this.setParamaterToConfigured(PARENTROLES_NAME);

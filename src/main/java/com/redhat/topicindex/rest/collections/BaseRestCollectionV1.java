@@ -3,8 +3,6 @@ package com.redhat.topicindex.rest.collections;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
 /**
@@ -16,33 +14,30 @@ public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T>>
 	private String expand = null;
 	private Integer startExpandIndex = null;
 	private Integer endExpandIndex = null;
-	private List<T> items = null;
-	
-	public BaseRestCollectionV1<T> clone(final boolean deepCopy)
+	protected List<T> items = null;
+
+	public void cloneInto(final BaseRestCollectionV1<T> dest, final boolean deepCopy)
 	{
-		final BaseRestCollectionV1<T> retValue  = new BaseRestCollectionV1<T>();
-		retValue.size = this.size;
-		retValue.expand = this.expand;
-		retValue.startExpandIndex = this.startExpandIndex;
-		retValue.endExpandIndex = this.endExpandIndex;
-		
+		dest.size = this.size;
+		dest.expand = this.expand;
+		dest.startExpandIndex = this.startExpandIndex;
+		dest.endExpandIndex = this.endExpandIndex;
+
 		if (this.items != null)
 		{
-			retValue.items = new ArrayList<T>();
+			dest.items = new ArrayList<T>();
 			if (deepCopy)
 			{
 				for (final T item : this.items)
-					retValue.items.add(item.clone(deepCopy));
+					dest.items.add(item.clone(deepCopy));
 			}
 			else
 			{
-				retValue.items.addAll(this.items);
+				dest.items.addAll(this.items);
 			}
 		}
-		return retValue;
 	}
-	
-	@XmlElement
+
 	public Integer getSize()
 	{
 		return size;
@@ -53,7 +48,6 @@ public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T>>
 		this.size = size;
 	}
 
-	@XmlElement
 	public String getExpand()
 	{
 		return expand;
@@ -64,18 +58,23 @@ public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T>>
 		this.expand = expand;
 	}
 
-	@XmlElement
-	public List<T> getItems()
+	/**
+	 * Errai has a limitation with nested parameterized types being returned by a Jackson REST interface. See https://issues.jboss.org/browse/ERRAI-319 for more
+	 * details. However, it is still useful to be able to access the collection held by this object in a generic way. So this method uses a nonstandard naming
+	 * convention to prevent it from being read by any serialization routines.
+	 * 
+	 * @return The collection of objects held by this collection.
+	 */
+	public List<T> returnItems()
 	{
 		return items;
 	}
 
-	public void setItems(final List<T> items)
+	public void defineItems(final List<T> items)
 	{
 		this.items = items;
 	}
 
-	@XmlElement
 	public Integer getStartExpandIndex()
 	{
 		return startExpandIndex;
@@ -86,7 +85,6 @@ public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T>>
 		this.startExpandIndex = startExpandIndex;
 	}
 
-	@XmlElement
 	public Integer getEndExpandIndex()
 	{
 		return endExpandIndex;
@@ -96,7 +94,7 @@ public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T>>
 	{
 		this.endExpandIndex = endExpandIndex;
 	}
-	
+
 	public void addItem(final T item)
 	{
 		if (this.items == null)

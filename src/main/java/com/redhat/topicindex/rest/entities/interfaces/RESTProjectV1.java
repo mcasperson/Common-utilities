@@ -1,6 +1,7 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 
 
 public class RESTProjectV1 extends RESTBaseEntityV1<RESTProjectV1>
@@ -11,7 +12,7 @@ public class RESTProjectV1 extends RESTBaseEntityV1<RESTProjectV1>
 	
 	private String name = null;
 	private String description = null;
-	private BaseRestCollectionV1<RESTTagV1> tags = null;
+	private RESTTagCollectionV1 tags = null;
 	
 	@Override
 	public RESTProjectV1 clone(boolean deepCopy)
@@ -25,7 +26,10 @@ public class RESTProjectV1 extends RESTBaseEntityV1<RESTProjectV1>
 
 		if (deepCopy)
 		{
-			retValue.tags = this.tags == null ? null : this.tags.clone(deepCopy);
+			if (this.tags == null)
+				retValue.tags = null;
+			else
+				this.tags.cloneInto(retValue.tags, deepCopy);
 		}
 		else
 		{
@@ -67,17 +71,17 @@ public class RESTProjectV1 extends RESTBaseEntityV1<RESTProjectV1>
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTTagV1> getTags()
+	public RESTTagCollectionV1 getTags()
 	{
 		return tags;
 	}
 
-	public void setTags(final BaseRestCollectionV1<RESTTagV1> tags)
+	public void setTags(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 	}
 	
-	public void setTagsExplicit(final BaseRestCollectionV1<RESTTagV1> tags)
+	public void setTagsExplicit(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 		this.setParamaterToConfigured(TAGS_NAME);
