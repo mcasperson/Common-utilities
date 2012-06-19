@@ -339,7 +339,7 @@ public class DocbookBuildingOptions
 			return this.getBookEdition();
 		
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
-			return this.getBookPubsnumber() == null ? null : this.getBookPubsnumber().toString();
+			return this.getBookPubsnumber() == null ? "" : this.getBookPubsnumber().toString();
 		
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
 			return this.getBookSubtitle();

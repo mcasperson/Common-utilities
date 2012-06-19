@@ -7,7 +7,6 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.redhat.contentspec.rest.utils.RESTCollectionCache;
 import com.redhat.contentspec.rest.utils.RESTEntityCache;
-import com.redhat.contentspec.utils.logging.ErrorLoggerManager;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
 
 /**
@@ -22,7 +21,7 @@ public class RESTManager
 	private final RESTEntityCache entityCache = new RESTEntityCache();
 	private final RESTCollectionCache collectionCache = new RESTCollectionCache(entityCache);
 	
-	public RESTManager(ErrorLoggerManager elm, String serverUrl)
+	public RESTManager(final String serverUrl)
 	{
 		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 		ResteasyProviderFactory.getInstance().registerProvider(ResteasyJacksonProvider.class);

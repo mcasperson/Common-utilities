@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.BaseRESTEntityV1;
+import com.redhat.topicindex.rest.entities.TranslatedTopicV1;
 
 public class RESTEntityCache {
 
@@ -16,7 +17,15 @@ public class RESTEntityCache {
 	public <T extends BaseRESTEntityV1<T>> void add(BaseRestCollectionV1<T> value, boolean isRevisions) {
 		if (value != null && value.getItems() != null) {
 			for (T item: value.getItems()) {
-				add(item, isRevisions);
+				if (item.getClass() == TranslatedTopicV1.class)
+				{
+					add(item, ((TranslatedTopicV1) item).getTopicId(), isRevisions);
+					add(item, ((TranslatedTopicV1) item).getZanataId(), isRevisions);
+				}
+				else
+				{
+					add(item, isRevisions);
+				}
 			}
 		}
 	}
@@ -32,24 +41,37 @@ public class RESTEntityCache {
 		return containsKeyValue(clazz, id, null);
 	}
 	
-	public <T extends BaseRESTEntityV1<T>> void add(T value) {
+	public <T extends BaseRESTEntityV1<T>> void add(T value)
+	{
 		add(value, false);
 	}
 	
-	public <T extends BaseRESTEntityV1<T>> void add(T value, boolean isRevision) {
+	public <T extends BaseRESTEntityV1<T>> void add(T value, final Number id, boolean isRevision)
+	{
+		add(value, id.toString(), isRevision);
+	}
+
+	public <T extends BaseRESTEntityV1<T>> void add(T value, final String id, boolean isRevision)
+	{
 		// Add the map if one doesn't exist for the current class
-		if (!singleEntities.containsKey(value.getClass())) {
+		if (!singleEntities.containsKey(value.getClass()))
+		{
 			singleEntities.put(value.getClass(), new HashMap<String, BaseRESTEntityV1<?>>());
 		}
-		
+
 		// Add the entity
-		if (isRevision) 
-			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + value.getId() + "-" + value.getRevision(), value);
+		if (isRevision)
+			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id + "-" + value.getRevision(), value);
 		else
-			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + value.getId(), value);
-		
+			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id, value);
+
 		// Add any revisions to the cache
 		add(value.getRevisions(), true);
+	}
+
+	public <T extends BaseRESTEntityV1<T>> void add(T value, boolean isRevision)
+	{
+		add(value, value.getId().toString(), isRevision);
 	}
 	
 	public <T extends BaseRESTEntityV1<T>> BaseRestCollectionV1<T> get(Class<T> clazz) {

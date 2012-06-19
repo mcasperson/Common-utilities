@@ -24,7 +24,7 @@ public class UserV1 extends BaseRESTEntityV1<UserV1>
 		
 		if (deepCopy)
 		{
-			retValue.roles = this.roles.clone(deepCopy);
+			retValue.roles = this.roles == null ? null : this.roles.clone(deepCopy);
 		}
 		else
 		{

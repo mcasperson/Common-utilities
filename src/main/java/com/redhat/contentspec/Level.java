@@ -22,6 +22,7 @@ public class Level extends SpecNode {
 	protected final LinkedList<Node> nodes = new LinkedList<Node>();
 	protected final LevelType type;
 	private String targetId = null;
+	private String externalTargetId = null;
 	protected String title = null;
 	protected String duplicateId = null;
 	
@@ -251,6 +252,24 @@ public class Level extends SpecNode {
 	}
 	
 	/**
+	 * Get the External Target ID for the level if one exists.
+	 * 
+	 * @return A String that represents an External Target ID if one exists otherwise null.
+	 */
+	public String getExternalTargetId() {
+		return externalTargetId;
+	}
+
+	/**
+	 * Set the External Target ID for the level.
+	 * 
+	 * @param externalTargetId The External Target ID to associate with the level.
+	 */
+	public void setExternalTargetId(final String externalTargetId) {
+		this.externalTargetId = externalTargetId;
+	}
+	
+	/**
 	 * Appends a Comment node to the Level.
 	 * 
 	 * @param comment The Comment Node to be appended.
@@ -366,6 +385,9 @@ public class Level extends SpecNode {
 						type.getTitle() + ": " + title + (
 							// Add the target id if one exists
 							targetId == null ? "" : (" [" + targetId + "]")
+						) + (
+							// Add the external target id if one exists
+							externalTargetId == null ? "" : (" [" + externalTargetId + "]")
 						) + (
 							// Add any options
 							options.equals("") ? "" : (" [" + options + "]")

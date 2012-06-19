@@ -200,17 +200,19 @@ public class RESTReader {
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
 				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
-				expand.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), 
-						new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")),
-						new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
-				
+				expand.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")),
+						new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
+
 				final String expandString = mapper.writeValueAsString(expand);
 				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				if (rev == null) {
+				if (rev == null)
+				{
 					topic = client.getJSONTopic(id, expandEncodedString);
 					entityCache.add(topic);
-				} else {
-					topic = client.getJSONTopic(id, expandEncodedString);
+				}
+				else
+				{
+					topic = client.getJSONTopicRevision(id, rev, expandEncodedString);
 					entityCache.add(topic, true);
 				}
 			}
@@ -224,7 +226,7 @@ public class RESTReader {
 	/*
 	 * Gets a collection of topics based on the list of ids passed.
 	 */
-	public BaseRestCollectionV1<TopicV1> getTopicsByIds(List<Integer> ids) {
+	public BaseRestCollectionV1<TopicV1> getTopicsByIds(final List<Integer> ids, final boolean expandTranslations) {
 		if (ids.isEmpty()) return null;
 		
 		try {
@@ -263,8 +265,10 @@ public class RESTReader {
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
 				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
-				topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, 
-						new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
+				if (expandTranslations)
+					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
+				else
+					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls"))));
 
 				expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
 				
@@ -361,9 +365,16 @@ public class RESTReader {
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 			
 			for (Integer id: ids) {
-				if (!entityCache.containsKeyValue(TranslatedTopicV1.class, id)) {
+				if (!entityCache.containsKeyValue(TranslatedTopicV1.class, id) && !entityCache.containsKeyValue(TranslatedTopicV1.class, (id * -1)))
+				{
 					urlVars.append(id + encodedComma);
-				} else {
+				}
+				else if (entityCache.containsKeyValue(TranslatedTopicV1.class, (id * -1)))
+				{
+					topics.addItem(entityCache.get(TranslatedTopicV1.class, (id * -1)));
+				}
+				else
+				{
 					topics.addItem(entityCache.get(TranslatedTopicV1.class, id));
 				}
 			}
@@ -421,6 +432,96 @@ public class RESTReader {
 		}
 		return null;
 	}
+	
+	/*
+	 * Gets a collection of translated topics based on the list of topic ids
+	 * passed.
+	 */
+	public BaseRestCollectionV1<TranslatedTopicV1> getTranslatedTopicsByZanataIds(final List<Integer> ids, final String locale)
+	{
+		if (ids.isEmpty())
+			return null;
+
+		try
+		{
+			final BaseRestCollectionV1<TranslatedTopicV1> topics = new BaseRestCollectionV1<TranslatedTopicV1>();
+			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;zanataIds=");
+			final String encodedComma = URLEncoder.encode(",", "UTF-8");
+
+			for (Integer id : ids)
+			{
+				if (!entityCache.containsKeyValue(TranslatedTopicV1.class, id))
+				{
+					urlVars.append(id + encodedComma);
+				}
+				else
+				{
+					topics.addItem(entityCache.get(TranslatedTopicV1.class, id));
+				}
+			}
+
+			String query = urlVars.toString();
+
+			if (query.length() != "query;latestTranslations=true;zanataIds=".length())
+			{
+				query = query.substring(0, query.length() - encodedComma.length());
+
+				/* Add the locale to the query if one was passed */
+				if (locale != null && !locale.isEmpty())
+					query += ";locale1=" + locale + "1";
+
+				PathSegment path = new PathSegmentImpl(query, false);
+
+				/*
+				 * We need to expand the all the items in the translatedtopic
+				 * collection
+				 */
+				final ExpandDataTrunk expand = new ExpandDataTrunk();
+
+				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
+				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(TopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(BaseTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
+				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(TranslatedTopicV1.TOPIC_NAME));
+
+				/* We need to expand the categories collection on the topic tags */
+				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+
+				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
+
+				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+
+				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
+
+				final String expandString = mapper.writeValueAsString(expand);
+				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				BaseRestCollectionV1<TranslatedTopicV1> downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				entityCache.add(downloadedTopics);
+
+				/* Transfer the downloaded data to the current topic list */
+				if (downloadedTopics != null && downloadedTopics.getItems() != null)
+				{
+					for (final TranslatedTopicV1 item : downloadedTopics.getItems())
+					{
+						entityCache.add(item, item.getZanataId(), false);
+						topics.addItem(item);
+					}
+				}
+			}
+
+			return topics;
+		}
+		catch (Exception e)
+		{
+			log.error(ExceptionUtilities.getStackTrace(e));
+		}
+		return null;
+	}
+
 	
 	/*
 	 * Gets a translated topic based on a topic id and locale

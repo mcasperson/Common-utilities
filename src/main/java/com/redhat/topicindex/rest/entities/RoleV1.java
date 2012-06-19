@@ -32,9 +32,9 @@ public class RoleV1 extends BaseRESTEntityV1<RoleV1>
 		
 		if (deepCopy)
 		{
-			retValue.users = this.users.clone(deepCopy);
-			retValue.childRoles = this.childRoles.clone(deepCopy);
-			retValue.parentRoles = this.parentRoles.clone(deepCopy);
+			retValue.users = this.users == null ? null : this.users.clone(deepCopy);
+			retValue.childRoles = this.childRoles == null ? null : this.childRoles.clone(deepCopy);
+			retValue.parentRoles = this.parentRoles == null ? null : this.parentRoles.clone(deepCopy);
 		}
 		else
 		{

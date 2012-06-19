@@ -35,6 +35,7 @@ public class SpecTopic extends SpecNode {
 	private String duplicateId = null;
 	private BaseTopicV1<? extends BaseTopicV1<?>> topic = null;
 	private Document xmlDocument = null;
+	private Integer revision = null;
 	
 	/**
 	 * Constructor
@@ -116,6 +117,29 @@ public class SpecTopic extends SpecNode {
 	 */
 	public String getId() {
 		return id;
+	}
+	
+	/**
+	 * Get the revision number of the topic that the Spec Topic represents. 
+	 * 
+	 * @return The revision number for the underlying topic or null if the 
+	 * Spec Topic represents the latest copy.
+	 */
+	public Integer getRevision()
+	{
+		return revision;
+	}
+
+	/**
+	 * Set the revision number for the underlying topic that the Spec Topic
+	 * represents.
+	 * 
+	 * @param revision The underlying topic revision number or null if its 
+	 * the latest revision.
+	 */
+	public void setRevision(final Integer revision)
+	{
+		this.revision = revision;
 	}
 	
 	/**
@@ -518,34 +542,31 @@ public class SpecTopic extends SpecNode {
 	}
 	
 	@Override
-	public String getText() {
-		if (text == null) {
-			String output = "";
-			if (DBId == 0) {
-				String options = getOptionsString();
-				output += title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) +  "]";
-			} else {
-				output += title + " [" + id + "]";
-			}
-			if (!getRelatedRelationships().isEmpty()) {
-				ArrayList<String> relatedIds = new ArrayList<String>();
-				for (Relationship related: getRelatedRelationships()) {
-					relatedIds.add(related.getSecondaryRelationshipTopicId());
-				}
-				output += " [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
-			}
-			if (!getPrerequisiteRelationships().isEmpty()) {
-				ArrayList<String> relatedIds = new ArrayList<String>();
-				for (Relationship related: getPrerequisiteRelationships()) {
-					relatedIds.add(related.getSecondaryRelationshipTopicId());
-				}
-				output += " [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
-			}
-			setText(output);
-			return output;
+	public String getText()
+	{
+		String output = "";
+		if (DBId == 0) {
+			String options = getOptionsString();
+			output += title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) +  "]";
 		} else {
-			return text;
+			output += title + " [" + id + (revision == null ? "" : (", rev: " + revision)) + "]";
 		}
+		if (!getRelatedRelationships().isEmpty()) {
+			ArrayList<String> relatedIds = new ArrayList<String>();
+			for (Relationship related: getRelatedRelationships()) {
+				relatedIds.add(related.getSecondaryRelationshipTopicId());
+			}
+			output += " [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
+		}
+		if (!getPrerequisiteRelationships().isEmpty()) {
+			ArrayList<String> relatedIds = new ArrayList<String>();
+			for (Relationship related: getPrerequisiteRelationships()) {
+				relatedIds.add(related.getSecondaryRelationshipTopicId());
+			}
+			output += " [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
+		}
+		setText(output);
+		return output;
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ public class BugzillaOptions {
 	private String product = null;
 	private String component = null;
 	private String version = null;
+	private String urlComponent = null;
 	private boolean injectLinks = true;
 
 	/**
@@ -70,5 +71,27 @@ public class BugzillaOptions {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Get the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @return The BZURL component for the content specification.
+	 */
+	public String getUrlComponent()
+	{
+		return urlComponent;
+	}
+
+	/**
+	 * Set the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @param urlComponent The BZURL component to be used when building.
+	 */
+	public void setUrlComponent(final String urlComponent)
+	{
+		this.urlComponent = urlComponent;
 	}
 }

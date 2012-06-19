@@ -40,6 +40,7 @@ public class ContentSpec {
 	private String bugzillaProduct = null;
 	private String bugzillaComponent = null;
 	private String bugzillaVersion = null;
+	private String bugzillaURL = null;
 	private boolean injectBugLinks = true;
 	private boolean injectSurveyLinks = false;
 	private String locale = null;
@@ -774,6 +775,28 @@ public class ContentSpec {
 		this.bugzillaVersion = bugzillaVersion;
 	}
 	
+	/**
+	 * Get the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @return The BZURL component for the content specification.
+	 */
+	public String getBugzillaURL()
+	{
+		return bugzillaURL;
+	}
+
+	/**
+	 * Set the URL component that is used in the .ent file when
+	 * building the Docbook files.
+	 * 
+	 * @param bugzillaURL The BZURL component to be used when building.
+	 */
+	public void setBugzillaURL(final String bugzillaURL)
+	{
+		this.bugzillaURL = bugzillaURL;
+	}
+	
 	public boolean isInjectBugLinks() {
 		return injectBugLinks;
 	}
@@ -795,6 +818,7 @@ public class ContentSpec {
 		bzOption.setProduct(bugzillaProduct);
 		bzOption.setComponent(bugzillaComponent);
 		bzOption.setVersion(bugzillaVersion);
+		bzOption.setUrlComponent(bugzillaURL);
 		bzOption.setBugzillaLinksEnabled(injectBugLinks);
 		return bzOption;
 	}
@@ -811,7 +835,8 @@ public class ContentSpec {
 		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
 		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) +
 				(bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) +
-				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"));
+				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n")) +
+				(bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n"));
 		
 		String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) +
 				(allowEmptyLevels == null  || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
