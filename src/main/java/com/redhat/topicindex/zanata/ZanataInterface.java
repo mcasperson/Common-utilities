@@ -21,11 +21,25 @@ import com.redhat.ecs.constants.CommonConstants;
 
 public class ZanataInterface
 {
-	private final ZanataDetails details = new ZanataDetails();
+	private final static ZanataDetails defaultDetails = new ZanataDetails();
+	private final ZanataDetails details;
 	private final ZanataProxyFactory proxyFactory;
+	private final ZanataLocaleManager localeManager;
 
 	public ZanataInterface()
 	{
+		this(defaultDetails.getProject());
+	}
+	
+	/**
+	 * Constructs the interface with a custom project
+	 * @param projectOverride The name of the Zanata project to work with, which override the default specidie
+	 */
+	public ZanataInterface(final String projectOverride)
+	{
+		details = new ZanataDetails(defaultDetails);
+		details.setProject(projectOverride);
+		
 		URI URI = null;
 		try
 		{
@@ -39,16 +53,7 @@ public class ZanataInterface
 			versionInfo.setVersionNo("1.5.0");
 
 		proxyFactory = new ZanataProxyFactory(URI, details.getUsername(), details.getToken(), versionInfo);
-	}
-	
-	/**
-	 * Constructs the interface with a custom project
-	 * @param projectOverride The name of the Zanata project to work with, which override the default specidie
-	 */
-	public ZanataInterface(final String projectOverride)
-	{
-		this();
-		this.details.setProject(projectOverride);
+		localeManager = ZanataLocaleManager.getInstance(details.getProject());
 	}
 
 	public boolean getZanataResourceExists(final String id)
@@ -160,6 +165,12 @@ public class ZanataInterface
 			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
+			
+			/* Remove the locale if it is forbidden */
+			if (status == Response.Status.FORBIDDEN)
+			{
+				localeManager.removeLocale(locale);
+			}
 
 			return status == Response.Status.OK;
 
@@ -179,7 +190,14 @@ public class ZanataInterface
 			final ITranslationResources client = proxyFactory.getTranslationResources(details.getProject(), details.getVersion());
 			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
 
-			if (Response.Status.fromStatusCode(response.getStatus()) == Response.Status.OK)
+			final Status status = Response.Status.fromStatusCode(response.getStatus());
+			
+			/* Remove the locale if it is forbidden */
+			if (status == Response.Status.FORBIDDEN)
+			{
+				localeManager.removeLocale(locale);
+			}
+			else if (status == Response.Status.OK)
 			{
 				final TranslationsResource retValue = response.getEntity();
 				return retValue;
@@ -220,6 +238,11 @@ public class ZanataInterface
 
 		return null;
 	}
+	
+	public List<LocaleId> getZanataLocales()
+	{
+		return localeManager.getLocales();
+	}
 }
 
 /**
@@ -232,7 +255,6 @@ class ZanataDetails
 	private String version;
 	private String username;
 	private String token;
-	private String url;
 
 	public ZanataDetails()
 	{
@@ -241,7 +263,15 @@ class ZanataDetails
 		this.version = System.getProperty(CommonConstants.ZANATA_PROJECT_VERSION_PROPERTY);
 		this.username = System.getProperty(CommonConstants.ZANATA_USERNAME_PROPERTY);
 		this.token = System.getProperty(CommonConstants.ZANATA_TOKEN_PROPERTY);
-		this.url = server + "/seam/resource/restv1/projects/p/" + project + "/iterations/i/" + version + "/r";
+	}
+	
+	public ZanataDetails(final ZanataDetails zanataDetails)
+	{
+		this.server = zanataDetails.server;
+		this.project = zanataDetails.project;
+		this.version = zanataDetails.version;
+		this.username = zanataDetails.username;
+		this.token = zanataDetails.token;
 	}
 
 	public String getServer()
@@ -296,11 +326,6 @@ class ZanataDetails
 
 	public String getUrl()
 	{
-		return url;
-	}
-
-	public void setUrl(String url)
-	{
-		this.url = url;
+		return server + "/seam/resource/restv1/projects/p/" + project + "/iterations/i/" + version + "/r";
 	}
 }
