@@ -1,16 +1,32 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
+import com.redhat.topicindex.rest.collections.RESTBlobConstantCollectionV1;
+
 
 /**
  * A REST representation of the BlobConstants database entity
  */
-public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1>
+public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1, RESTBlobConstantCollectionV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String VALUE_NAME = "value";
 	
 	private String name;
 	private byte[] value;
+	/** A list of the Envers revision numbers */
+	private RESTBlobConstantCollectionV1 revisions = null;
+	
+	@Override
+	public RESTBlobConstantCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTBlobConstantCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTBlobConstantV1 clone(boolean deepCopy)
@@ -32,10 +48,19 @@ public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1>
 			{
 				retValue.value = null;
 			}
+			
+			if (this.getRevisions() == null)
+				retValue.revisions = null;
+			else
+			{
+				retValue.revisions = new RESTBlobConstantCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}			
 		}
 		else
 		{
 			retValue.value = value;
+			retValue.revisions = this.revisions;
 		}
 		return retValue;
 	}
@@ -71,4 +96,6 @@ public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1>
 		this.value = value;
 		this.setParamaterToConfigured(VALUE_NAME);
 	}
+
+
 }

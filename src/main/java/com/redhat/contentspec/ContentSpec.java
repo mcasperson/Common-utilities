@@ -16,9 +16,12 @@ import com.redhat.contentspec.enums.LevelType;
 import com.redhat.ecs.commonutils.DocBookUtilities;
 import com.redhat.ecs.commonutils.HashUtilities;
 import com.redhat.ecs.commonutils.StringUtilities;
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
-public class ContentSpec {
-	
+public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+{
+
 	private int id = 0;
 	private String title = "";
 	private String product = "";
@@ -30,7 +33,7 @@ public class ContentSpec {
 	private String publicanCfg = null;
 	private ArrayList<String> text = new ArrayList<String>();
 	private String dtd = "Docbook 4.5";
-	private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);;
+	private final Level<T, U> level = new Level<T, U>("Initial Level", 0, null, LevelType.BASE);;
 	private String createdBy = null;
 	private Integer revision = null;
 	private String checksum = null;
@@ -45,165 +48,194 @@ public class ContentSpec {
 	private boolean injectSurveyLinks = false;
 	private String locale = null;
 	private String outputStyle = CSConstants.CSP_OUTOUT_FORMAT;
-	private Boolean allowDuplicateTopics = true; 
-	private Boolean allowEmptyLevels = false; 
-	
-	private LinkedList<Comment> baseComments = new LinkedList<Comment>();
-	
+	private Boolean allowDuplicateTopics = true;
+	private Boolean allowEmptyLevels = false;
+
+	private LinkedList<Comment<T, U>> baseComments = new LinkedList<Comment<T, U>>();
+
 	/**
 	 * Constructor
 	 * 
-	 * @param title The Title of the Content Specification.
-	 * @param product The Product that the Content Specification documents.
-	 * @param version The Version of the Product that the Content Specification documents.
-	 * @param copyrightHolder The Copyright Holder of the Content Specification and the book it creates.
+	 * @param title
+	 *            The Title of the Content Specification.
+	 * @param product
+	 *            The Product that the Content Specification documents.
+	 * @param version
+	 *            The Version of the Product that the Content Specification documents.
+	 * @param copyrightHolder
+	 *            The Copyright Holder of the Content Specification and the book it creates.
 	 */
-	public ContentSpec(String title, String product, String version, String copyrightHolder) {
+	public ContentSpec(String title, String product, String version, String copyrightHolder)
+	{
 		this.title = title;
 		this.product = product;
 		this.version = version;
 		this.copyrightHolder = copyrightHolder;
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param title The title of the Content Specification.
+	 * @param title
+	 *            The title of the Content Specification.
 	 */
-	public ContentSpec(String title) {
+	public ContentSpec(String title)
+	{
 		this.title = title;
 	}
-	
+
 	/**
 	 * Constructor
 	 * 
-	 * @param id The Database ID of the Content Specification.
-	 * @param title The title of the Content Specification.
+	 * @param id
+	 *            The Database ID of the Content Specification.
+	 * @param title
+	 *            The title of the Content Specification.
 	 */
-	public ContentSpec(int id, String title) {
+	public ContentSpec(int id, String title)
+	{
 		this.id = id;
 		this.title = title;
 	}
-	
-	public ContentSpec() {
+
+	public ContentSpec()
+	{
 	}
-	
+
 	// Start of the basic getter/setter methods for this Scope.
-	
+
 	/**
 	 * Get the base Level of the Content Specification. This level will contain all the other levels in the content specification.
 	 * 
 	 * @return The Base Level object of a Content Specification.
 	 */
-	public Level getBaseLevel() {
+	public Level<T, U> getBaseLevel()
+	{
 		return level;
 	}
-	
+
 	/**
 	 * Gets the Product that the Content Specification documents.
 	 * 
 	 * @return The name of the product.
 	 */
-	public String getProduct() {
+	public String getProduct()
+	{
 		return product;
 	}
-	
+
 	/**
 	 * Sets the name of the product that the Content Specification documents.
 	 * 
-	 * @param product The name of the Product.
+	 * @param product
+	 *            The name of the Product.
 	 */
-	public void setProduct(String product) {
+	public void setProduct(String product)
+	{
 		this.product = product;
 	}
-	
+
 	/**
 	 * Get the version of the product that the Content Specification documents.
 	 * 
 	 * @return The version of the product.
 	 */
-	public String getVersion() {
+	public String getVersion()
+	{
 		return version;
 	}
-	
+
 	/**
 	 * Set the version of the product that the Content Specification documents.
 	 * 
-	 * @param version The product version.
+	 * @param version
+	 *            The product version.
 	 */
-	public void setVersion(String version) {
+	public void setVersion(String version)
+	{
 		this.version = version;
 	}
-	
+
 	/**
 	 * Gets the brand of the product that the Content Specification documents.
 	 * 
 	 * @return The brand of the product or null if one doesn't exist.
 	 */
-	public String getBrand() {
+	public String getBrand()
+	{
 		return brand;
 	}
-	
+
 	/**
 	 * Set the brand of the product that the Content Specification documents.
 	 * 
-	 * @param brand The brand of the product. 
+	 * @param brand
+	 *            The brand of the product.
 	 */
-	public void setBrand(String brand) {
+	public void setBrand(String brand)
+	{
 		this.brand = brand;
 	}
-	
+
 	/**
 	 * Sets the ID of the Content Specification.
 	 * 
-	 * @param id The database ID of the content specification.
+	 * @param id
+	 *            The database ID of the content specification.
 	 */
-	public void setId(int id) {
+	public void setId(int id)
+	{
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the ID of the Content Specification
 	 * 
-	 * @return The Content Specification database ID or 0 if one hasn't been set. 
+	 * @return The Content Specification database ID or 0 if one hasn't been set.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
-	
+
 	/**
 	 * Gets the title of the Content Specification.
 	 * 
 	 * @return The Content Specification title.
 	 */
-	public String getTitle() {
+	public String getTitle()
+	{
 		return title;
 	}
-	
+
 	/**
 	 * Gets the escaped version of the title for the Content Specification.
 	 * 
 	 * @return The Content Specification title.
 	 */
-	public String getEscapedTitle() {
+	public String getEscapedTitle()
+	{
 		return DocBookUtilities.escapeTitle(title);
 	}
-	
+
 	/**
 	 * Sets the Content Specifications title.
 	 * 
-	 * @param title The title for the content specification
+	 * @param title
+	 *            The title for the content specification
 	 */
-	public void setTitle(String title) {
-		this.title= title;
+	public void setTitle(String title)
+	{
+		this.title = title;
 	}
-	
+
 	/**
 	 * Gets the Subtitle for the Content Specification.
 	 * 
 	 * @return The Subtitle of the Content Specification or null if one doesn't exist.
 	 */
-	public String getSubtitle() {
+	public String getSubtitle()
+	{
 		return subtitle;
 	}
 
@@ -212,7 +244,8 @@ public class ContentSpec {
 	 * 
 	 * @param subtitle
 	 */
-	public void setSubtitle(String subtitle) {
+	public void setSubtitle(String subtitle)
+	{
 		this.subtitle = subtitle;
 	}
 
@@ -221,16 +254,19 @@ public class ContentSpec {
 	 * 
 	 * @return The Content Specifications Book Edition or null if one doesn't exist.
 	 */
-	public String getEdition() {
+	public String getEdition()
+	{
 		return edition;
 	}
 
 	/**
 	 * Set the Edition of the Book the Content Specification represents.
 	 * 
-	 * @param edition The Book Edition.
+	 * @param edition
+	 *            The Book Edition.
 	 */
-	public void setEdition(String edition) {
+	public void setEdition(String edition)
+	{
 		this.edition = edition;
 	}
 
@@ -239,124 +275,144 @@ public class ContentSpec {
 	 * 
 	 * @return The publication number or null if one doesn't exist.
 	 */
-	public Integer getPubsNumber() {
+	public Integer getPubsNumber()
+	{
 		return pubsNumber;
 	}
 
 	/**
 	 * Set the publication number for the Content Specification.
 	 * 
-	 * @param pubsNumber The publication number.
+	 * @param pubsNumber
+	 *            The publication number.
 	 */
-	public void setPubsNumber(Integer pubsNumber) {
+	public void setPubsNumber(Integer pubsNumber)
+	{
 		this.pubsNumber = pubsNumber;
 	}
-	
+
 	/**
 	 * Gets the data what will be appended to the publican.cfg file when built.
 	 * 
 	 * @return The data to be appended or null if none exist.
 	 */
-	public String getPublicanCfg() {
+	public String getPublicanCfg()
+	{
 		return publicanCfg;
 	}
 
 	/**
 	 * Set the data that will be appended to the publican.cfg file when built.
 	 * 
-	 * @param publicanCfg The data to be appended.
+	 * @param publicanCfg
+	 *            The data to be appended.
 	 */
-	public void setPublicanCfg(String publicanCfg) {
+	public void setPublicanCfg(String publicanCfg)
+	{
 		this.publicanCfg = publicanCfg;
 	}
-	
+
 	/**
 	 * Get the pre processed text of a specific line in the Content Specification.
 	 * 
-	 * @param line The line number of the text.
+	 * @param line
+	 *            The line number of the text.
 	 * @return The text at "line" in the Content Specification or null if the line doesn't exist.
 	 */
-	public String getPreProcessedTextForLine(int line) {
+	public String getPreProcessedTextForLine(int line)
+	{
 		return text.size() >= line ? text.get(line - 1) : null;
 	}
-	
+
 	/**
 	 * Gets a list of all the pre processed lines in the Content Specification.
 	 * 
 	 * @return A List of pre processed Content Specification lines.
 	 */
-	public List<String> getPreProcessedText() {
+	public List<String> getPreProcessedText()
+	{
 		return text;
 	}
-	
+
 	/**
-	 * Sets the pre processed text of a content specification for a specific line. If the line doesn't
-	 * exist then a IndexOutOfBoundsException will be thrown.
+	 * Sets the pre processed text of a content specification for a specific line. If the line doesn't exist then a IndexOutOfBoundsException will be thrown.
 	 * 
-	 * @param text The text to be set at "line".
-	 * @param line The line number in the content specification to set the text for.
+	 * @param text
+	 *            The text to be set at "line".
+	 * @param line
+	 *            The line number in the content specification to set the text for.
 	 */
-	public void setPreProcessedTextForLine (String text, int line) {
-		this.text.set(line-1, text);
+	public void setPreProcessedTextForLine(String text, int line)
+	{
+		this.text.set(line - 1, text);
 	}
-	
+
 	/**
 	 * Get the DTD of the Content Specification. The default value is "Docbook 4.5".
 	 * 
 	 * @return The DTD of the Content Specification or the default value if one isn't set.
 	 */
-	public String getDtd() {
+	public String getDtd()
+	{
 		return dtd;
 	}
-	
+
 	/**
 	 * Sets the DTD for a Content Specification.
 	 * 
-	 * @param dtd The DTD of the Content Specification.
+	 * @param dtd
+	 *            The DTD of the Content Specification.
 	 */
-	public void setDtd (String dtd) {
+	public void setDtd(String dtd)
+	{
 		this.dtd = dtd;
 	}
-	
+
 	/**
 	 * Sets the created by Username for the author who created/uploaded the Content Specification.
 	 * 
-	 * @param username The Username of the User who created/uploaded the Content Specification or null if one doesn't exist. 
+	 * @param username
+	 *            The Username of the User who created/uploaded the Content Specification or null if one doesn't exist.
 	 */
-	public void setCreatedBy(String username) {
+	public void setCreatedBy(String username)
+	{
 		this.createdBy = username;
 	}
-	
+
 	/**
 	 * Get the Username of the user who created/uploaded the Content Specification.
 	 * 
 	 * @return The Username of the Content Specification creator.
 	 */
-	public String getCreatedBy() {
+	public String getCreatedBy()
+	{
 		return createdBy;
 	}
-	
+
 	/**
-	 * Gets the SpecRevision number for the Content Specification. This number is used to validate 
-	 * that the Content Specification hasn't been modified since the last upload.
+	 * Gets the SpecRevision number for the Content Specification. This number is used to validate that the Content Specification hasn't been modified since the
+	 * last upload.
 	 * 
 	 * @return The SpecRevision number or null if one doesn't exist.
 	 */
 	@Deprecated
-	public Integer getRevision() {
+	public Integer getRevision()
+	{
 		return revision;
 	}
 
 	/**
 	 * Sets the SpecRevision number for a ContentSpecification.
 	 * 
-	 * @param revision The SpecRevision number.
+	 * @param revision
+	 *            The SpecRevision number.
 	 */
 	@Deprecated
-	public void setRevision(int revision) {
+	public void setRevision(int revision)
+	{
 		this.revision = revision;
 	}
-	
+
 	/**
 	 * Get the set Checksum value for a Content Specification.
 	 * 
@@ -364,7 +420,8 @@ public class ContentSpec {
 	 * 
 	 * @return The set value of the Content Specifications Checksum or null if one doesn't exist.
 	 */
-	public String getChecksum() {
+	public String getChecksum()
+	{
 		return checksum;
 	}
 
@@ -373,9 +430,11 @@ public class ContentSpec {
 	 * 
 	 * Note: This value isn't used by the toString() function as it re calculates the Checksum.
 	 * 
-	 * @param checksum The Checksum of the Content Specification.
+	 * @param checksum
+	 *            The Checksum of the Content Specification.
 	 */
-	public void setChecksum(String checksum) {
+	public void setChecksum(String checksum)
+	{
 		this.checksum = checksum;
 	}
 
@@ -384,273 +443,320 @@ public class ContentSpec {
 	 * 
 	 * @return The abstract for the Content Specification or null if one doesn't exist.
 	 */
-	public String getAbstract() {
+	public String getAbstract()
+	{
 		return description;
 	}
 
 	/**
 	 * Sets the Abstract (or Description) for a Content Specification.
 	 * 
-	 * @param description The Abstract for the Content Specifications book.
+	 * @param description
+	 *            The Abstract for the Content Specifications book.
 	 */
-	public void setAbstract(String description) {
+	public void setAbstract(String description)
+	{
 		this.description = description;
 	}
-	
+
 	/**
 	 * Get the Copyright Holder of the Content Specification and the book it creates.
 	 * 
 	 * @return The name of the Copyright Holder.
 	 */
-	public String getCopyrightHolder() {
+	public String getCopyrightHolder()
+	{
 		return copyrightHolder;
 	}
 
 	/**
 	 * Set the Copyright Holder of the Content Specification and the book it creates.
 	 * 
-	 * @param copyrightHolder The name of the Copyright Holder.
+	 * @param copyrightHolder
+	 *            The name of the Copyright Holder.
 	 */
-	public void setCopyrightHolder(String copyrightHolder) {
+	public void setCopyrightHolder(String copyrightHolder)
+	{
 		this.copyrightHolder = copyrightHolder;
 	}
-	
+
 	/**
 	 * Gets the injection Options for the Content Specification that will be used when building a book.
 	 * 
 	 * @return A InjectionOptions object containing the Injection Options to be used when building.
 	 */
-	public InjectionOptions getInjectionOptions() {
+	public InjectionOptions getInjectionOptions()
+	{
 		return injectionOptions;
 	}
 
 	/**
 	 * Sets the InjectionOptions that will be used by the Builder when building a book.
 	 * 
-	 * @param injectionOptions The InjectionOptions to be used when building a book.
+	 * @param injectionOptions
+	 *            The InjectionOptions to be used when building a book.
 	 */
-	public void setInjectionOptions(InjectionOptions injectionOptions) {
+	public void setInjectionOptions(InjectionOptions injectionOptions)
+	{
 		this.injectionOptions = injectionOptions;
 	}
-	
+
 	/**
 	 * Sets the description for the global tags.
 	 * 
-	 * @param desc The description.
+	 * @param desc
+	 *            The description.
 	 */
-	public void setDescription(String desc) {
+	public void setDescription(String desc)
+	{
 		level.setDescription(desc);
 	}
-	
+
 	/**
 	 * Get the description that will be applied globally.
 	 * 
 	 * @return The description as a String
 	 */
-	public String getDescription() {
+	public String getDescription()
+	{
 		return level.getDescription(false);
 	}
-	
+
 	/**
 	 * Gets the locale of the Content Specification.
 	 * 
 	 * @return The Content Specification locale.
 	 */
-	public String getLocale() {
+	public String getLocale()
+	{
 		return locale;
 	}
-	
+
 	/**
 	 * Sets the Content Specifications locale.
 	 * 
-	 * @param locale The locale for the content specification
+	 * @param locale
+	 *            The locale for the content specification
 	 */
-	public void setLocale(String locale) {
-		this.locale= locale;
+	public void setLocale(String locale)
+	{
+		this.locale = locale;
 	}
-	
+
 	/**
 	 * Gets the output style for the Content Specification. The default is CSP.
 	 * 
 	 * @return The Content Specification output style.
 	 */
-	public String getOutputStyle() {
+	public String getOutputStyle()
+	{
 		return outputStyle;
 	}
-	
+
 	/**
-	 * Sets the Content Specifications output style. 
+	 * Sets the Content Specifications output style.
 	 * 
-	 * @param outputStyle The output style for the content specification
+	 * @param outputStyle
+	 *            The output style for the content specification
 	 */
-	public void setOutputStyle(String outputStyle) {
-		this.outputStyle= outputStyle;
+	public void setOutputStyle(String outputStyle)
+	{
+		this.outputStyle = outputStyle;
 	}
-	
+
 	/**
 	 * Sets the Assigned Writer for the global tags.
 	 * 
-	 * @param writer The writers name that matches to the assigned writer tag in the database
+	 * @param writer
+	 *            The writers name that matches to the assigned writer tag in the database
 	 */
-	public void setAssignedWriter(String writer) {
+	public void setAssignedWriter(String writer)
+	{
 		level.setAssignedWriter(writer);
 	}
-	
+
 	/**
 	 * Gets the Assigned Writer that will be applied globally.
 	 * 
 	 * @return The Assigned Writers name as a String
 	 */
-	public String getAssignedWriter() {
+	public String getAssignedWriter()
+	{
 		return level.getAssignedWriter(false);
 	}
-	
+
 	/**
 	 * Sets the set of tags for the global tags
 	 * 
-	 * @param tags A List of tags by their name.
+	 * @param tags
+	 *            A List of tags by their name.
 	 */
-	public void setTags(List<String> tags) {
+	public void setTags(List<String> tags)
+	{
 		level.setTags(tags);
 	}
-	
+
 	/**
 	 * Gets the set of tags for the global tags.
 	 * 
 	 * @return A list of tag names
 	 */
-	public List<String> getTags() {
+	public List<String> getTags()
+	{
 		return level.getTags(false);
 	}
-	
+
 	/**
 	 * Sets the list of tags that are to be removed in the global options.
 	 * 
-	 * @param tags An ArrayList of tags to be removed
+	 * @param tags
+	 *            An ArrayList of tags to be removed
 	 */
-	public void setRemoveTags(List<String> tags) {
+	public void setRemoveTags(List<String> tags)
+	{
 		level.setRemoveTags(tags);
 	}
-	
+
 	/**
 	 * Gets an ArrayList of tags that are to be removed globally.
 	 * 
 	 * @return An ArrayList of tags
 	 */
-	public List<String> getRemoveTags() {
+	public List<String> getRemoveTags()
+	{
 		return level.getRemoveTags(false);
 	}
-	
+
 	/**
 	 * Sets the list of source urls to be applied globally
 	 * 
-	 * @param sourceUrls A List of urls
+	 * @param sourceUrls
+	 *            A List of urls
 	 */
-	public void setSourceUrls(List<String> sourceUrls) {
+	public void setSourceUrls(List<String> sourceUrls)
+	{
 		level.setSourceUrls(sourceUrls);
 	}
-	
+
 	/**
 	 * Get the Source Urls that are to be applied globally.
 	 * 
 	 * @return A List of Strings that represent the source urls
 	 */
-	public List<String> getSourceUrls() {
+	public List<String> getSourceUrls()
+	{
 		return level.getSourceUrls();
 	}
-	
-	public Boolean getAllowDuplicateTopics() {
+
+	public Boolean getAllowDuplicateTopics()
+	{
 		return allowDuplicateTopics;
 	}
 
-	public void setAllowDuplicateTopics(Boolean allowDuplicateTopics) {
+	public void setAllowDuplicateTopics(Boolean allowDuplicateTopics)
+	{
 		this.allowDuplicateTopics = allowDuplicateTopics;
 	}
-	
-	public Boolean getAllowEmptyLevels() {
+
+	public Boolean getAllowEmptyLevels()
+	{
 		return allowEmptyLevels;
 	}
 
-	public void setAllowEmptyLevels(Boolean allowEmptyLevels) {
+	public void setAllowEmptyLevels(Boolean allowEmptyLevels)
+	{
 		this.allowEmptyLevels = allowEmptyLevels;
 	}
 
 	/**
-	 * Adds a tag to the global list of tags. If the tag starts with a - then its added to the remove tag list otherwise its added
-	 * to the normal tag mapping. Also strips off + & - from the start of tags.
+	 * Adds a tag to the global list of tags. If the tag starts with a - then its added to the remove tag list otherwise its added to the normal tag mapping.
+	 * Also strips off + & - from the start of tags.
 	 * 
-	 * @param tagName The name of the Tag to be added.
+	 * @param tagName
+	 *            The name of the Tag to be added.
 	 * @return True if the tag was added successfully otherwise false.
 	 */
-	public boolean addTag(String tagName) {
+	public boolean addTag(String tagName)
+	{
 		return level.addTag(tagName);
 	}
-	
+
 	/**
 	 * Adds a list of tags to the global list of tags
 	 * 
-	 * @param tagArray A list of tags by name that are to be added.
+	 * @param tagArray
+	 *            A list of tags by name that are to be added.
 	 * @return True if all the tags were added successfully otherwise false.
 	 */
-	public boolean addTags(List<String> tagArray) {
+	public boolean addTags(List<String> tagArray)
+	{
 		return level.addTags(tagArray);
 	}
-	
+
 	/**
 	 * Adds a source URL to the list of global URL's
 	 * 
-	 * @param url The URL to be added
+	 * @param url
+	 *            The URL to be added
 	 */
-	public void addSourceUrl(String url) {
+	public void addSourceUrl(String url)
+	{
 		level.addSourceUrl(url);
 	}
-	
+
 	/**
 	 * Removes a specific Source URL from the list of global URL's
 	 * 
-	 * @param url The URL to be removed.
+	 * @param url
+	 *            The URL to be removed.
 	 */
-	public void removeSourceUrl(String url) {
+	public void removeSourceUrl(String url)
+	{
 		level.removeSourceUrl(url);
 	}
-	
+
 	/**
-	 * Adds a Chapter to the Content Specification. If the Chapter already has a parent, then it is removed from that parent
-	 * and added to this level.
+	 * Adds a Chapter to the Content Specification. If the Chapter already has a parent, then it is removed from that parent and added to this level.
 	 * 
-	 * @param chapter A Chapter to be added to the Content Specification.
+	 * @param chapter
+	 *            A Chapter to be added to the Content Specification.
 	 */
-	public void appendChapter(Chapter chapter) {
+	public void appendChapter(Chapter<T, U> chapter)
+	{
 		level.appendChild(chapter);
 	}
-	
+
 	/**
 	 * Removes a Chapter from the Content Specification and removes the Content Specification as the Chapters parent.
 	 * 
-	 * @param chapter The Chapter to be removed from the Content Specification.
+	 * @param chapter
+	 *            The Chapter to be removed from the Content Specification.
 	 */
-	public void removeChapter(Chapter chapter) {
+	public void removeChapter(Chapter<T, U> chapter)
+	{
 		level.appendChild(chapter);
 	}
-	
+
 	/**
 	 * Gets a ordered linked list of the child nodes within the Content Specification. This includes comments and chapters.
 	 * 
 	 * @return The ordered list of nodes for the Content Specification.
 	 */
-	public LinkedList<Node> getChildNodes() {
+	public LinkedList<Node<T, U>> getChildNodes()
+	{
 		return level.getChildNodes();
 	}
-	
+
 	/**
 	 * Gets the number of Chapters in the Content Specification.
 	 * 
 	 * @return The number of Child Levels
 	 */
-	public int getNumberOfChapters() {
+	public int getNumberOfChapters()
+	{
 		return level.getNumberOfChildLevels();
 	}
-	
+
 	/**
 	 * Gets a List of all the chapters in this level.
 	 * 
@@ -658,70 +764,84 @@ public class ContentSpec {
 	 * 
 	 * @return A List of Chapters.
 	 */
-	public List<Level> getChapters() {
+	public List<Level<T, U>> getChapters()
+	{
 		return level.getChildLevels();
 	}
-	
+
 	/**
 	 * Appends a Comment to the Content Specification.
 	 * 
-	 * @param comment The comment node to be appended to the Content Specification.
+	 * @param comment
+	 *            The comment node to be appended to the Content Specification.
 	 */
-	public void appendComment(Comment comment) {
+	public void appendComment(Comment<T, U> comment)
+	{
 		level.appendComment(comment);
 	}
-	
+
 	/**
 	 * Creates and appends a Comment node to the Content Specification.
 	 * 
-	 * @param comment The Comment to be appended.
+	 * @param comment
+	 *            The Comment to be appended.
 	 */
-	public void appendComment(String comment) {
-		level.appendComment(new Comment(comment));
+	public void appendComment(String comment)
+	{
+		level.appendComment(new Comment<T, U>(comment));
 	}
 
 	/**
 	 * Removes a Comment from the Content Specification.
 	 * 
-	 * @param comment The Comment node to be removed.
+	 * @param comment
+	 *            The Comment node to be removed.
 	 */
-	public void removeComment(Comment comment) {
+	public void removeComment(Comment<T, U> comment)
+	{
 		level.removeComment(comment);
 	}
-	
+
 	/**
 	 * Adds a Comment to the top of the Content Specification before the Initial Content Specification data.
 	 * 
-	 * @param comment The Comment node to be added.
+	 * @param comment
+	 *            The Comment node to be added.
 	 */
-	public void appendInitialComment(Comment comment) {
+	public void appendInitialComment(Comment<T, U> comment)
+	{
 		baseComments.add(comment);
 	}
-	
+
 	/**
 	 * Creates and adds a Comment to the top of the Content Specification before the Initial Content Specification data.
 	 * 
-	 * @param comment The Comment to be added.
+	 * @param comment
+	 *            The Comment to be added.
 	 */
-	public void appendInitialComment(String comment) {
-		baseComments.add(new Comment(comment));
+	public void appendInitialComment(String comment)
+	{
+		baseComments.add(new Comment<T, U>(comment));
 	}
-	
+
 	/**
 	 * Removes a Comment from the top of a Content Specification.
 	 * 
-	 * @param comment The Comment node to be removed.
+	 * @param comment
+	 *            The Comment node to be removed.
 	 */
-	public void removeInitialComment(Comment comment) {
+	public void removeInitialComment(Comment<T, U> comment)
+	{
 		baseComments.remove(comment);
 	}
-	
+
 	// End of the basic getter/setter methods for this ContentSpec.
 
 	/**
 	 * Appends a pre processed line to the list of lines in the Content Specification.
 	 * 
-	 * @param line The Line to be added.
+	 * @param line
+	 *            The Line to be added.
 	 */
 	public void appendPreProcessedLine(final String line)
 	{
@@ -729,27 +849,29 @@ public class ContentSpec {
 	}
 
 	/**
-	 * Appends a String to a pre processed line that has already been added to the Content Specification.
-	 * Throws a IndexOutOfBoundsException if the line doesn't exist.
+	 * Appends a String to a pre processed line that has already been added to the Content Specification. Throws a IndexOutOfBoundsException if the line doesn't
+	 * exist.
 	 * 
-	 * @param text The text to be appended.
-	 * @param line The line number of the original text that the new text should be appended to.
+	 * @param text
+	 *            The text to be appended.
+	 * @param line
+	 *            The line number of the original text that the new text should be appended to.
 	 */
-	public void appendPreProcessedLineText (final String text, final int line)
+	public void appendPreProcessedLineText(final String text, final int line)
 	{
-		String temp = this.text.get(line-1) + text;
-		this.text.set(line-1, temp);
+		String temp = this.text.get(line - 1) + text;
+		this.text.set(line - 1, temp);
 	}
-	
-	public List<SpecTopic> getSpecTopics()
+
+	public List<SpecTopic<T, U>> getSpecTopics()
 	{
 		return getLevelSpecTopics(level);
 	}
-	
-	private List<SpecTopic> getLevelSpecTopics(final Level level)
+
+	private List<SpecTopic<T, U>> getLevelSpecTopics(final Level<T, U> level)
 	{
-		final List<SpecTopic> specTopics = level.getSpecTopics();
-		for (final Level childLevel: level.getChildLevels())
+		final List<SpecTopic<T, U>> specTopics = level.getSpecTopics();
+		for (final Level<T, U> childLevel : level.getChildLevels())
 		{
 			specTopics.addAll(getLevelSpecTopics(childLevel));
 		}
@@ -776,7 +898,8 @@ public class ContentSpec {
 		this.bugzillaComponent = bugzillaComponent;
 	}
 
-	public String getBugzillaVersion() {
+	public String getBugzillaVersion()
+	{
 		return bugzillaVersion;
 	}
 
@@ -784,10 +907,9 @@ public class ContentSpec {
 	{
 		this.bugzillaVersion = bugzillaVersion;
 	}
-	
+
 	/**
-	 * Get the URL component that is used in the .ent file when
-	 * building the Docbook files.
+	 * Get the URL component that is used in the .ent file when building the Docbook files.
 	 * 
 	 * @return The BZURL component for the content specification.
 	 */
@@ -797,17 +919,18 @@ public class ContentSpec {
 	}
 
 	/**
-	 * Set the URL component that is used in the .ent file when
-	 * building the Docbook files.
+	 * Set the URL component that is used in the .ent file when building the Docbook files.
 	 * 
-	 * @param bugzillaURL The BZURL component to be used when building.
+	 * @param bugzillaURL
+	 *            The BZURL component to be used when building.
 	 */
 	public void setBugzillaURL(final String bugzillaURL)
 	{
 		this.bugzillaURL = bugzillaURL;
 	}
-	
-	public boolean isInjectBugLinks() {
+
+	public boolean isInjectBugLinks()
+	{
 		return injectBugLinks;
 	}
 
@@ -826,7 +949,6 @@ public class ContentSpec {
 		this.injectSurveyLinks = injectSurveyLinks;
 	}
 
-	
 	public BugzillaOptions getBugzillaOptions()
 	{
 		final BugzillaOptions bzOption = new BugzillaOptions();
@@ -836,71 +958,64 @@ public class ContentSpec {
 		bzOption.setBugzillaLinksEnabled(injectBugLinks);
 		return bzOption;
 	}
-	
+
 	/**
-	 * Returns a String representation of the Content Specification. 
+	 * Returns a String representation of the Content Specification.
 	 */
 	@Override
-	public String toString() 
+	public String toString()
 	{
 		String output = "";
-		for (Comment baseComment: baseComments) {
+		for (Comment<T, U> baseComment : baseComments)
+		{
 			output += baseComment.toString();
 		}
 		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
-		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) +
-				(bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) +
-				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n")) +
-				(bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n"));
-		
-		String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) +
-				(allowEmptyLevels == null  || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
-		
-		output += "Title = " + (title == null ? "" : title) + "\n" + 
-				"Product = " + (product == null ? "" : product) + "\n" + 
-				"Version = " + (version == null ? "" : version) + "\n" + 
-				"Copyright Holder = " + (copyrightHolder == null ? "" : copyrightHolder) + "\n" +
-				"DTD = " + (dtd == null ? "" : dtd) + "\n" +
-				(subtitle == null ? "" : ("Subtitle = " + subtitle + "\n")) +
-				(edition == null ? "" : ("Edition = " + edition + "\n")) +
-				(brand == null ? "" : ("Brand = " + brand + "\n")) +
-				(pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n")) +
-				(description == null ? "" : ("Abstract = " + description + "\n")) +
-				(allowDetails.isEmpty() ? "" : allowDetails) +
-				(outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTOUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n")) +
-				(locale == null ? "" : ("Translation Locale = " + locale + "\n")) +
-				"\n" + bugzillaDetails +
-				(injectSurveyLinks ? "Survey Links = On\n" : "") + 
-				(publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n"));
-		
+		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) + (bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) + (bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"))
+				+ (bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n"));
+
+		String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) + (allowEmptyLevels == null || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
+
+		output += "Title = " + (title == null ? "" : title) + "\n" + "Product = " + (product == null ? "" : product) + "\n" + "Version = " + (version == null ? "" : version) + "\n" + "Copyright Holder = " + (copyrightHolder == null ? "" : copyrightHolder) + "\n" + "DTD = " + (dtd == null ? "" : dtd) + "\n"
+				+ (subtitle == null ? "" : ("Subtitle = " + subtitle + "\n")) + (edition == null ? "" : ("Edition = " + edition + "\n")) + (brand == null ? "" : ("Brand = " + brand + "\n")) + (pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n"))
+				+ (description == null ? "" : ("Abstract = " + description + "\n")) + (allowDetails.isEmpty() ? "" : allowDetails) + (outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTOUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n"))
+				+ (locale == null ? "" : ("Translation Locale = " + locale + "\n")) + "\n" + bugzillaDetails + (injectSurveyLinks ? "Survey Links = On\n" : "") + (publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n"));
+
 		// Add the injection options if they exist
-		if (injectionOptions != null && injectionOptions.getStrictTopicTypes() != null 
-				&& !injectionOptions.getStrictTopicTypes().isEmpty() && injectionOptions.getContentSpecType() != null) {
+		if (injectionOptions != null && injectionOptions.getStrictTopicTypes() != null && !injectionOptions.getStrictTopicTypes().isEmpty() && injectionOptions.getContentSpecType() != null)
+		{
 			output += "Inline Injection = ";
-			if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.STRICT) {
+			if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.STRICT)
+			{
 				output += "on [" + StringUtilities.buildString(injectionOptions.getStrictTopicTypes().toArray(new String[0]), ", ") + "]";
-			} else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.ON) {
+			}
+			else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.ON)
+			{
 				output += "on";
-			} else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.OFF) {
+			}
+			else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.OFF)
+			{
 				output += "off";
 			}
 			output += "\n";
 		}
-		
+
 		// Append a new line to separate the metadata from content
 		output += "\n";
-		
+
 		// Add any global options
 		String options = level.getOptionsString();
-		if (!options.equals("")) {
+		if (!options.equals(""))
+		{
 			output += "[" + options + "]\n";
 		}
-		
+
 		// Append the String representation of each level
-		output +=level.toString();
-		
+		output += level.toString();
+
 		// If the id isn't null then add the id and checksum
-		if (id != 0) {
+		if (id != 0)
+		{
 			output = "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id + "\n" + output) + "\n" + "ID = " + id + "\n" + output;
 		}
 		return output;

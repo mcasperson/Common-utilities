@@ -1,12 +1,13 @@
 package com.redhat.topicindex.rest.entities;
 
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityWithPropertiesV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 
 /**
  * This is the base class for all entities that have Property Tags
  */
-public abstract class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBaseEntityWithPropertiesV1<T>> 
+public abstract class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBaseEntityWithPropertiesV1<T, U>, U extends BaseRestCollectionV1<T, U>> 
 {
 	final T source;
 	
@@ -20,7 +21,7 @@ public abstract class ComponentBaseRESTEntityWithPropertiesV1<T extends RESTBase
 		return returnProperty(source, propertyTagId);
 	}
 	
-	static public <T extends RESTBaseEntityWithPropertiesV1<T>> RESTPropertyTagV1 returnProperty(final T source, final Integer propertyTagId)
+	static public <T extends RESTBaseEntityWithPropertiesV1<T, U>, U extends BaseRestCollectionV1<T, U>> RESTPropertyTagV1 returnProperty(final T source, final Integer propertyTagId)
 	{
 		if (source.getProperties() != null && source.getProperties().getItems() != null)
 		{

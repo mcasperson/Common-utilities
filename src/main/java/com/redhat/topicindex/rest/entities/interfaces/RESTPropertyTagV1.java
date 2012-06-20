@@ -1,6 +1,8 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-public class RESTPropertyTagV1 extends RESTBaseEntityV1<RESTPropertyTagV1>
+import com.redhat.topicindex.rest.collections.RESTPropertyTagCollectionV1;
+
+public class RESTPropertyTagV1 extends RESTBaseEntityV1<RESTPropertyTagV1, RESTPropertyTagCollectionV1>
 {
 	public static String NAME_NAME = "name";
 	public static String DESCRIPTION_NAME = "description";
@@ -16,6 +18,20 @@ public class RESTPropertyTagV1 extends RESTBaseEntityV1<RESTPropertyTagV1>
 	private String regex;
 	private boolean canBeNull;
 	private boolean isUnique;
+	/** A list of the Envers revision numbers */
+	private RESTPropertyTagCollectionV1 revisions = null;
+	
+	@Override
+	public RESTPropertyTagCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTPropertyTagCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTPropertyTagV1 clone(boolean deepCopy)

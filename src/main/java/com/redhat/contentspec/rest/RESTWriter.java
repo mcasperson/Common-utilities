@@ -7,7 +7,11 @@ import com.redhat.contentspec.constants.CSConstants;
 import com.redhat.contentspec.rest.utils.RESTCollectionCache;
 import com.redhat.contentspec.rest.utils.RESTEntityCache;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTPropertyTagCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicSourceUrlCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
@@ -60,7 +64,7 @@ public class RESTWriter
 	/*
 	 * Writes a Tag tuple to the database using the data provided.
 	 */
-	public Integer createTag(String name, String description, BaseRestCollectionV1<RESTCategoryV1> categories)
+	public Integer createTag(String name, String description, RESTCategoryCollectionV1 categories)
 	{
 		Integer insertId = null;
 		try
@@ -96,8 +100,8 @@ public class RESTWriter
 	/*
 	 * Writes a Topic tuple to the database using the data provided.
 	 */
-	public Integer createTopic(String title, String text, String description, Date timestamp, BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls, BaseRestCollectionV1<RESTTopicV1> incomingRelationships, BaseRestCollectionV1<RESTTopicV1> outgoingRelationships, BaseRestCollectionV1<RESTTagV1> tags,
-			BaseRestCollectionV1<RESTPropertyTagV1> properties)
+	public Integer createTopic(String title, String text, String description, Date timestamp, RESTTopicSourceUrlCollectionV1 sourceUrls, RESTTopicCollectionV1 incomingRelationships, RESTTopicCollectionV1 outgoingRelationships, RESTTagCollectionV1 tags,
+			RESTPropertyTagCollectionV1 properties)
 	{
 		Integer insertId = null;
 		try
@@ -178,8 +182,8 @@ public class RESTWriter
 	/*
 	 * Updates a Topic tuple in the database using the data provided.
 	 */
-	public Integer updateTopic(Integer topicId, String title, String text, String description, Date timestamp, BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls, BaseRestCollectionV1<RESTTopicV1> incomingRelationships, BaseRestCollectionV1<RESTTopicV1> outgoingRelationships, BaseRestCollectionV1<RESTTagV1> tags,
-			BaseRestCollectionV1<RESTPropertyTagV1> properties)
+	public Integer updateTopic(Integer topicId, String title, String text, String description, Date timestamp, RESTTopicSourceUrlCollectionV1 sourceUrls, RESTTopicCollectionV1 incomingRelationships, RESTTopicCollectionV1 outgoingRelationships, RESTTagCollectionV1 tags,
+			RESTPropertyTagCollectionV1 properties)
 	{
 		Integer insertId = null;
 		try
@@ -268,7 +272,7 @@ public class RESTWriter
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Create the Added By, Content Spec Type and DTD property tags
-			BaseRestCollectionV1<RESTPropertyTagV1> properties = new BaseRestCollectionV1<RESTPropertyTagV1>();
+			RESTPropertyTagCollectionV1 properties = new RESTPropertyTagCollectionV1();
 			RESTPropertyTagV1 addedBy = client.getJSONPropertyTag(CSConstants.ADDED_BY_PROPERTY_TAG_ID, null);
 			addedBy.explicitSetValue(createdBy);
 			addedBy.setAddItem(true);
@@ -288,7 +292,7 @@ public class RESTWriter
 			contentSpec.explicitSetProperties(properties);
 
 			// Add the Content Specification Type Tag
-			BaseRestCollectionV1<RESTTagV1> tags = new BaseRestCollectionV1<RESTTagV1>();
+			RESTTagCollectionV1 tags = new RESTTagCollectionV1();
 			RESTTagV1 typeTag = client.getJSONTag(CSConstants.CONTENT_SPEC_TAG_ID, null);
 			typeTag.setAddItem(true);
 			tags.addItem(typeTag);
@@ -328,7 +332,7 @@ public class RESTWriter
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Update the Content Spec Type and DTD property tags
-			BaseRestCollectionV1<RESTPropertyTagV1> properties = contentSpec.getProperties();
+			RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 
@@ -401,7 +405,7 @@ public class RESTWriter
 			contentSpec.explicitSetXml(postContentSpec);
 
 			// Update Content Spec Type
-			BaseRestCollectionV1<RESTPropertyTagV1> properties = contentSpec.getProperties();
+			RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 

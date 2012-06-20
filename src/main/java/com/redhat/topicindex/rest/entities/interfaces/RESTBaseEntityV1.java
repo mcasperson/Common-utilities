@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 
-public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T>>
+public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 	public static final String REVISIONS_NAME = "revisions";
 	
@@ -28,11 +28,13 @@ public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T>>
 	/** true if the database entity this REST entity represents should be added to the collection */ 
 	private boolean addItem = false;
 	/** true if the database entity this REST entity represents should be removed from the collection */
-	private boolean removeItem = false;
-	/** A list of the Envers revision numbers */
-	private BaseRestCollectionV1<T> revisions = null;
-	
-	public void cloneInto(final RESTBaseEntityV1<T> clone, final boolean deepCopy)
+	private boolean removeItem = false;	
+
+	abstract public U getRevisions();
+
+	abstract public void setRevisions(U revisions);
+		
+	public void cloneInto(final RESTBaseEntityV1<T, U> clone, final boolean deepCopy)
 	{
 		clone.setId(new Integer(this.id));
 		clone.setRevision(this.revision);
@@ -43,17 +45,12 @@ public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T>>
 		clone.setExpand(this.expand);
 		clone.setAddItem(this.addItem);
 		clone.setRemoveItem(this.removeItem);
-		
-		if (deepCopy)
-		{
-			clone.setRevisions(this.revisions == null ? null : this.revisions.clone(deepCopy));
-		}
-		else
-		{
-			clone.setRevisions(this.revisions);
-		}
 	}
 	
+	/**
+	 * @param deepCopy true if referenced objects should be copied, false if the referenced themselves should be copied
+	 * @return A clone of this object
+	 */
 	public abstract T clone(final boolean deepCopy);
 	
 	/**
@@ -178,15 +175,5 @@ public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T>>
 	public void setRevision(final Integer revision)
 	{
 		this.revision = revision;
-	}
-
-	public BaseRestCollectionV1<T> getRevisions()
-	{
-		return revisions;
-	}
-
-	public void setRevisions(BaseRestCollectionV1<T> revisions)
-	{
-		this.revisions = revisions;
 	}
 }

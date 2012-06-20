@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.ecs.commonutils.CollectionUtilities;
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
@@ -16,7 +17,7 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
  * with some function to retrieve topics based on a set of tags to match or
  * exclude.
  */
-public class TocTopicDatabase<T extends RESTBaseTopicV1<T>>
+public class TocTopicDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 	private Map<T, TopicProcessingData> topics = new HashMap<T, TopicProcessingData>();
 

@@ -1,6 +1,8 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1>
+import com.redhat.topicindex.rest.collections.RESTBugzillaBugCollectionV1;
+
+public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1, RESTBugzillaBugCollectionV1>
 {
 	public static final String BUG_ID = "bugzillabugid";
 	public static final String BUG_ISOPEN = "bugisopen";
@@ -9,6 +11,20 @@ public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1>
 	private Integer bugId;
 	private Boolean isOpen;
 	private String summary;
+	/** A list of the Envers revision numbers */
+	private RESTBugzillaBugCollectionV1 revisions = null;
+	
+	@Override
+	public RESTBugzillaBugCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(RESTBugzillaBugCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTBugzillaBugV1 clone(boolean deepCopy)
@@ -20,6 +36,23 @@ public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1>
 		retValue.bugId = new Integer(this.bugId);
 		retValue.isOpen = new Boolean(this.isOpen);
 		retValue.summary = summary;
+		
+		
+		if (deepCopy)
+		{
+			if (this.getRevisions() == null)
+				retValue.revisions = null;
+			else
+			{
+				retValue.revisions = new RESTBugzillaBugCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}			
+		}
+		else
+		{
+			retValue.revisions = this.revisions;
+		}
+		
 		return retValue;
 	}
 
@@ -70,4 +103,7 @@ public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1>
 		this.summary = summary;
 		this.setParamaterToConfigured(BUG_SUMMARY);
 	}
+
+
+
 }

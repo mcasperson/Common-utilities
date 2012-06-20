@@ -2,6 +2,7 @@ package com.redhat.topicindex.rest.entities;
 
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
+import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
@@ -9,7 +10,7 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
  * This component contains methods that can be applied against translated topics
  * @author Matthew Casperson
  */
-public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTranslatedTopicV1>
+public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTranslatedTopicV1, RESTTranslatedTopicCollectionV1>
 {
 	final RESTTranslatedTopicV1 source;
 	
@@ -29,6 +30,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		return source.getTopicId() + "-" + source.getTopicRevision();
 	}
 
+	@Override
 	public String returnBugzillaBuildId()
 	{
 		return returnBugzillaBuildId(source);
@@ -39,6 +41,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		return "Translation " + returnZanataId(source) + " " + source.getLocale();
 	}
 
+	@Override
 	public String returnSkynetURL()
 	{
 		return returnSkynetURL(source);
@@ -65,6 +68,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		}
 	}
 
+	@Override
 	public String returnInternalURL()
 	{
 		return returnInternalURL(source);
@@ -91,6 +95,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		}
 	}
 
+	@Override
 	public RESTTranslatedTopicV1 returnRelatedTopicByID(final Integer id)
 	{
 		return returnRelatedTopicByID(source, id);
@@ -118,6 +123,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		return relatedTopic;
 	}
 
+	@Override
 	public String returnXRefID()
 	{
 		return returnXRefID(source);
@@ -133,6 +139,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 			return ComponentTopicV1.returnErrorXRefID(source.getTopic());
 	}
 
+	@Override
 	public String returnErrorXRefID()
 	{
 		return returnErrorXRefID(source);
@@ -192,6 +199,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		return baseTranslationExists;
 	}
 	
+	@Override
 	public boolean hasRelationshipTo(final Integer id)
 	{
 		return hasRelationshipTo(source, id);
@@ -203,6 +211,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	}
 	
 
+	@Override
 	public String returnXrefPropertyOrId(final Integer propertyTagId)
 	{
 		return returnXrefPropertyOrId(source, propertyTagId);

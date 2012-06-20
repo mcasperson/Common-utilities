@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.ecs.commonutils.CollectionUtilities;
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
@@ -14,12 +15,12 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase<T extends RESTBaseTopicV1<T>>
+public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 	public static final Integer ERROR = 1;
 	public static final Integer WARNING = 5;
 
-	private Map<String, List<TopicErrorData<T>>> errors = new HashMap<String, List<TopicErrorData<T>>>();
+	private Map<String, List<TopicErrorData<T, U>>> errors = new HashMap<String, List<TopicErrorData<T, U>>>();
 
 	public int getErrorCount(final String locale)
 	{
@@ -63,16 +64,16 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T>>
 
 	private void addItem(final T topic, final String item, final Integer level)
 	{
-		final TopicErrorData<T> topicErrorData = addOrGetTopicErrorData(topic);
+		final TopicErrorData<T, U> topicErrorData = addOrGetTopicErrorData(topic);
 		/* don't add duplicates */
 		if (!(topicErrorData.getErrors().containsKey(level) && topicErrorData.getErrors().get(level).contains(item)))
 			topicErrorData.addError(item, level);
 	}
 
-	private TopicErrorData<T> getErrorData(final T topic)
+	private TopicErrorData<T, U> getErrorData(final T topic)
 	{
 		for (final String locale : errors.keySet())
-			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
+			for (final TopicErrorData<T, U> topicErrorData : errors.get(locale))
 			{
 				if (ComponentBaseTopicV1.returnIsDummyTopic(topic))
 				{
@@ -91,15 +92,15 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T>>
 		return null;
 	}
 
-	private TopicErrorData<T> addOrGetTopicErrorData(final T topic)
+	private TopicErrorData<T, U> addOrGetTopicErrorData(final T topic)
 	{
-		TopicErrorData<T> topicErrorData = getErrorData(topic);
+		TopicErrorData<T, U> topicErrorData = getErrorData(topic);
 		if (topicErrorData == null)
 		{
-			topicErrorData = new TopicErrorData<T>();
+			topicErrorData = new TopicErrorData<T, U>();
 			topicErrorData.setTopic(topic);
 			if (!errors.containsKey(topic.getLocale()))
-				errors.put(topic.getLocale(), new ArrayList<TopicErrorData<T>>());
+				errors.put(topic.getLocale(), new ArrayList<TopicErrorData<T, U>>());
 			errors.get(topic.getLocale()).add(topicErrorData);
 		}
 		return topicErrorData;
@@ -110,12 +111,12 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T>>
 		return CollectionUtilities.toArrayList(errors.keySet());
 	}
 
-	public List<TopicErrorData<T>> getErrors(final String locale)
+	public List<TopicErrorData<T, U>> getErrors(final String locale)
 	{
 		return errors.containsKey(locale) ? errors.get(locale) : null;
 	}
 
-	public void setErrors(final String locale, final List<TopicErrorData<T>> errors)
+	public void setErrors(final String locale, final List<TopicErrorData<T, U>> errors)
 	{
 		this.errors.put(locale, errors);
 	}
