@@ -342,6 +342,7 @@ public class XMLUtilities
 		}
 
 		// TODO: deal with entities in attributes
+		// TODO: deal with entities in comments
 	}
 
 	/**
