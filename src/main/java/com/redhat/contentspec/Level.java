@@ -7,8 +7,6 @@ import java.util.ListIterator;
 
 import com.redhat.contentspec.enums.LevelType;
 import com.redhat.ecs.commonutils.DocBookUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
 /**
  * A Class that represents a Level inside of a Content Specification. A Level can either be a Chapter, Section or Appendix. A Level can have children Levels and
@@ -17,12 +15,12 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
  * @author lnewson
  * 
  */
-public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends SpecNode<T, U>
+public class Level extends SpecNode
 {
 
-	protected final List<SpecTopic<T, U>> topics = new ArrayList<SpecTopic<T, U>>();
-	protected final List<Level<T, U>> levels = new ArrayList<Level<T, U>>();
-	protected final LinkedList<Node<T, U>> nodes = new LinkedList<Node<T, U>>();
+	protected final List<SpecTopic> topics = new ArrayList<SpecTopic>();
+	protected final List<Level> levels = new ArrayList<Level>();
+	protected final LinkedList<Node> nodes = new LinkedList<Node>();
 	protected final LevelType type;
 	private String targetId = null;
 	private String externalTargetId = null;
@@ -92,9 +90,9 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @return The parent of the level.
 	 */
 	@Override
-	public Level<T, U> getParent()
+	public Level getParent()
 	{
-		return (Level<T, U>) parent;
+		return (Level) parent;
 	}
 
 	/**
@@ -103,7 +101,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param parent
 	 *            A Level that will act as the parent to this level.
 	 */
-	protected void setParent(Level<T, U> parent)
+	protected void setParent(Level parent)
 	{
 		super.setParent(parent);
 	}
@@ -115,7 +113,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * 
 	 * @return A List of Content Specification Topics that exist within the level.
 	 */
-	public List<SpecTopic<T, U>> getSpecTopics()
+	public List<SpecTopic> getSpecTopics()
 	{
 		return topics;
 	}
@@ -126,7 +124,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param specTopic
 	 *            The Content Specification Topic to be added to the level.
 	 */
-	public void appendSpecTopic(final SpecTopic<T, U> specTopic)
+	public void appendSpecTopic(final SpecTopic specTopic)
 	{
 		topics.add(specTopic);
 		nodes.add(specTopic);
@@ -143,7 +141,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param specTopic
 	 *            The Content Specification Topic to be removed from the level.
 	 */
-	public void removeSpecTopic(SpecTopic<T, U> specTopic)
+	public void removeSpecTopic(SpecTopic specTopic)
 	{
 		topics.remove(specTopic);
 		nodes.remove(specTopic);
@@ -157,7 +155,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * 
 	 * @return A List of child levels.
 	 */
-	public List<Level<T, U>> getChildLevels()
+	public List<Level> getChildLevels()
 	{
 		return levels;
 	}
@@ -168,15 +166,15 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param childLevel
 	 *            A Child Level to be added to the Level.
 	 */
-	public void appendChild(SpecNode<T, U> child)
+	public void appendChild(SpecNode child)
 	{
 		if (child instanceof Level)
 		{
-			levels.add((Level<T, U>) child);
+			levels.add((Level) child);
 		}
 		else if (child instanceof SpecTopic)
 		{
-			topics.add((SpecTopic<T, U>) child);
+			topics.add((SpecTopic) child);
 		}
 		nodes.add(child);
 		if (child.getParent() != null)
@@ -192,7 +190,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param childLevel
 	 *            The Child Level to be removed from the level.
 	 */
-	public void removeChild(SpecNode<T, U> child)
+	public void removeChild(SpecNode child)
 	{
 		if (child instanceof Level)
 		{
@@ -234,7 +232,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 *            The node that the new node should be inserted in front of.
 	 * @return True if the node was inserted correctly otherwise false.
 	 */
-	public boolean insertBefore(SpecNode<T, U> newNode, SpecNode<T, U> oldNode)
+	public boolean insertBefore(SpecNode newNode, SpecNode oldNode)
 	{
 		if (oldNode == null || newNode == null)
 			return false;
@@ -250,11 +248,11 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 			// Add the node to the relevant list
 			if (newNode instanceof Level)
 			{
-				levels.add((Level<T, U>) newNode);
+				levels.add((Level) newNode);
 			}
 			else if (newNode instanceof SpecTopic)
 			{
-				topics.add((SpecTopic<T, U>) newNode);
+				topics.add((SpecTopic) newNode);
 			}
 			// Insert the node
 			if (index == 0)
@@ -331,7 +329,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param comment
 	 *            The Comment Node to be appended.
 	 */
-	public void appendComment(final Comment<T, U> comment)
+	public void appendComment(final Comment comment)
 	{
 		nodes.add(comment);
 		if (comment.getParent() != null)
@@ -349,7 +347,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 */
 	public void appendComment(final String comment)
 	{
-		appendComment(new Comment<T, U>(comment));
+		appendComment(new Comment(comment));
 	}
 
 	/**
@@ -358,7 +356,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * @param comment
 	 *            The Comment node to be removed.
 	 */
-	public void removeComment(Comment<T, U> comment)
+	public void removeComment(Comment comment)
 	{
 		nodes.remove(comment);
 	}
@@ -368,7 +366,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 * 
 	 * @return The ordered list of child nodes for the level.
 	 */
-	public LinkedList<Node<T, U>> getChildNodes()
+	public LinkedList<Node> getChildNodes()
 	{
 		return nodes;
 	}
@@ -381,24 +379,24 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	protected Integer getTotalNumberOfChildren()
 	{
 		Integer numChildrenNodes = 0;
-		for (Level<T, U> childLevel : levels)
+		for (Level childLevel : levels)
 		{
 			numChildrenNodes += childLevel.getTotalNumberOfChildren();
 		}
 		return nodes.size() + numChildrenNodes;
 	}
 
-	public SpecNode<T, U> getFirstSpecNode()
+	public SpecNode getFirstSpecNode()
 	{
 		if (nodes == null)
 			return null;
 
-		final ListIterator<Node<T, U>> it = nodes.listIterator();
+		final ListIterator<Node> it = nodes.listIterator();
 		while (it.hasNext())
 		{
-			final Node<T, U> node = it.next();
+			final Node node = it.next();
 			if (node instanceof SpecNode)
-				return (SpecNode<T, U>) node;
+				return (SpecNode) node;
 		}
 
 		return null;
@@ -409,7 +407,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		if (getSpecTopics().size() > 0)
 			return true;
 
-		for (final Level<T, U> childLevel : levels)
+		for (final Level childLevel : levels)
 		{
 			if (childLevel.hasSpecTopics())
 				return true;
@@ -431,12 +429,12 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		// If the level isn't the first node then get the previous nodes step
 		if (nodePos > 0)
 		{
-			Node<T, U> node = getParent().nodes.get(nodePos - 1);
+			Node node = getParent().nodes.get(nodePos - 1);
 			previousNode = node.getStep();
 			// If the add node is a level then add the number of nodes it contains
 			if (node instanceof Level)
 			{
-				previousNode = (previousNode == null ? 0 : previousNode) + ((Level<T, U>) node).getTotalNumberOfChildren();
+				previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
 			}
 			// The node is the first item so use the parent levels step
 		}
@@ -489,13 +487,13 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 			}
 			String output = spacer + getText() + "\n";
 
-			for (Node<T, U> node : nodes)
+			for (Node node : nodes)
 			{
 				String nodeOutput = node.toString();
 				output += nodeOutput;
 				if (node instanceof Level)
 				{
-					if (((Level<T, U>) node).getType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) && !nodeOutput.isEmpty())
+					if (((Level) node).getType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) && !nodeOutput.isEmpty())
 					{
 						output += "\n";
 					}
@@ -516,7 +514,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		setParent(null);
 	}
 
-	public SpecTopic<T, U> getClosestTopic(final SpecTopic<T, U> topic, final boolean checkParentNode)
+	public SpecTopic getClosestTopic(final SpecTopic topic, final boolean checkParentNode)
 	{
 		return getClosestTopic(topic, this, checkParentNode);
 	}
@@ -528,12 +526,12 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 *            The node we need to find the closest match for
 	 * @return
 	 */
-	public SpecTopic<T, U> getClosestTopic(final SpecTopic<T, U> topic, final SpecNode<T, U> callerNode, final boolean checkParentNode)
+	public SpecTopic getClosestTopic(final SpecTopic topic, final SpecNode callerNode, final boolean checkParentNode)
 	{
 		/*
 		 * Check this level to see if the topic exists
 		 */
-		for (final SpecTopic<T, U> childTopic : topics)
+		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic == topic || childTopic.getId().equals(topic.getId()))
 				return childTopic;
@@ -542,7 +540,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		/*
 		 * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels first.
 		 */
-		for (final Level<T, U> childLevel : levels)
+		for (final Level childLevel : levels)
 		{
 			if (callerNode == childLevel)
 			{
@@ -550,7 +548,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 			}
 			else
 			{
-				final SpecTopic<T, U> childLevelTopic = childLevel.getClosestTopic(topic, callerNode, false);
+				final SpecTopic childLevelTopic = childLevel.getClosestTopic(topic, callerNode, false);
 				if (childLevelTopic != null)
 					return childLevelTopic;
 			}
@@ -565,7 +563,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		return null;
 	}
 
-	public SpecTopic<T, U> getClosestTopicByDBId(final Integer DBId, final boolean checkParentNode)
+	public SpecTopic getClosestTopicByDBId(final Integer DBId, final boolean checkParentNode)
 	{
 		return getClosestTopicByDBId(DBId, this, checkParentNode);
 	}
@@ -581,12 +579,12 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 *            If the function should check the levels parents as well
 	 * @return
 	 */
-	public SpecTopic<T, U> getClosestTopicByDBId(final Integer DBId, final SpecNode<T, U> callerNode, final boolean checkParentNode)
+	public SpecTopic getClosestTopicByDBId(final Integer DBId, final SpecNode callerNode, final boolean checkParentNode)
 	{
 		/*
 		 * Check this level to see if the topic exists
 		 */
-		for (final SpecTopic<T, U> childTopic : topics)
+		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic.getDBId() == DBId)
 				return childTopic;
@@ -595,7 +593,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		/*
 		 * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels first.
 		 */
-		for (final Level<T, U> childLevel : levels)
+		for (final Level childLevel : levels)
 		{
 			if (childLevel == callerNode)
 			{
@@ -603,7 +601,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 			}
 			else
 			{
-				final SpecTopic<T, U> childLevelTopic = childLevel.getClosestTopicByDBId(DBId, callerNode, false);
+				final SpecTopic childLevelTopic = childLevel.getClosestTopicByDBId(DBId, callerNode, false);
 				if (childLevelTopic != null)
 					return childLevelTopic;
 			}
@@ -625,12 +623,12 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 	 *            The topic to see if it exists
 	 * @return True if the topic exists within this level or its children otherwise false.
 	 */
-	public boolean isSpecTopicInLevel(final SpecTopic<T, U> topic)
+	public boolean isSpecTopicInLevel(final SpecTopic topic)
 	{
 		/*
 		 * Check this level to see if the topic exists
 		 */
-		for (final SpecTopic<T, U> childTopic : topics)
+		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic == topic || childTopic.getId().equals(topic.getId()))
 				return true;
@@ -639,7 +637,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		/*
 		 * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels first.
 		 */
-		for (final Level<T, U> childLevel : levels)
+		for (final Level childLevel : levels)
 		{
 			if (childLevel.isSpecTopicInLevel(topic))
 				return true;
@@ -660,7 +658,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		/*
 		 * Check this level to see if the topic exists
 		 */
-		for (final SpecTopic<T, U> childTopic : topics)
+		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic.getDBId() == topicId)
 				return true;
@@ -669,7 +667,7 @@ public class Level<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollection
 		/*
 		 * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels first.
 		 */
-		for (final Level<T, U> childLevel : levels)
+		for (final Level childLevel : levels)
 		{
 			if (childLevel.isSpecTopicInLevelByTopicID(topicId))
 				return true;

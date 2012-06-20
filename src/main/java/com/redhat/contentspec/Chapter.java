@@ -1,8 +1,6 @@
 package com.redhat.contentspec;
 
 import com.redhat.contentspec.enums.LevelType;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
 /**
  * A class that is used to represent a Chapter in a book or Content Specification. It can contain other Levels (Sections or Topics)
@@ -11,8 +9,8 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
  * @author lnewson
  *
  */
-public class Chapter<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends Level<T, U> {
-
+public class Chapter extends Level
+{
 	/**
 	 * Constructor
 	 * 

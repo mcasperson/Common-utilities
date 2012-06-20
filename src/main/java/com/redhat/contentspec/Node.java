@@ -1,19 +1,16 @@
 package com.redhat.contentspec;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
-
 /**
  * A very basic class that represents the lowest form of a Node in a Content Specification.
  * 
  * @author lnewson
  * 
  */
-public abstract class Node<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public abstract class Node
 {
 	protected final int lineNumber;
 	protected String text;
-	protected Node<T, U> parent;
+	protected Node parent;
 
 	public Node(int lineNumber, String text)
 	{
@@ -76,7 +73,7 @@ public abstract class Node<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCo
 	 * 
 	 * @return The nodes parent.
 	 */
-	public Node<T, U> getParent()
+	public Node getParent()
 	{
 		return parent;
 	}
@@ -87,7 +84,7 @@ public abstract class Node<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCo
 	 * @param parent
 	 *            The parent node.
 	 */
-	protected void setParent(Node<T, U> parent)
+	protected void setParent(Node parent)
 	{
 		this.parent = parent;
 	}

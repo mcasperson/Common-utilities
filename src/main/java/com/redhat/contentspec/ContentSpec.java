@@ -16,10 +16,8 @@ import com.redhat.contentspec.enums.LevelType;
 import com.redhat.ecs.commonutils.DocBookUtilities;
 import com.redhat.ecs.commonutils.HashUtilities;
 import com.redhat.ecs.commonutils.StringUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
-public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class ContentSpec
 {
 
 	private int id = 0;
@@ -33,7 +31,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	private String publicanCfg = null;
 	private ArrayList<String> text = new ArrayList<String>();
 	private String dtd = "Docbook 4.5";
-	private final Level<T, U> level = new Level<T, U>("Initial Level", 0, null, LevelType.BASE);;
+	private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);;
 	private String createdBy = null;
 	private Integer revision = null;
 	private String checksum = null;
@@ -51,7 +49,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	private Boolean allowDuplicateTopics = true;
 	private Boolean allowEmptyLevels = false;
 
-	private LinkedList<Comment<T, U>> baseComments = new LinkedList<Comment<T, U>>();
+	private LinkedList<Comment> baseComments = new LinkedList<Comment>();
 
 	/**
 	 * Constructor
@@ -109,7 +107,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * 
 	 * @return The Base Level object of a Content Specification.
 	 */
-	public Level<T, U> getBaseLevel()
+	public Level getBaseLevel()
 	{
 		return level;
 	}
@@ -721,7 +719,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * @param chapter
 	 *            A Chapter to be added to the Content Specification.
 	 */
-	public void appendChapter(Chapter<T, U> chapter)
+	public void appendChapter(Chapter chapter)
 	{
 		level.appendChild(chapter);
 	}
@@ -732,7 +730,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * @param chapter
 	 *            The Chapter to be removed from the Content Specification.
 	 */
-	public void removeChapter(Chapter<T, U> chapter)
+	public void removeChapter(Chapter chapter)
 	{
 		level.appendChild(chapter);
 	}
@@ -742,7 +740,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * 
 	 * @return The ordered list of nodes for the Content Specification.
 	 */
-	public LinkedList<Node<T, U>> getChildNodes()
+	public LinkedList<Node> getChildNodes()
 	{
 		return level.getChildNodes();
 	}
@@ -764,7 +762,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * 
 	 * @return A List of Chapters.
 	 */
-	public List<Level<T, U>> getChapters()
+	public List<Level> getChapters()
 	{
 		return level.getChildLevels();
 	}
@@ -775,7 +773,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * @param comment
 	 *            The comment node to be appended to the Content Specification.
 	 */
-	public void appendComment(Comment<T, U> comment)
+	public void appendComment(Comment comment)
 	{
 		level.appendComment(comment);
 	}
@@ -788,7 +786,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 */
 	public void appendComment(String comment)
 	{
-		level.appendComment(new Comment<T, U>(comment));
+		level.appendComment(new Comment(comment));
 	}
 
 	/**
@@ -797,7 +795,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * @param comment
 	 *            The Comment node to be removed.
 	 */
-	public void removeComment(Comment<T, U> comment)
+	public void removeComment(Comment comment)
 	{
 		level.removeComment(comment);
 	}
@@ -808,7 +806,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * @param comment
 	 *            The Comment node to be added.
 	 */
-	public void appendInitialComment(Comment<T, U> comment)
+	public void appendInitialComment(Comment comment)
 	{
 		baseComments.add(comment);
 	}
@@ -821,7 +819,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 */
 	public void appendInitialComment(String comment)
 	{
-		baseComments.add(new Comment<T, U>(comment));
+		baseComments.add(new Comment(comment));
 	}
 
 	/**
@@ -830,7 +828,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	 * @param comment
 	 *            The Comment node to be removed.
 	 */
-	public void removeInitialComment(Comment<T, U> comment)
+	public void removeInitialComment(Comment comment)
 	{
 		baseComments.remove(comment);
 	}
@@ -863,15 +861,15 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 		this.text.set(line - 1, temp);
 	}
 
-	public List<SpecTopic<T, U>> getSpecTopics()
+	public List<SpecTopic> getSpecTopics()
 	{
 		return getLevelSpecTopics(level);
 	}
 
-	private List<SpecTopic<T, U>> getLevelSpecTopics(final Level<T, U> level)
+	private List<SpecTopic> getLevelSpecTopics(final Level level)
 	{
-		final List<SpecTopic<T, U>> specTopics = level.getSpecTopics();
-		for (final Level<T, U> childLevel : level.getChildLevels())
+		final List<SpecTopic> specTopics = level.getSpecTopics();
+		for (final Level childLevel : level.getChildLevels())
 		{
 			specTopics.addAll(getLevelSpecTopics(childLevel));
 		}
@@ -966,7 +964,7 @@ public class ContentSpec<T extends RESTBaseTopicV1<T, U>, U extends BaseRestColl
 	public String toString()
 	{
 		String output = "";
-		for (Comment<T, U> baseComment : baseComments)
+		for (Comment baseComment : baseComments)
 		{
 			output += baseComment.toString();
 		}

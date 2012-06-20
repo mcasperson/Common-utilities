@@ -26,19 +26,19 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
-public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends SpecNode<T, U>
+public class SpecTopic extends SpecNode
 {
 	private String id;
 	private int DBId = 0;
 	private String type;
-	private ArrayList<TopicRelationship<T, U>> topicRelationships = new ArrayList<TopicRelationship<T, U>>();
-	private ArrayList<TargetRelationship<T, U>> topicTargetRelationships = new ArrayList<TargetRelationship<T, U>>();
-	private ArrayList<TargetRelationship<T, U>> levelRelationships = new ArrayList<TargetRelationship<T, U>>();
+	private ArrayList<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
+	private ArrayList<TargetRelationship> topicTargetRelationships = new ArrayList<TargetRelationship>();
+	private ArrayList<TargetRelationship> levelRelationships = new ArrayList<TargetRelationship>();
 	private String targetId = null;
 	private int preProcessedLineNumber = 0;
 	private String title = null;
 	private String duplicateId = null;
-	private RESTBaseTopicV1<T, U> topic = null;
+	private RESTBaseTopicV1<?, ?> topic = null;
 	private Document xmlDocument = null;
 	private Integer revision = null;
 
@@ -116,7 +116,7 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * 
 	 * @return The underlying topic if it has been set otherwise null.
 	 */
-	public RESTBaseTopicV1<T, U> getTopic()
+	public RESTBaseTopicV1<?, ?> getTopic()
 	{
 		return topic;
 	}
@@ -126,7 +126,7 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * 
 	 * @param topic The underlying topic.
 	 */
-	public void setTopic(final RESTBaseTopicV1<T, U> topic)
+	public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> void setTopic(final RESTBaseTopicV1<T, U> topic)
 	{
 		this.topic = topic;
 	}
@@ -301,9 +301,9 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * @param type
 	 *            The type of the relationship.
 	 */
-	public void addRelationshipToTopic(SpecTopic<T, U> topic, RelationshipType type)
+	public void addRelationshipToTopic(SpecTopic topic, RelationshipType type)
 	{
-		topicRelationships.add(new TopicRelationship<T, U>(this, topic, type));
+		topicRelationships.add(new TopicRelationship(this, topic, type));
 	}
 
 	/**
@@ -314,9 +314,9 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * @param type
 	 *            The type of the relationship.
 	 */
-	public void addRelationshipToTarget(SpecTopic<T, U> topic, RelationshipType type)
+	public void addRelationshipToTarget(SpecTopic topic, RelationshipType type)
 	{
-		topicTargetRelationships.add(new TargetRelationship<T, U>(this, topic, type));
+		topicTargetRelationships.add(new TargetRelationship(this, topic, type));
 	}
 
 	/**
@@ -327,9 +327,9 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * @param type
 	 *            The type of the relationship.
 	 */
-	public void addRelationshipToTarget(Level<T, U> level, RelationshipType type)
+	public void addRelationshipToTarget(Level level, RelationshipType type)
 	{
-		levelRelationships.add(new TargetRelationship<T, U>(this, level, type));
+		levelRelationships.add(new TargetRelationship(this, level, type));
 	}
 
 	// End of the basic getter/setter methods for this Topic.
@@ -441,9 +441,9 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	}
 
 	@Override
-	public Level<T, U> getParent()
+	public Level getParent()
 	{
-		return (Level<T, U>) parent;
+		return (Level) parent;
 	}
 
 	/**
@@ -452,7 +452,7 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * @param parent
 	 *            The Level that is the parent of this topic.
 	 */
-	protected void setParent(Level<T, U> parent)
+	protected void setParent(Level parent)
 	{
 		super.setParent(parent);
 	}
@@ -514,12 +514,12 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * 
 	 * @return An ArrayList of TopicRelationship's where the main topic matches the topic or an empty array if none are found.
 	 */
-	public List<TopicRelationship<T, U>> getTopicRelationships()
+	public List<TopicRelationship> getTopicRelationships()
 	{
-		ArrayList<TopicRelationship<T, U>> relationships = new ArrayList<TopicRelationship<T, U>>(topicRelationships);
-		for (final TargetRelationship<T, U> relationship : topicTargetRelationships)
+		ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>(topicRelationships);
+		for (final TargetRelationship relationship : topicTargetRelationships)
 		{
-			relationships.add(new TopicRelationship<T, U>(relationship.getTopic(), (SpecTopic<T, U>) relationship.getSecondaryElement(), relationship.getType()));
+			relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
 		}
 		return relationships;
 	}
@@ -529,35 +529,35 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 * 
 	 * @return A List of LevelRelationship's where the Topic matches the topic or an empty array if none are found.
 	 */
-	public List<TargetRelationship<T, U>> getLevelRelationships()
+	public List<TargetRelationship> getLevelRelationships()
 	{
 		return levelRelationships;
 	}
 
-	public List<TopicRelationship<T, U>> getRelatedTopicRelationships()
+	public List<TopicRelationship> getRelatedTopicRelationships()
 	{
-		final ArrayList<TopicRelationship<T, U>> relationships = new ArrayList<TopicRelationship<T, U>>();
-		for (final TopicRelationship<T, U> relationship : topicRelationships)
+		final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
+		for (final TopicRelationship relationship : topicRelationships)
 		{
 			if (relationship.getType() == RelationshipType.RELATED)
 			{
 				relationships.add(relationship);
 			}
 		}
-		for (final TargetRelationship<T, U> relationship : topicTargetRelationships)
+		for (final TargetRelationship relationship : topicTargetRelationships)
 		{
 			if (relationship.getType() == RelationshipType.RELATED)
 			{
-				relationships.add(new TopicRelationship<T, U>(relationship.getTopic(), (SpecTopic<T, U>) relationship.getSecondaryElement(), relationship.getType()));
+				relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
 			}
 		}
 		return relationships;
 	}
 
-	public List<TargetRelationship<T, U>> getRelatedLevelRelationships()
+	public List<TargetRelationship> getRelatedLevelRelationships()
 	{
-		final ArrayList<TargetRelationship<T, U>> relationships = new ArrayList<TargetRelationship<T, U>>();
-		for (final TargetRelationship<T, U> relationship : levelRelationships)
+		final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
+		for (final TargetRelationship relationship : levelRelationships)
 		{
 			if (relationship.getType() == RelationshipType.RELATED)
 			{
@@ -567,30 +567,30 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		return relationships;
 	}
 
-	public List<TopicRelationship<T, U>> getPrerequisiteTopicRelationships()
+	public List<TopicRelationship> getPrerequisiteTopicRelationships()
 	{
-		final ArrayList<TopicRelationship<T, U>> relationships = new ArrayList<TopicRelationship<T, U>>();
-		for (final TopicRelationship<T, U> relationship : topicRelationships)
+		final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
+		for (final TopicRelationship relationship : topicRelationships)
 		{
 			if (relationship.getType() == RelationshipType.PREREQUISITE)
 			{
 				relationships.add(relationship);
 			}
 		}
-		for (final TargetRelationship<T, U> relationship : topicTargetRelationships)
+		for (final TargetRelationship relationship : topicTargetRelationships)
 		{
 			if (relationship.getType() == RelationshipType.PREREQUISITE)
 			{
-				relationships.add(new TopicRelationship<T, U>(relationship.getTopic(), (SpecTopic<T, U>) relationship.getSecondaryElement(), relationship.getType()));
+				relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
 			}
 		}
 		return relationships;
 	}
 
-	public List<TargetRelationship<T, U>> getPrerequisiteLevelRelationships()
+	public List<TargetRelationship> getPrerequisiteLevelRelationships()
 	{
-		final ArrayList<TargetRelationship<T, U>> relationships = new ArrayList<TargetRelationship<T, U>>();
-		for (final TargetRelationship<T, U> relationship : levelRelationships)
+		final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
+		for (final TargetRelationship relationship : levelRelationships)
 		{
 			if (relationship.getType() == RelationshipType.PREREQUISITE)
 			{
@@ -600,41 +600,41 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		return relationships;
 	}
 
-	public List<TopicRelationship<T, U>> getNextTopicRelationships()
+	public List<TopicRelationship> getNextTopicRelationships()
 	{
-		ArrayList<TopicRelationship<T, U>> relationships = new ArrayList<TopicRelationship<T, U>>();
-		for (TopicRelationship<T, U> relationship : topicRelationships)
+		ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
+		for (TopicRelationship relationship : topicRelationships)
 		{
 			if (relationship.getType() == RelationshipType.NEXT)
 			{
 				relationships.add(relationship);
 			}
 		}
-		for (TargetRelationship<T, U> relationship : topicTargetRelationships)
+		for (TargetRelationship relationship : topicTargetRelationships)
 		{
 			if (relationship.getType() == RelationshipType.NEXT)
 			{
-				relationships.add(new TopicRelationship<T, U>(relationship.getTopic(), (SpecTopic<T, U>) relationship.getSecondaryElement(), relationship.getType()));
+				relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
 			}
 		}
 		return relationships;
 	}
 
-	public List<TopicRelationship<T, U>> getPrevTopicRelationships()
+	public List<TopicRelationship> getPrevTopicRelationships()
 	{
-		ArrayList<TopicRelationship<T, U>> relationships = new ArrayList<TopicRelationship<T, U>>();
-		for (TopicRelationship<T, U> relationship : topicRelationships)
+		ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
+		for (TopicRelationship relationship : topicRelationships)
 		{
 			if (relationship.getType() == RelationshipType.PREVIOUS)
 			{
 				relationships.add(relationship);
 			}
 		}
-		for (TargetRelationship<T, U> relationship : topicTargetRelationships)
+		for (TargetRelationship relationship : topicTargetRelationships)
 		{
 			if (relationship.getType() == RelationshipType.PREVIOUS)
 			{
-				relationships.add(new TopicRelationship<T, U>(relationship.getTopic(), (SpecTopic<T, U>) relationship.getSecondaryElement(), relationship.getType()));
+				relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
 			}
 		}
 		return relationships;
@@ -653,12 +653,12 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		// If the level isn't the first node then get the previous nodes step
 		if (nodePos > 0)
 		{
-			Node<T, U> node = getParent().nodes.get(nodePos - 1);
+			Node node = getParent().nodes.get(nodePos - 1);
 			previousNode = node.getStep();
 			// If the add node is a level then add the number of nodes it contains
 			if (node instanceof Level)
 			{
-				previousNode = (previousNode == null ? 0 : previousNode) + ((Level<T, U>) node).getTotalNumberOfChildren();
+				previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
 			}
 			// The node is the first item so use the parent levels step
 		}
@@ -741,7 +741,7 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 *            The node we need to find the closest match for
 	 * @return
 	 */
-	public SpecTopic<T, U> getClosestTopic(final SpecTopic<T, U> topic, final boolean checkParentNode)
+	public SpecTopic getClosestTopic(final SpecTopic topic, final boolean checkParentNode)
 	{
 		/*
 		 * Check this topic to see if it is the topic we are looking for
@@ -758,7 +758,7 @@ public class SpecTopic<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		return null;
 	}
 
-	public SpecTopic<T, U> getClosestTopicByDBId(final Integer DBId, final boolean checkParentNode)
+	public SpecTopic getClosestTopicByDBId(final Integer DBId, final boolean checkParentNode)
 	{
 		/*
 		 * Check this topic to see if it is the topic we are looking for

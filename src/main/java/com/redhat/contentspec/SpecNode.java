@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.ecs.commonutils.StringUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
 /**
  * An abstract class that contains the base objects required for a Content Specification Node.
@@ -13,7 +11,7 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
  * @author lnewson
  *
  */
-public abstract class SpecNode<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends Node<T, U> {
+public abstract class SpecNode extends Node {
 
 	protected List<String> tags = new ArrayList<String>();
 	protected List<String> removeTags = new ArrayList<String>();
@@ -88,8 +86,8 @@ public abstract class SpecNode<T extends RESTBaseTopicV1<T, U>, U extends BaseRe
 	 * @return The nodes parent.
 	 */
 	@Override
-	public SpecNode<T, U> getParent() {
-		return (SpecNode<T, U>) parent;
+	public SpecNode getParent() {
+		return (SpecNode) parent;
 	}
 	
 	/**
@@ -97,7 +95,7 @@ public abstract class SpecNode<T extends RESTBaseTopicV1<T, U>, U extends BaseRe
 	 * 
 	 * @param parent The parent node.
 	 */
-	protected void setParent(SpecNode<T, U> parent) {
+	protected void setParent(SpecNode parent) {
 		super.setParent(parent);
 	}	
 	

@@ -1,15 +1,12 @@
 package com.redhat.contentspec;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
-
 /**
  * A class that is used to represent a comment in a Content Specification.
  * 
  * @author lnewson
  * 
  */
-public class Comment<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends Node<T, U>
+public class Comment extends Node
 {
 
 	/**
@@ -49,12 +46,12 @@ public class Comment<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 		// If the level isn't the first node then get the previous nodes step
 		if (nodePos > 0)
 		{
-			Node<T, U> node = getParent().getChildNodes().get(nodePos - 1);
+			Node node = getParent().getChildNodes().get(nodePos - 1);
 			previousNode = node.getStep();
 			// If the add node is a level then add the number of nodes it contains
 			if (node instanceof Level)
 			{
-				previousNode = (previousNode == null ? 0 : previousNode) + ((Level<T, U>) node).getTotalNumberOfChildren();
+				previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
 			}
 			// The node is the first item so use the parent levels step
 		}
@@ -70,9 +67,9 @@ public class Comment<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	}
 
 	@Override
-	public Level<T, U> getParent()
+	public Level getParent()
 	{
-		return (Level<T, U>) parent;
+		return (Level) parent;
 	}
 
 	/**
@@ -81,7 +78,7 @@ public class Comment<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	 * @param parent
 	 *            The parent node for the comment.
 	 */
-	protected void setParent(Level<T, U> parent)
+	protected void setParent(Level parent)
 	{
 		super.setParent(parent);
 	}

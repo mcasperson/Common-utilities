@@ -101,7 +101,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		}
 	}
 
-	public SpecTopic<T, U> initialiseFromPool(SpecTopic<T, U> specTopic)
+	public SpecTopic initialiseFromPool(SpecTopic specTopic)
 	{
 		if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty())
 		{

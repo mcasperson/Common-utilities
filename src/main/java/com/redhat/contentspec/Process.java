@@ -14,9 +14,7 @@ import com.redhat.contentspec.enums.LevelType;
 import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.contentspec.rest.RESTReader;
 import com.redhat.contentspec.utils.ContentSpecUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 
 /**
@@ -25,13 +23,13 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
  * @author lnewson
  * 
  */
-public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends Level<T, U>
+public class Process extends Level
 {
 
-	private LinkedHashMap<String, SpecTopic<T, U>> topics = new LinkedHashMap<String, SpecTopic<T, U>>();
+	private LinkedHashMap<String, SpecTopic> topics = new LinkedHashMap<String, SpecTopic>();
 	private boolean topicsProcessed = false;
 	private HashMap<String, ArrayList<Relationship>> relationships = new HashMap<String, ArrayList<Relationship>>();
-	private HashMap<String, SpecTopic<T, U>> targets = new HashMap<String, SpecTopic<T, U>>();
+	private HashMap<String, SpecTopic> targets = new HashMap<String, SpecTopic>();
 	private HashMap<String, List<String>> branches = new HashMap<String, List<String>>();
 
 	/**
@@ -61,7 +59,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	}
 
 	@Override
-	public void appendSpecTopic(SpecTopic<T, U> specTopic)
+	public void appendSpecTopic(SpecTopic specTopic)
 	{
 		String topicId = specTopic.getId();
 		if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
@@ -74,7 +72,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	}
 
 	@Override
-	public void removeSpecTopic(SpecTopic<T, U> specTopic)
+	public void removeSpecTopic(SpecTopic specTopic)
 	{
 		String topicId = specTopic.getId();
 		if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
@@ -183,7 +181,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	 * 
 	 * @return A mapping of Target IDs to Content Specification Topics that exist within the process.
 	 */
-	public HashMap<String, SpecTopic<T, U>> getProcessTargets()
+	public HashMap<String, SpecTopic> getProcessTargets()
 	{
 		return targets;
 	}
@@ -196,7 +194,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	protected List<String> getTopicIds()
 	{
 		LinkedList<String> topicIds = new LinkedList<String>();
-		Iterator<Entry<String, SpecTopic<T, U>>> i = topics.entrySet().iterator();
+		Iterator<Entry<String, SpecTopic>> i = topics.entrySet().iterator();
 		while (i.hasNext())
 		{
 			topicIds.add(i.next().getKey());
@@ -205,10 +203,10 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	}
 
 	@Override
-	public LinkedList<SpecTopic<T, U>> getSpecTopics()
+	public LinkedList<SpecTopic> getSpecTopics()
 	{
-		LinkedList<SpecTopic<T, U>> topicList = new LinkedList<SpecTopic<T, U>>();
-		Iterator<Entry<String, SpecTopic<T, U>>> i = topics.entrySet().iterator();
+		LinkedList<SpecTopic> topicList = new LinkedList<SpecTopic>();
+		Iterator<Entry<String, SpecTopic>> i = topics.entrySet().iterator();
 		while (i.hasNext())
 		{
 			topicList.add(i.next().getValue());
@@ -227,17 +225,17 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	 *            A DBReader object that is used to access database objects via the REST Interface
 	 * @return True if everything loaded successfully otherwise false
 	 */
-	public boolean processTopics(HashMap<String, SpecTopic<T, U>> specTopics, HashMap<String, SpecTopic<T, U>> topicTargets, RESTReader reader)
+	public boolean processTopics(HashMap<String, SpecTopic> specTopics, HashMap<String, SpecTopic> topicTargets, RESTReader reader)
 	{
 		boolean successfullyLoaded = true;
-		SpecTopic<T, U> prevTopic = null;
+		SpecTopic prevTopic = null;
 		String prevTopicTargetId = null;
 		int count = 1;
 		LinkedList<String> processTopics = new LinkedList<String>(this.getTopicIds());
 		for (String topicId : processTopics)
 		{
 			String nonUniqueId = topicId.replaceAll("^[0-9]+-", "");
-			SpecTopic<T, U> specTopic = topics.get(topicId);
+			SpecTopic specTopic = topics.get(topicId);
 
 			// If the topic is an existing or cloned topic then use the database information
 			if (nonUniqueId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX))
@@ -349,7 +347,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 	 *            The Target ID of the topic.
 	 * @return True if the relationship was created successfully otherwise false.
 	 */
-	private boolean createProcessRelationships(SpecTopic<T, U> prevTopic, String topicId, String prevTopicTargetId, String topicTargetId)
+	private boolean createProcessRelationships(SpecTopic prevTopic, String topicId, String prevTopicTargetId, String topicTargetId)
 	{
 		// Get the id of the parent branching node(s) for this topic for the
 		List<String> branchRootIds = getBranchRootIdsForTopicId(topicId, topicTargetId);
@@ -359,7 +357,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 			{
 				// Add this topic to the previous topics next relationship
 				int count = 0;
-				SpecTopic<T, U> relatedTopic = null;
+				SpecTopic relatedTopic = null;
 
 				// Get the parent topic and count if more then one is found
 				for (String specTopicId : topics.keySet())
@@ -454,7 +452,7 @@ public class Process<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollecti
 			}
 			String output = spacer + getText() + "\n";
 
-			for (Node<T, U> node : nodes)
+			for (Node node : nodes)
 			{
 				output += node.toString();
 			}

@@ -1,10 +1,8 @@
 package com.redhat.contentspec;
 
 import com.redhat.contentspec.enums.LevelType;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
-public class Part<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends Level<T, U>
+public class Part extends Level
 {
 
 	/**
