@@ -1,6 +1,8 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-public class RESTTopicSourceUrlV1 extends RESTBaseEntityV1<RESTTopicSourceUrlV1>
+import com.redhat.topicindex.rest.collections.RESTTopicSourceUrlCollectionV1;
+
+public class RESTTopicSourceUrlV1 extends RESTBaseEntityV1<RESTTopicSourceUrlV1, RESTTopicSourceUrlCollectionV1>
 {
 	public static final String URL_NAME = "url";
 	public static final String DESCRIPTION_NAME = "description";
@@ -9,6 +11,20 @@ public class RESTTopicSourceUrlV1 extends RESTBaseEntityV1<RESTTopicSourceUrlV1>
 	private String url;
 	private String title;
 	private String description;
+	/** A list of the Envers revision numbers */
+	private RESTTopicSourceUrlCollectionV1 revisions = null;
+	
+	@Override
+	public RESTTopicSourceUrlCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTTopicSourceUrlCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTTopicSourceUrlV1 clone(boolean deepCopy)

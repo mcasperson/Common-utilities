@@ -19,7 +19,7 @@ import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuildingOptions;
 import com.redhat.topicindex.component.docbookrenderer.structures.tocformat.TagRequirements;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.ComponentTopicV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
@@ -28,7 +28,7 @@ import com.redhat.topicindex.rest.expand.ExpandDataDetails;
 import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
 
-public class ContentSpecGenerator
+public class ContentSpecGenerator <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends ContentSpec<T, U>
 {
 	/** The REST client */
 	private final RESTInterfaceV1 restClient;
@@ -53,7 +53,7 @@ public class ContentSpecGenerator
 	 * @param locale The locale of the topics.
 	 * @return A ContentSpec object that represents the Content Specification. The toString() method can be used to get the text based version.
 	 */
-	public <T extends RESTBaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale)
+	public ContentSpec<T, U> generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale)
 	{
 		return this.generateContentSpecFromTopics(clazz, topics, locale, new DocbookBuildingOptions());
 	}
@@ -71,9 +71,9 @@ public class ContentSpecGenerator
 	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
 	 * @return A ContentSpec object that represents the Content Specification. The toString() method can be used to get the text based version.
 	 */
-	public <T extends RESTBaseTopicV1<T>> ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	public ContentSpec<T, U> generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
-		final ContentSpec contentSpec = doFormattedTocPass(clazz, topics, locale, docbookBuildingOptions);
+		final ContentSpec<T, U> contentSpec = doFormattedTocPass(clazz, topics, locale, docbookBuildingOptions);
 		trimEmptySectionsFromContentSpecLevel(contentSpec.getBaseLevel());
 		return contentSpec;
 	}
@@ -83,10 +83,10 @@ public class ContentSpecGenerator
 	 * 
 	 * @param level The level to remove empty sections from.
 	 */
-	private void trimEmptySectionsFromContentSpecLevel(final Level level)
+	private void trimEmptySectionsFromContentSpecLevel(final Level<T, U> level)
 	{
-		final List<Level> childLevels = new LinkedList<Level>(level.getChildLevels());
-		for (final Level childLevel : childLevels)
+		final List<Level<T, U>> childLevels = new LinkedList<Level<T, U>>(level.getChildLevels());
+		for (final Level<T, U> childLevel : childLevels)
 		{
 			if (!childLevel.hasSpecTopics())
 				level.removeChild(childLevel);
@@ -104,7 +104,7 @@ public class ContentSpecGenerator
 	 * @param childRequirements The TagRequirements for this level based on the child requirements from the levels parent.
 	 * @param displayRequirements The TagRequirements to display topics at this level.
 	 */
-	private <T extends RESTBaseTopicV1<T>> void populateContentSpecLevel(final BaseRestCollectionV1<T> topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
+	private void populateContentSpecLevel(final BaseRestCollectionV1<T, U> topics, final Level<T, U> level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
 	{
 		/*
 		 * If this branch has no parent, then it is the top level and we don't
@@ -123,7 +123,7 @@ public class ContentSpecGenerator
 				boolean doesMatch = true;
 				for (final RESTTagV1 andTag : requirements.getMatchAllOf())
 				{
-					if (!ComponentTopicV1.hasTag(topic, andTag.getId()))
+					if (!ComponentBaseTopicV1.hasTag(topic, andTag.getId()))
 					{
 						doesMatch = false;
 						break;
@@ -139,7 +139,7 @@ public class ContentSpecGenerator
 							boolean matchesOrBlock = false;
 							for (final RESTTagV1 orTag : orBlock)
 							{
-								if (ComponentTopicV1.hasTag(topic, orTag.getId()))
+								if (ComponentBaseTopicV1.hasTag(topic, orTag.getId()))
 								{
 									matchesOrBlock = true;
 									break;
@@ -170,7 +170,7 @@ public class ContentSpecGenerator
 						topicTitle = topic.getTitle();
 					}
 					
-					final SpecTopic specTopic = new SpecTopic(topicId, topicTitle);
+					final SpecTopic<T, U> specTopic = new SpecTopic<T, U>(topicId, topicTitle);
 					specTopic.setTopic(topic.clone(false));
 					level.appendSpecTopic(specTopic);
 				}
@@ -188,7 +188,7 @@ public class ContentSpecGenerator
 	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
 	 * @return A ContentSpec object that represents the assembled Content Specification. The toString() method can be used to get the text based version.
 	 */
-	private <T extends RESTBaseTopicV1<T>> ContentSpec doFormattedTocPass(final Class<T> clazz, final BaseRestCollectionV1<T> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	private ContentSpec<T, U> doFormattedTocPass(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		try
 		{
@@ -196,7 +196,7 @@ public class ContentSpecGenerator
 			 * content specification defines the structure and 
 			 * contents of the TOC.
 			 */
-			final ContentSpec retValue = new ContentSpec();
+			final ContentSpec<T, U> retValue = new ContentSpec<T, U>();
 			
 			/* Setup the basic content specification data */
 			retValue.setTitle(docbookBuildingOptions.getBookTitle());
@@ -308,7 +308,7 @@ public class ContentSpecGenerator
 					}
 				});
 
-				final Chapter topLevelTagChapter = new Chapter(tag.getName());
+				final Chapter<T, U> topLevelTagChapter = new Chapter<T, U>(tag.getName());
 				retValue.appendChapter(topLevelTagChapter);
 				
 				populateContentSpecLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
@@ -323,7 +323,7 @@ public class ContentSpecGenerator
 					concernLevelChildTags.merge(topLevelBranchTags);
 					final TagRequirements concernLevelDisplayTags = new TagRequirements((RESTTagV1) null, CollectionUtilities.toArrayList(conceptualOverviewTag, taskTag));
 					
-					final Section concernSection = new Section(concernTag.getName());
+					final Section<T, U> concernSection = new Section<T, U>(concernTag.getName());
 					topLevelTagChapter.appendChild(concernSection);
 					
 					populateContentSpecLevel(topics, concernSection, concernLevelChildTags, concernLevelDisplayTags);
@@ -332,8 +332,8 @@ public class ContentSpecGenerator
 					 * the third levels of the TOC are the concept and reference
 					 * topics
 					 */
-					final Section conceptSection = new Section(conceptTag.getName());
-					final Section referenceSection = new Section(referenceTag.getName());
+					final Section<T, U> conceptSection = new Section<T, U>(conceptTag.getName());
+					final Section<T, U> referenceSection = new Section<T, U>(referenceTag.getName());
 					
 					if (concernSection.getChildNodes().isEmpty())
 						concernSection.appendChild(referenceSection);

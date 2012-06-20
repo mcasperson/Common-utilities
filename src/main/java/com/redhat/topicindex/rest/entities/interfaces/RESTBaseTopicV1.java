@@ -1,8 +1,10 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicSourceUrlCollectionV1;
 
-public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T>> extends RESTBaseEntityWithPropertiesV1<T>
+public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends RESTBaseEntityWithPropertiesV1<T, U>
 {
 	public static final String TITLE_NAME = "title";
 	public static final String XML_NAME = "xml";
@@ -21,12 +23,15 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 	protected String html = null;
 	protected Integer revision = 0;
 	protected String locale = null;
-	protected BaseRestCollectionV1<RESTTagV1> tags = null;
-	protected BaseRestCollectionV1<T> outgoingRelationships = null;
-	protected BaseRestCollectionV1<T> incomingRelationships = null;
-	protected BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls_OTM = null;
+	protected RESTTagCollectionV1 tags = null;
+	protected RESTTopicSourceUrlCollectionV1 sourceUrls_OTM = null;
 	
-	public void cloneInto(final RESTBaseTopicV1<T> clone, final boolean deepCopy)
+	abstract public U getIncomingRelationships();
+	abstract public void setIncomingRelationships(final U incomingRelationships);
+	abstract public U getOutgoingRelationships();
+	abstract public void setOutgoingRelationships(final U outgoingRelationships);
+
+	public void cloneInto(final RESTBaseTopicV1<T, U> clone, final boolean deepCopy)
 	{
 		super.cloneInto(clone, deepCopy);
 		
@@ -39,16 +44,19 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 		
 		if (deepCopy)
 		{
-			clone.tags = this.tags == null ? null: this.tags.clone(deepCopy);
-			clone.outgoingRelationships = this.outgoingRelationships == null ? null : this.outgoingRelationships.clone(deepCopy);
-			clone.incomingRelationships = this.incomingRelationships == null ? null : this.incomingRelationships.clone(deepCopy);
-			clone.sourceUrls_OTM = this.sourceUrls_OTM == null ? null : this.sourceUrls_OTM.clone(deepCopy);
+			if (this.tags == null)
+				clone.tags = null;
+			else
+				this.tags.cloneInto(clone.tags, deepCopy);
+						
+			if (this.sourceUrls_OTM == null)
+				clone.sourceUrls_OTM = null;
+			else
+				this.sourceUrls_OTM.cloneInto(clone.sourceUrls_OTM, deepCopy);
 		}
 		else
 		{
 			clone.tags = this.tags;
-			clone.outgoingRelationships = this.outgoingRelationships;
-			clone.incomingRelationships = this.incomingRelationships;
 			clone.sourceUrls_OTM = this.sourceUrls_OTM;
 		}
 	}
@@ -121,18 +129,18 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 		this.xmlErrors = xmlErrors;
 	}
 	
-	public BaseRestCollectionV1<RESTTagV1> getTags()
+	public RESTTagCollectionV1 getTags()
 	{
 		return tags;
 	}
 	
-	public void explicitSetTags(final BaseRestCollectionV1<RESTTagV1> tags)
+	public void explicitSetTags(final RESTTagCollectionV1 tags)
 	{
 		setTags(tags);
 		setParamaterToConfigured(TAGS_NAME);
 	}
 
-	public void setTags(final BaseRestCollectionV1<RESTTagV1> tags)
+	public void setTags(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 	}
@@ -140,54 +148,22 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseEntityWithPropertiesV1<T
 	public void addTag(final RESTTagV1 tag)
 	{
 		if (this.tags == null)
-			this.tags = new BaseRestCollectionV1<RESTTagV1>();
+			this.tags = new RESTTagCollectionV1();
 
 		this.tags.addItem(tag);
-	}
-	
-	public BaseRestCollectionV1<T> getOutgoingRelationships()
-	{
-		return outgoingRelationships;
-	}
+	}	
 
-	public void setOutgoingRelationships(final BaseRestCollectionV1<T> outgoingRelationships)
-	{
-		this.outgoingRelationships = outgoingRelationships;
-	}
-	
-	public void explicitSetOutgoingRelationships(final BaseRestCollectionV1<T> outgoingRelationships)
-	{
-		setOutgoingRelationships(outgoingRelationships);
-		setParamaterToConfigured(OUTGOING_NAME);
-	}
-
-	public BaseRestCollectionV1<T> getIncomingRelationships()
-	{
-		return incomingRelationships;
-	}
-
-	public void setIncomingRelationships(final BaseRestCollectionV1<T> incomingRelationships)
-	{
-		this.incomingRelationships = incomingRelationships;
-	}
-	
-	public void explicitSetIncomingRelationships(final BaseRestCollectionV1<T> incomingRelationships)
-	{
-		setIncomingRelationships(incomingRelationships);
-		setParamaterToConfigured(INCOMING_NAME);
-	}
-
-	public BaseRestCollectionV1<RESTTopicSourceUrlV1> getSourceUrls_OTM()
+	public RESTTopicSourceUrlCollectionV1 getSourceUrls_OTM()
 	{
 		return sourceUrls_OTM;
 	}
 
-	public void setSourceUrls_OTM(final BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls)
+	public void setSourceUrls_OTM(final RESTTopicSourceUrlCollectionV1 sourceUrls)
 	{
 		this.sourceUrls_OTM = sourceUrls;		
 	}
 	
-	public void explicitSetSourceUrls_OTM(final BaseRestCollectionV1<RESTTopicSourceUrlV1> sourceUrls)
+	public void explicitSetSourceUrls_OTM(final RESTTopicSourceUrlCollectionV1 sourceUrls)
 	{
 		setSourceUrls_OTM(sourceUrls);
 		setParamaterToConfigured(SOURCE_URLS_NAME);

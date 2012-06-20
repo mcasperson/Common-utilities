@@ -38,8 +38,9 @@ import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.Injecti
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.TocTopicDatabase;
 import com.redhat.ecs.sort.ExternalListSort;
 
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.entities.ComponentBaseRESTEntityWithPropertiesV1;
 import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
-import com.redhat.topicindex.rest.entities.ComponentTagV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
@@ -53,7 +54,7 @@ import com.redhat.topicindex.rest.sort.BaseTopicV1TitleComparator;
 /**
  * This class takes the XML from a topic and modifies it to include and injected content.
  */
-public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
+public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 	/**
 	 * Used to identify that an <orderedlist> should be generated for the injection point
@@ -162,7 +163,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	 */
 	protected static final String NO_INJECT_ROLE = "noinject";
 
-	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicBugzillaLink(final SpecTopic<T, U> specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{
 		/* SIMPLESECT TO HOLD OTHER LINKS */
 		final Element bugzillaSection = document.createElement("simplesect");
@@ -199,7 +200,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 			String bugzillaAssignedTo = null;
 			final String bugzillaEnvironment = URLEncoder.encode("Instance Name: " + fixedInstanceNameProperty + "\nBuild: " + buildName + "\nBuild Filter: " + searchTagsUrl + "\nBuild Name: " + specifiedBuildName + "\nBuild Date: " + formatter.format(buildDate), "UTF-8");
 			
-			final RESTBaseTopicV1<? extends RESTBaseTopicV1<?>> topic = specTopic.getTopic();
+			final RESTBaseTopicV1<? extends RESTBaseTopicV1<?, ?>, ? extends BaseRestCollectionV1<?, ?>> topic = specTopic.getTopic();
 			final String bugzillaBuildId = topic instanceof RESTTopicV1 ? ComponentTopicV1.returnBugzillaBuildId((RESTTopicV1)topic) : ComponentTranslatedTopicV1.returnBugzillaBuildId((RESTTranslatedTopicV1)topic);			
 			final String bugzillaBuildID = URLEncoder.encode(bugzillaBuildId, "UTF-8");
 
@@ -208,11 +209,11 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 			{
 				for (final RESTTagV1 tag : specTopic.getTopic().getTags().getItems())
 				{
-					final RESTPropertyTagV1 bugzillaProductTag = ComponentTagV1.returnProperty(tag, CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
-					final RESTPropertyTagV1 bugzillaComponentTag = ComponentTagV1.returnProperty(tag, CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
-					final RESTPropertyTagV1 bugzillaKeywordsTag = ComponentTagV1.returnProperty(tag, CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
-					final RESTPropertyTagV1 bugzillaVersionTag = ComponentTagV1.returnProperty(tag, CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
-					final RESTPropertyTagV1 bugzillaAssignedToTag = ComponentTagV1.returnProperty(tag, CommonConstants.BUGZILLA_PROFILE_PROPERTY);
+					final RESTPropertyTagV1 bugzillaProductTag = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
+					final RESTPropertyTagV1 bugzillaComponentTag = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
+					final RESTPropertyTagV1 bugzillaKeywordsTag = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
+					final RESTPropertyTagV1 bugzillaVersionTag = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
+					final RESTPropertyTagV1 bugzillaAssignedToTag = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(tag, CommonConstants.BUGZILLA_PROFILE_PROPERTY);
 
 					if (bugzillaProduct == null && bugzillaProductTag != null)
 						bugzillaProduct = URLEncoder.encode(bugzillaProductTag.getValue(), "UTF-8");
@@ -291,7 +292,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	/**
 	 * Adds some debug information and links to the end of the topic
 	 */
-	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicAdditionalInfo(final SpecTopic<T, U> specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{		
 		if ((docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink()) || searchTagsUrl != null)
 		{
@@ -335,7 +336,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 				skynetElement.appendChild(skynetLinkULink);
 				skynetLinkULink.setTextContent("View in Skynet");
 				
-				final RESTBaseTopicV1<? extends RESTBaseTopicV1<?>> topic = specTopic.getTopic();
+				final RESTBaseTopicV1<? extends RESTBaseTopicV1<?, ?>, ? extends BaseRestCollectionV1<?, ?>> topic = specTopic.getTopic();
 				final String url = topic instanceof RESTTopicV1 ? ComponentTopicV1.returnSkynetURL((RESTTopicV1)topic) : ComponentTranslatedTopicV1.returnSkynetURL((RESTTranslatedTopicV1)topic); 
 				skynetLinkULink.setAttribute("url", url);
 	
@@ -392,7 +393,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		return retValue;
 	}
 
-	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	public List<Integer> processInjections(final Level<T, U>  level, final SpecTopic<T, U> topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/*
 		 * this collection keeps a track of the injection point markers and the docbook lists that we will be replacing them with
@@ -404,7 +405,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, usedFixedUrls));
 		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, usedFixedUrls));
 		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, usedFixedUrls));
-		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter<T>(), docbookBuildingOptions, usedFixedUrls));
+		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter<T, U>(), docbookBuildingOptions, usedFixedUrls));
 		errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, usedFixedUrls));
 
 		/*
@@ -456,8 +457,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		return errorTopics;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
+	public List<Integer> processInjections(final Level<T, U>  level, final SpecTopic<T, U> topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
 			final ExternalListSort<Integer, T, InjectionTopicData> sortComparator, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
@@ -492,12 +492,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 					/*
 					 * get the outgoing relationships
 					 */
-					final List<T> relatedTopics = (List<T>) topic.getTopic().getOutgoingRelationships().getItems();
+					final List<T> relatedTopics = topic.getTopic().getOutgoingRelationships().getItems();
 
 					/*
 					 * Create a TocTopicDatabase to hold the related topics. The TocTopicDatabase provides a convenient way to access these topics
 					 */
-					TocTopicDatabase<T> relatedTopicsDatabase = new TocTopicDatabase<T>();
+					TocTopicDatabase<T, U> relatedTopicsDatabase = new TocTopicDatabase<T, U>();
 					relatedTopicsDatabase.setTopics(relatedTopics);
 
 					/* sort the InjectionTopicData list if required */
@@ -569,7 +569,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 									topicId = relatedTopic.getId();
 								}
 
-								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
+								final SpecTopic<T, U> closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
 								if (sequenceID.optional)
 								{
 									list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
@@ -597,8 +597,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		return retValue;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Integer> processGenericInjections(final Level level, final SpecTopic topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	@SuppressWarnings({ "unchecked" })
+	public List<Integer> processGenericInjections(final Level<T, U> level, final SpecTopic<T, U> topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> errors = new ArrayList<Integer>();
 
@@ -608,12 +608,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		/*
 		 * this collection will hold the lists of related topics
 		 */
-		final GenericInjectionPointDatabase<T> relatedLists = new GenericInjectionPointDatabase<T>();
+		final GenericInjectionPointDatabase<T, U> relatedLists = new GenericInjectionPointDatabase<T, U>();
 
 		/* wrap each related topic in a listitem tag */
 		if (topic.getTopic().getOutgoingRelationships() != null && topic.getTopic().getOutgoingRelationships().getItems() != null)
 		{
-			for (final RESTBaseTopicV1 relatedTopic : topic.getTopic().getOutgoingRelationships().getItems())
+			for (final RESTBaseTopicV1<T, U> relatedTopic : topic.getTopic().getOutgoingRelationships().getItems())
 			{
 
 				final Integer topicId;
@@ -667,7 +667,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	 * The generic injection points are placed in well defined locations within a topics xml structure. This function takes the list of related topics and the
 	 * topic type tags that are associated with them and injects them into the xml document.
 	 */
-	private void insertGenericInjectionLinks(final Level level, final SpecTopic topic, final Document xmlDoc, final GenericInjectionPointDatabase<T> relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	private void insertGenericInjectionLinks(final Level<T, U>  level, final SpecTopic<T, U> topic, final Document xmlDoc, final GenericInjectionPointDatabase<T, U> relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/* all related topics are placed before the first simplesect */
 		final NodeList nodes = xmlDoc.getDocumentElement().getChildNodes();
@@ -687,7 +687,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		 */
 		for (final Integer topTag : CollectionUtilities.toArrayList(DocbookBuilderConstants.REFERENCE_TAG_ID, DocbookBuilderConstants.TASK_TAG_ID, DocbookBuilderConstants.CONCEPT_TAG_ID, DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID))
 		{
-			for (final GenericInjectionPoint<T> genericInjectionPoint : relatedLists.getInjectionPoints())
+			for (final GenericInjectionPoint<T, U> genericInjectionPoint : relatedLists.getInjectionPoints())
 			{
 				if (genericInjectionPoint.getCategoryIDAndName().getFirst() == topTag)
 				{
@@ -698,7 +698,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 					{
 						final Node itemizedlist = DocbookUtils.createRelatedTopicItemizedList(xmlDoc, "Related " + genericInjectionPoint.getCategoryIDAndName().getSecond() + "s");
 
-						Collections.sort(relatedTopics, new BaseTopicV1TitleComparator<T>());
+						Collections.sort(relatedTopics, new BaseTopicV1TitleComparator<T, U>());
 
 						for (final T relatedTopic : relatedTopics)
 						{
@@ -719,7 +719,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 									topicId = relatedTopic.getId();
 								}
 
-								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
+								final SpecTopic<T, U>  closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
 								DocbookUtils.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls), itemizedlist);
 							}
 
@@ -735,7 +735,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		}
 	}
 
-	public static void processInternalImageFiles(final Document xmlDoc, final SpecTopic topic)
+	public static <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> void processInternalImageFiles(final Document xmlDoc, final SpecTopic<T, U> topic)
 	{
 		if (xmlDoc == null)
 			return;
@@ -764,7 +764,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Integer> processTopicContentFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
+	public List<Integer> processTopicContentFragments(final SpecTopic<T, U> specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final T topic = (T) specTopic.getTopic();
 		
@@ -911,7 +911,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Integer> processTopicTitleFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
+	public List<Integer> processTopicTitleFragments(final SpecTopic<T, U> specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final T topic = (T) specTopic.getTopic();
 		
@@ -984,7 +984,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		return retValue;
 	}
 
-	public void processPrevRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
+	public void processPrevRelationshipInjections(final SpecTopic<T, U> topic, final Document doc, final boolean useFixedUrls)
 	{
 		if (topic.getPrevTopicRelationships().isEmpty())
 			return;
@@ -1003,7 +1003,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		if (titleEle != null)
 		{
 			// Attempt to get the previous topic and process it
-			List<TopicRelationship> prevList = topic.getPrevTopicRelationships();
+			List<TopicRelationship<T, U>> prevList = topic.getPrevTopicRelationships();
 			// Create the paragraph/itemizedlist and list of previous relationships.
 			Element rootEle = null;
 			rootEle = doc.createElement("itemizedlist");
@@ -1024,10 +1024,10 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 			linkTitleEle.appendChild(titleXrefItem);
 			rootEle.appendChild(linkTitleEle);
 
-			for (TopicRelationship prev : prevList)
+			for (TopicRelationship<T, U> prev : prevList)
 			{
 				Element prevEle = doc.createElement("para");
-				SpecTopic prevTopic = prev.getSecondaryRelationship();
+				SpecTopic<T, U> prevTopic = prev.getSecondaryRelationship();
 				prevEle.setAttribute("role", "process-previous-link");
 				// Add the previous element to either the list or paragraph
 				// Create the link element
@@ -1048,13 +1048,13 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		}
 	}
 
-	public void processNextRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
+	public void processNextRelationshipInjections(final SpecTopic<T, U> topic, final Document doc, final boolean useFixedUrls)
 	{
 		if (topic.getNextTopicRelationships().isEmpty())
 			return;
 
 		// Attempt to get the previous topic and process it
-		List<TopicRelationship> nextList = topic.getNextTopicRelationships();
+		List<TopicRelationship<T, U>> nextList = topic.getNextTopicRelationships();
 		// Create the paragraph/itemizedlist and list of next relationships.
 		Element rootEle = null;
 		rootEle = doc.createElement("itemizedlist");
@@ -1076,10 +1076,10 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		linkTitleEle.appendChild(titleXrefItem);
 		rootEle.appendChild(linkTitleEle);
 
-		for (TopicRelationship next : nextList)
+		for (TopicRelationship<T, U> next : nextList)
 		{
 			Element nextEle = doc.createElement("para");
-			SpecTopic nextTopic = next.getSecondaryRelationship();
+			SpecTopic<T, U> nextTopic = next.getSecondaryRelationship();
 			nextEle.setAttribute("role", "process-next-link");
 			// Add the next element to either the list or paragraph
 			// Create the link element
@@ -1097,7 +1097,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 	/*
 	 * Process's a Content Specs Topic and adds in the prerequisite topic links
 	 */
-	public void processPrerequisiteInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
+	public void processPrerequisiteInjections(final SpecTopic<T, U> topic, final Document doc, final boolean useFixedUrls)
 	{
 		if (topic.getPrerequisiteRelationships().isEmpty())
 			return;
@@ -1125,16 +1125,16 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 			List<List<Element>> list = new ArrayList<List<Element>>();
 
 			// Add the Topic Prerequisites
-			for (TopicRelationship prereq : topic.getPrerequisiteTopicRelationships())
+			for (TopicRelationship<T, U> prereq : topic.getPrerequisiteTopicRelationships())
 			{
-				SpecTopic relatedTopic = prereq.getSecondaryRelationship();
+				SpecTopic<T, U> relatedTopic = prereq.getSecondaryRelationship();
 				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
 			}
 
 			// Add the Level Prerequisites
-			for (TargetRelationship prereq : topic.getPrerequisiteLevelRelationships())
+			for (TargetRelationship<T, U> prereq : topic.getPrerequisiteLevelRelationships())
 			{
-				Level relatedLevel = (Level) prereq.getSecondaryElement();
+				Level<T, U> relatedLevel = (Level<T, U>) prereq.getSecondaryElement();
 				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
 			}
 
@@ -1156,7 +1156,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		}
 	}
 
-	public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
+	public void processSeeAlsoInjections(final SpecTopic<T, U> topic, final Document doc, final boolean useFixedUrls)
 	{
 		// Create the paragraph and list of prerequisites.
 		if (topic.getRelatedRelationships().isEmpty())
@@ -1169,17 +1169,17 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		List<List<Element>> list = new ArrayList<List<Element>>();
 
 		// Add the Topic Relationships
-		for (TopicRelationship prereq : topic.getRelatedTopicRelationships())
+		for (TopicRelationship<T, U> prereq : topic.getRelatedTopicRelationships())
 		{
-			SpecTopic relatedTopic = prereq.getSecondaryRelationship();
+			SpecTopic<T, U> relatedTopic = prereq.getSecondaryRelationship();
 
 			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
 		}
 
 		// Add the Level Relationships
-		for (TargetRelationship prereq : topic.getRelatedLevelRelationships())
+		for (TargetRelationship<T, U> prereq : topic.getRelatedLevelRelationships())
 		{
-			Level relatedLevel = (Level) prereq.getSecondaryElement();
+			Level<T, U> relatedLevel = (Level<T, U>) prereq.getSecondaryElement();
 			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
 		}
 

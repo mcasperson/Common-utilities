@@ -1,6 +1,8 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1>
+import com.redhat.topicindex.rest.collections.RESTLanguageImageCollectionV1;
+
+public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1, RESTLanguageImageCollectionV1>
 {
 	public static final String IMAGEDATA_NAME = "imageData";
 	public static final String IMAGEDATABASE64_NAME = "imageDataBase64";
@@ -16,6 +18,20 @@ public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1>
 	private byte[] imageDataBase64;
 	private String locale;
 	private String filename;
+	/** A list of the Envers revision numbers */
+	private RESTLanguageImageCollectionV1 revisions = null;
+	
+	@Override
+	public RESTLanguageImageCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTLanguageImageCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 
 	@Override
 	public RESTLanguageImageV1 clone(boolean deepCopy)
@@ -60,22 +76,33 @@ public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1>
 			{
 				retValue.imageDataBase64 = null;
 			}
+
+			if (this.getRevisions() == null)
+				retValue.revisions = null;
+			else
+			{
+				retValue.revisions = new RESTLanguageImageCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}			
 		}
 		else
 		{
 			retValue.imageData = this.imageData;
 			retValue.thumbnail = this.thumbnail;
 			retValue.imageDataBase64 = this.imageDataBase64;
+			retValue.revisions = this.revisions;
 		}
 
 		return retValue;
 	}
 
+	@Override
 	public Integer getId()
 	{
 		return id;
 	}
 
+	@Override
 	public void setId(Integer id)
 	{
 		this.id = id;

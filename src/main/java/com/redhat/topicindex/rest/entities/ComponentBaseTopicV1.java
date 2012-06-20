@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import com.redhat.ecs.commonstructures.NameIDSortMap;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.ecs.commonutils.XMLUtilities;
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
@@ -23,7 +24,7 @@ import com.redhat.topicindex.rest.sort.TagV1NameComparator;
  * This component contains methods that can be applied against all topic entities
  * @author Matthew Casperson
  */
-public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends ComponentBaseRESTEntityWithPropertiesV1<T>
+public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> extends ComponentBaseRESTEntityWithPropertiesV1<T, U>
 {
 	final T source;
 	
@@ -41,7 +42,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 		return returnXMLWithNewContainer(source, containerName);
 	}
 	
-	static public <T extends RESTBaseTopicV1<T>> String returnXMLWithNewContainer(final T source, final String containerName)
+	static public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> String returnXMLWithNewContainer(final T source, final String containerName)
 	{
 		assert containerName != null : "The containerName parameter can not be null";
 
@@ -74,7 +75,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 
 	}
 
-	static public <T extends RESTBaseTopicV1<T>> String returnXMLWithNoContainer(final T source, final Boolean includeTitle)
+	static public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> String returnXMLWithNoContainer(final T source, final Boolean includeTitle)
 	{
 		Document document = null;
 		try
@@ -121,7 +122,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 		return getCommaSeparatedTagList(source);
 	}
 	
-	static public <T extends RESTBaseTopicV1<T>> String getCommaSeparatedTagList(final T source)
+	static public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> String getCommaSeparatedTagList(final T source)
 	{
 		final TreeMap<NameIDSortMap, ArrayList<RESTTagV1>> tags = getCategoriesMappedToTags(source);
 
@@ -157,7 +158,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 		return getCategoriesMappedToTags(source);
 	}
 	
-	static private <T extends RESTBaseTopicV1<T>> TreeMap<NameIDSortMap, ArrayList<RESTTagV1>> getCategoriesMappedToTags(final T source)
+	static private <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> TreeMap<NameIDSortMap, ArrayList<RESTTagV1>> getCategoriesMappedToTags(final T source)
 	{
 		final TreeMap<NameIDSortMap, ArrayList<RESTTagV1>> tags = new TreeMap<NameIDSortMap, ArrayList<RESTTagV1>>();
 
@@ -202,7 +203,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 		return returnTagsInCategoriesByID(source, categories);
 	}
 	
-	static public <T extends RESTBaseTopicV1<T>> List<RESTTagV1> returnTagsInCategoriesByID(final T source, final List<Integer> categories)
+	static public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> List<RESTTagV1> returnTagsInCategoriesByID(final T source, final List<Integer> categories)
 	{
 		final List<RESTTagV1> retValue = new ArrayList<RESTTagV1>();
 
@@ -245,7 +246,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 		return hasTag(source, tagID);
 	}
 	
-	static public <T extends RESTBaseTopicV1<T>> boolean hasTag(final T source, final Integer tagID)
+	static public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean hasTag(final RESTBaseTopicV1<T, U> source, final Integer tagID)
 	{
 		if (source.getTags() != null && source.getTags().getItems() != null)
 		{
@@ -264,7 +265,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 		return returnIsDummyTopic(source);
 	}
 	
-	static public <T extends RESTBaseTopicV1<T>> boolean returnIsDummyTopic(final T source)
+	static public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean returnIsDummyTopic(final T source)
 	{
 		return source.getId() == null || source.getId() < 0;
 	}
@@ -273,7 +274,7 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T>> extends
 	public abstract String returnBugzillaBuildId();
 	public abstract String returnSkynetURL();
 	public abstract String returnInternalURL();
-	public abstract RESTBaseTopicV1<T> returnRelatedTopicByID(final Integer id);
+	public abstract RESTBaseTopicV1<T, U> returnRelatedTopicByID(final Integer id);
 	public abstract String returnErrorXRefID();
 	public abstract String returnXrefPropertyOrId(final Integer propertyTagId);
 	public abstract String returnXRefID();

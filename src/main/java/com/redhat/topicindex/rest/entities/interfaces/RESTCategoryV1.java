@@ -1,8 +1,9 @@
 package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 
-public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1>
+public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1, RESTCategoryCollectionV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -14,7 +15,21 @@ public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1>
 	private String description = null;
 	private boolean mutuallyExclusive = false;
 	private Integer sort = null;
-	private BaseRestCollectionV1<RESTTagV1> tags = null;
+	private RESTTagCollectionV1 tags = null;
+	/** A list of the Envers revision numbers */
+	private RESTCategoryCollectionV1 revisions = null;
+	
+	@Override
+	public RESTCategoryCollectionV1 getRevisions()
+	{
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTCategoryCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
 	
 	@Override
 	public RESTCategoryV1 clone(boolean deepCopy)
@@ -30,11 +45,24 @@ public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1>
 		
 		if (deepCopy)
 		{
-			retValue.tags = this.tags == null ? null : this.tags.clone(deepCopy);
+			if (this.tags == null)
+				retValue.tags = null;
+			else
+				this.tags.cloneInto(retValue.tags, deepCopy);
+			
+
+			if (this.getRevisions() == null)
+				retValue.revisions = null;
+			else
+			{
+				retValue.revisions = new RESTCategoryCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}			
 		}
 		else
 		{
 			retValue.tags = this.tags;
+			retValue.revisions = this.revisions;
 		}
 		
 		return retValue;
@@ -104,17 +132,17 @@ public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1>
 		this.setParamaterToConfigured(SORT_NAME);
 	}
 
-	public BaseRestCollectionV1<RESTTagV1> getTags()
+	public RESTTagCollectionV1 getTags()
 	{
 		return tags;
 	}
 
-	public void setTags(final BaseRestCollectionV1<RESTTagV1> tags)
+	public void setTags(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 	}
 	
-	public void setTagsExplicit(final BaseRestCollectionV1<RESTTagV1> tags)
+	public void setTagsExplicit(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 		this.setParamaterToConfigured(TAGS_NAME);

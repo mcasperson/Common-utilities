@@ -7,9 +7,10 @@ import java.util.List;
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.InjectionTopicData;
 import com.redhat.ecs.sort.ExternalListSort;
 
+import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 
-public class TopicTitleSorter<T extends RESTBaseTopicV1<T>> implements ExternalListSort<Integer, T, InjectionTopicData>
+public class TopicTitleSorter<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> implements ExternalListSort<Integer, T, InjectionTopicData>
 {
 	public void sort(final List<T> topics, final List<InjectionTopicData> list) 
 	    {
