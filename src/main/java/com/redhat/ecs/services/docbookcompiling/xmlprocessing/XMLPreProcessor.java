@@ -41,10 +41,8 @@ import com.redhat.ecs.sort.ExternalListSort;
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 import com.redhat.topicindex.rest.entities.ComponentBaseRESTEntityWithPropertiesV1;
 import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
-import com.redhat.topicindex.rest.entities.ComponentTagV1;
 import com.redhat.topicindex.rest.entities.ComponentTopicV1;
 import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
@@ -165,7 +163,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	 */
 	protected static final String NO_INJECT_ROLE = "noinject";
 
-	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicBugzillaLink(final SpecTopic<T, U> specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{
 		/* SIMPLESECT TO HOLD OTHER LINKS */
 		final Element bugzillaSection = document.createElement("simplesect");
@@ -294,7 +292,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	/**
 	 * Adds some debug information and links to the end of the topic
 	 */
-	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicAdditionalInfo(final SpecTopic<T, U> specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{		
 		if ((docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink()) || searchTagsUrl != null)
 		{
@@ -395,7 +393,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		return retValue;
 	}
 
-	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	public List<Integer> processInjections(final Level<T, U>  level, final SpecTopic<T, U> topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/*
 		 * this collection keeps a track of the injection point markers and the docbook lists that we will be replacing them with
@@ -459,8 +457,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		return errorTopics;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
+	public List<Integer> processInjections(final Level<T, U>  level, final SpecTopic<T, U> topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument, final String regularExpression,
 			final ExternalListSort<Integer, T, InjectionTopicData> sortComparator, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
@@ -572,7 +569,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 									topicId = relatedTopic.getId();
 								}
 
-								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
+								final SpecTopic<T, U> closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
 								if (sequenceID.optional)
 								{
 									list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
@@ -600,8 +597,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		return retValue;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Integer> processGenericInjections(final Level level, final SpecTopic<T, U> topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	@SuppressWarnings({ "unchecked" })
+	public List<Integer> processGenericInjections(final Level<T, U> level, final SpecTopic<T, U> topic, final Document xmlDocument, final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		final List<Integer> errors = new ArrayList<Integer>();
 
@@ -670,7 +667,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	 * The generic injection points are placed in well defined locations within a topics xml structure. This function takes the list of related topics and the
 	 * topic type tags that are associated with them and injects them into the xml document.
 	 */
-	private void insertGenericInjectionLinks(final Level level, final SpecTopic<T, U> topic, final Document xmlDoc, final GenericInjectionPointDatabase<T, U> relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
+	private void insertGenericInjectionLinks(final Level<T, U>  level, final SpecTopic<T, U> topic, final Document xmlDoc, final GenericInjectionPointDatabase<T, U> relatedLists, final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls)
 	{
 		/* all related topics are placed before the first simplesect */
 		final NodeList nodes = xmlDoc.getDocumentElement().getChildNodes();
@@ -722,7 +719,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 									topicId = relatedTopic.getId();
 								}
 
-								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
+								final SpecTopic<T, U>  closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
 								DocbookUtils.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls), itemizedlist);
 							}
 
@@ -738,7 +735,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		}
 	}
 
-	public static void processInternalImageFiles(final Document xmlDoc, final SpecTopic topic)
+	public static <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> void processInternalImageFiles(final Document xmlDoc, final SpecTopic<T, U> topic)
 	{
 		if (xmlDoc == null)
 			return;
@@ -767,7 +764,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Integer> processTopicContentFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
+	public List<Integer> processTopicContentFragments(final SpecTopic<T, U> specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final T topic = (T) specTopic.getTopic();
 		
@@ -914,7 +911,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Integer> processTopicTitleFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
+	public List<Integer> processTopicTitleFragments(final SpecTopic<T, U> specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final T topic = (T) specTopic.getTopic();
 		
@@ -987,7 +984,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		return retValue;
 	}
 
-	public void processPrevRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
+	public void processPrevRelationshipInjections(final SpecTopic<T, U> topic, final Document doc, final boolean useFixedUrls)
 	{
 		if (topic.getPrevTopicRelationships().isEmpty())
 			return;
@@ -1006,7 +1003,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		if (titleEle != null)
 		{
 			// Attempt to get the previous topic and process it
-			List<TopicRelationship> prevList = topic.getPrevTopicRelationships();
+			List<TopicRelationship<T, U>> prevList = topic.getPrevTopicRelationships();
 			// Create the paragraph/itemizedlist and list of previous relationships.
 			Element rootEle = null;
 			rootEle = doc.createElement("itemizedlist");
@@ -1027,10 +1024,10 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			linkTitleEle.appendChild(titleXrefItem);
 			rootEle.appendChild(linkTitleEle);
 
-			for (TopicRelationship prev : prevList)
+			for (TopicRelationship<T, U> prev : prevList)
 			{
 				Element prevEle = doc.createElement("para");
-				SpecTopic prevTopic = prev.getSecondaryRelationship();
+				SpecTopic<T, U> prevTopic = prev.getSecondaryRelationship();
 				prevEle.setAttribute("role", "process-previous-link");
 				// Add the previous element to either the list or paragraph
 				// Create the link element
@@ -1051,13 +1048,13 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		}
 	}
 
-	public void processNextRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
+	public void processNextRelationshipInjections(final SpecTopic<T, U> topic, final Document doc, final boolean useFixedUrls)
 	{
 		if (topic.getNextTopicRelationships().isEmpty())
 			return;
 
 		// Attempt to get the previous topic and process it
-		List<TopicRelationship> nextList = topic.getNextTopicRelationships();
+		List<TopicRelationship<T, U>> nextList = topic.getNextTopicRelationships();
 		// Create the paragraph/itemizedlist and list of next relationships.
 		Element rootEle = null;
 		rootEle = doc.createElement("itemizedlist");
@@ -1079,10 +1076,10 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		linkTitleEle.appendChild(titleXrefItem);
 		rootEle.appendChild(linkTitleEle);
 
-		for (TopicRelationship next : nextList)
+		for (TopicRelationship<T, U> next : nextList)
 		{
 			Element nextEle = doc.createElement("para");
-			SpecTopic nextTopic = next.getSecondaryRelationship();
+			SpecTopic<T, U> nextTopic = next.getSecondaryRelationship();
 			nextEle.setAttribute("role", "process-next-link");
 			// Add the next element to either the list or paragraph
 			// Create the link element
@@ -1128,16 +1125,16 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			List<List<Element>> list = new ArrayList<List<Element>>();
 
 			// Add the Topic Prerequisites
-			for (TopicRelationship prereq : topic.getPrerequisiteTopicRelationships())
+			for (TopicRelationship<T, U> prereq : topic.getPrerequisiteTopicRelationships())
 			{
-				SpecTopic relatedTopic = prereq.getSecondaryRelationship();
+				SpecTopic<T, U> relatedTopic = prereq.getSecondaryRelationship();
 				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
 			}
 
 			// Add the Level Prerequisites
-			for (TargetRelationship prereq : topic.getPrerequisiteLevelRelationships())
+			for (TargetRelationship<T, U> prereq : topic.getPrerequisiteLevelRelationships())
 			{
-				Level relatedLevel = (Level) prereq.getSecondaryElement();
+				Level<T, U> relatedLevel = (Level<T, U>) prereq.getSecondaryElement();
 				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
 			}
 
@@ -1172,17 +1169,17 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		List<List<Element>> list = new ArrayList<List<Element>>();
 
 		// Add the Topic Relationships
-		for (TopicRelationship prereq : topic.getRelatedTopicRelationships())
+		for (TopicRelationship<T, U> prereq : topic.getRelatedTopicRelationships())
 		{
-			SpecTopic relatedTopic = prereq.getSecondaryRelationship();
+			SpecTopic<T, U> relatedTopic = prereq.getSecondaryRelationship();
 
 			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
 		}
 
 		// Add the Level Relationships
-		for (TargetRelationship prereq : topic.getRelatedLevelRelationships())
+		for (TargetRelationship<T, U> prereq : topic.getRelatedLevelRelationships())
 		{
-			Level relatedLevel = (Level) prereq.getSecondaryElement();
+			Level<T, U> relatedLevel = (Level<T, U>) prereq.getSecondaryElement();
 			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
 		}
 
