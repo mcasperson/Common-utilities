@@ -735,34 +735,6 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T>>
 		}
 	}
 
-	public static void processInternalImageFiles(final Document xmlDoc, final SpecTopic topic)
-	{
-		if (xmlDoc == null)
-			return;
-
-		final List<Node> imageDataNodes = XMLUtilities.getNodes(xmlDoc.getDocumentElement(), "imagedata");
-		for (final Node imageDataNode : imageDataNodes)
-		{
-			final NamedNodeMap attributes = imageDataNode.getAttributes();
-			final Node filerefAttribute = attributes.getNamedItem("fileref");
-			if (filerefAttribute != null)
-			{
-				String imageId = filerefAttribute.getTextContent();
-				imageId = imageId.replace("images/", "");
-				final int periodIndex = imageId.lastIndexOf(".");
-				if (periodIndex != -1)
-					imageId = imageId.substring(0, periodIndex);
-
-				/*
-				 * at this point imageId should be an integer that is the id of the image uploaded in skynet. We will leave the validation of imageId to the
-				 * ImageFileDisplay class.
-				 */
-
-				filerefAttribute.setTextContent("ImageFileDisplay.seam?imageFileId=" + imageId + "&language=" + topic.getTopic().getLocale());
-			}
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Integer> processTopicContentFragments(final SpecTopic specTopic, final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions)
 	{
