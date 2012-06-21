@@ -72,6 +72,16 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 				retValue.incomingTranslatedRelationships = null;
 			else
 				this.incomingTranslatedRelationships.cloneInto(retValue.incomingTranslatedRelationships, deepCopy);
+			
+			if (this.incomingRelationships == null)
+				retValue.incomingRelationships = null;
+			else
+				this.incomingRelationships.cloneInto(retValue.incomingRelationships, deepCopy);
+			
+			if (this.outgoingRelationships == null)
+				retValue.outgoingRelationships = null;
+			else
+				this.outgoingRelationships.cloneInto(retValue.outgoingRelationships, deepCopy);
 
 			retValue.setTopic(this.topic != null ? this.topic.clone(deepCopy) : null);
 		}
@@ -81,6 +91,8 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 			retValue.topic = this.topic;
 			retValue.outgoingTranslatedRelationships = this.outgoingTranslatedRelationships;
 			retValue.incomingTranslatedRelationships = this.incomingTranslatedRelationships;
+			retValue.outgoingRelationships = this.outgoingRelationships;
+			retValue.incomingRelationships = this.incomingRelationships;
 		}
 		return retValue;
 	}
@@ -235,12 +247,6 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 	{
 		this.outgoingRelationships = outgoingRelationships;
 	}
-	
-	public void explicitSetOutgoingRelationships(final RESTTranslatedTopicCollectionV1 outgoingRelationships)
-	{
-		setOutgoingRelationships(outgoingRelationships);
-		setParamaterToConfigured(OUTGOING_NAME);
-	}
 
 	@Override
 	public RESTTranslatedTopicCollectionV1 getIncomingRelationships()
@@ -252,11 +258,5 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 	public void setIncomingRelationships(final RESTTranslatedTopicCollectionV1 incomingRelationships)
 	{
 		this.incomingRelationships = incomingRelationships;
-	}
-	
-	public void explicitSetIncomingRelationships(final RESTTranslatedTopicCollectionV1 incomingRelationships)
-	{
-		setIncomingRelationships(incomingRelationships);
-		setParamaterToConfigured(INCOMING_NAME);
 	}
 }
