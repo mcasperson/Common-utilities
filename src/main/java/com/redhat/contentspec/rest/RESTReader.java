@@ -264,11 +264,16 @@ public class RESTReader {
 				
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
-				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
 				if (expandTranslations)
+				{
+					outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
 					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
+				}
 				else
+				{
+					outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties));
 					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls"))));
+				}
 
 				expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
 				
