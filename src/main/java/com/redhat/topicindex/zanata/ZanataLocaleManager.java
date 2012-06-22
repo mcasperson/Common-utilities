@@ -65,6 +65,7 @@ public class ZanataLocaleManager
 
 	public void removeLocale(final LocaleId locale)
 	{
+		System.out.println("Removing " + locale + " from further sync requests.");
 		synchronized (locales)
 		{
 			if (locales.contains(locale))

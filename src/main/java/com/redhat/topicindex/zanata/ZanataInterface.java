@@ -171,10 +171,9 @@ public class ZanataInterface
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
 
-			/* Remove the locale if it is forbidden, or older version of zanata return a 404 */
-			if (status == Response.Status.FORBIDDEN || status == Response.Status.NOT_FOUND)
+			/* Remove the locale if it is forbidden */
+			if (status == Response.Status.FORBIDDEN)
 			{
-				System.out.println("Removing " + locale + " from further sync requests.");
 				localeManager.removeLocale(locale);
 			}
 
