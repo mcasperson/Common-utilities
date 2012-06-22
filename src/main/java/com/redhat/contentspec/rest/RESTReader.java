@@ -104,9 +104,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
-				categories = client.getJSONCategories(expandEncodedString);
+				categories = client.getJSONCategories(expandString);
 				collectionsCache.add(RESTCategoryV1.class, categories);
 			}
 
@@ -165,8 +165,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				RESTTagV1 tag = client.getJSONTag(id, expandEncodedString);
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
+				final RESTTagV1 tag = client.getJSONTag(id, expandString);
 				entityCache.add(tag);
 				return tag;
 			}
@@ -198,9 +199,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
-				tags = client.getJSONTags(expandEncodedString);
+				tags = client.getJSONTags(expandString);
 				collectionsCache.add(RESTTagV1.class, tags);
 			}
 
@@ -269,15 +270,15 @@ public class RESTReader
 						new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 				if (rev == null)
 				{
-					topic = client.getJSONTopic(id, expandEncodedString);
+					topic = client.getJSONTopic(id, expandString);
 					entityCache.add(topic);
 				}
 				else
 				{
-					topic = client.getJSONTopicRevision(id, rev, expandEncodedString);
+					topic = client.getJSONTopicRevision(id, rev, expandString);
 					entityCache.add(topic, true);
 				}
 			}
@@ -347,8 +348,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				RESTTopicCollectionV1 downloadedTopics = client.getJSONTopicsWithQuery(path, expandEncodedString);
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
+				final RESTTopicCollectionV1 downloadedTopics = client.getJSONTopicsWithQuery(path, expandString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
@@ -398,9 +400,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
-				final RESTTopicV1 topic = client.getJSONTopic(topicId, expandEncodedString);
+				final RESTTopicV1 topic = client.getJSONTopic(topicId, expandString);
 				collectionsCache.add(RESTTopicV1.class, topic.getRevisions(), additionalKeys, true);
 				topicRevisions = topic.getRevisions();
 			}
@@ -515,8 +517,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				RESTTranslatedTopicCollectionV1 downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
+				final RESTTranslatedTopicCollectionV1 downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
@@ -604,8 +607,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				RESTTranslatedTopicCollectionV1 downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandEncodedString);
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
+				final RESTTranslatedTopicCollectionV1 downloadedTopics = client.getJSONTranslatedTopicsWithQuery(path, expandString);
 				entityCache.add(downloadedTopics);
 
 				/* Transfer the downloaded data to the current topic list */
@@ -670,8 +674,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("users"))));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-				users = client.getJSONUsers(expandEncodedString);
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
+				users = client.getJSONUsers(expandString);
 				collectionsCache.add(RESTUserV1.class, users);
 			}
 
@@ -766,9 +771,9 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags, expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
-				final RESTTopicV1 topic = client.getJSONTopic(csId, expandEncodedString);
+				final RESTTopicV1 topic = client.getJSONTopic(csId, expandString);
 				// Check that the topic is a content spec
 				if (!ComponentBaseTopicV1.hasTag(topic, CSConstants.CONTENT_SPEC_TAG_ID))
 					return null;
@@ -841,10 +846,10 @@ public class RESTReader
 				expand.setBranches(CollectionUtilities.toArrayList(expandTopics));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 				PathSegment path = new PathSegmentImpl("query;tag" + CSConstants.CONTENT_SPEC_TAG_ID + "=1;", false);
-				topics = client.getJSONTopicsWithQuery(path, expandEncodedString);
+				topics = client.getJSONTopicsWithQuery(path, expandString);
 				collectionsCache.add(RESTTopicV1.class, topics, additionalKeys);
 			}
 
@@ -1068,89 +1073,7 @@ public class RESTReader
 	 */
 	public int getNumberOfContentSpecs()
 	{
-		List<RESTTopicV1> contentSpecs = getContentSpecs(0, 0);
+		final List<RESTTopicV1> contentSpecs = getContentSpecs(0, 0);
 		return contentSpecs.size();
 	}
-
-	/*
-	 * Gets a list of snapshots in the database for the the content spec id
-	 * specified or all if the id is null.
-	 */
-	/*
-	 * public List<CSSnapshot> getSnapshots(Integer csId, int startPos, int
-	 * limit) { Session sess = sm.getCSSession(); try { Query query; if (csId !=
-	 * null) { query = sess.createQuery("from CSSnapshot where scopeId = " +
-	 * csId); } else { query = sess.createQuery("from CSSnapshot"); } if
-	 * (startPos != 0) { query.setFirstResult(startPos); } if (limit != 0) {
-	 * query.setMaxResults(limit); } return query.list(); } catch (Exception e)
-	 * { log.error(ExceptionUtilities.getStackTrace(e)); } return new
-	 * ArrayList<CSSnapshot>(); }
-	 */
-
-	/*
-	 * Gets the number of snapshots in the database for the the content spec id
-	 * specified or all if the id is null.
-	 */
-	/*
-	 * public long getNumberOfSnapshots(Integer csId) { Session sess =
-	 * sm.getCSSession(); try { Query query; if (csId != null) { query =
-	 * sess.createQuery("select count(*) from CSSnapshot where scopeId = " +
-	 * csId); } else { query =
-	 * sess.createQuery("select count(*) from CSSnapshot"); } return
-	 * (Long)query.uniqueResult(); } catch (Exception e) {
-	 * log.error(ExceptionUtilities.getStackTrace(e)); } return 0; }
-	 */
-
-	/*
-	 * Gets snapshot for the specified id or null if one isn't found
-	 */
-	/*
-	 * public CSSnapshot getSnapshotById(int id) { Session sess =
-	 * sm.getCSSession(); try { return (CSSnapshot) sess.get(CSSnapshot.class,
-	 * id); } catch (Exception e) {
-	 * log.error(ExceptionUtilities.getStackTrace(e)); } return null; }
-	 */
-
-	/*
-	 * Gets a list of all content specifications in the database that match the
-	 * search string
-	 */
-	/*
-	 * public List<CSSnapshot> searchSnapshots(String searchText, Integer
-	 * startPos, Integer limit) { Session sess = sm.getCSSession(); try { Query
-	 * query = sess.createQuery("from CSSnapshot where snapshotName like '%" +
-	 * searchText + "%'"); if (startPos != null) {
-	 * query.setFirstResult(startPos); } if (limit != null) {
-	 * query.setMaxResults(limit); } return query.list(); } catch (Exception e)
-	 * { log.error(ExceptionUtilities.getStackTrace(e)); } return new
-	 * ArrayList<CSSnapshot>(); }
-	 */
-
-	/*
-	 * public SnapshotTopicV1 getSnapshotTopicByTopicAndRevId(Integer topicId,
-	 * Integer rev) { try { final BaseRestCollectionV1<SnapshotTopicV1>
-	 * snapshotTopics; if (entityCache.containsKey("SnapshotTopics")) {
-	 * snapshotTopics =
-	 * (BaseRestCollectionV1<SnapshotTopicV1>)entityCache.get("SnapshotTopics");
-	 * } else { /* We need to expand the Snapshot Topics collection
-	 */
-	/*
-	 * final ExpandDataTrunk expand = new ExpandDataTrunk();
-	 * expand.setBranches(CollectionUtilities.toArrayList(new
-	 * ExpandDataTrunk(new ExpandDataDetails("snapshottopics"))));
-	 * 
-	 * final String expandString = mapper.writeValueAsString(expand); final
-	 * String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-	 * 
-	 * snapshotTopics = client.getJSONSnapshotTopics(expandEncodedString);
-	 * entityCache.add("SnapshotTopics", snapshotTopics); }
-	 * 
-	 * // List through the snapshotTopics and see if a topic exists for the
-	 * Topic Id and Revision if (snapshotTopics != null) { for (SnapshotTopicV1
-	 * snapshotTopic: snapshotTopics.getItems()) { if
-	 * (snapshotTopic.getTopicId().equals(topicId) &&
-	 * snapshotTopic.getTopicRevision().equals(rev)) { return snapshotTopic; } }
-	 * } } catch (Exception e) { log.error(ExceptionUtilities.getStackTrace(e));
-	 * } return null; }
-	 */
 }

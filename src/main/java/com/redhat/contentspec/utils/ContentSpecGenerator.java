@@ -74,7 +74,10 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 	public ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final ContentSpec contentSpec = doFormattedTocPass(clazz, topics, locale, docbookBuildingOptions);
-		trimEmptySectionsFromContentSpecLevel(contentSpec.getBaseLevel());
+		if (contentSpec != null)
+		{
+			trimEmptySectionsFromContentSpecLevel(contentSpec.getBaseLevel());
+		}
 		return contentSpec;
 	}
 	
@@ -85,6 +88,8 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 	 */
 	private void trimEmptySectionsFromContentSpecLevel(final Level level)
 	{
+		if (level == null) return;
+		
 		final List<Level> childLevels = new LinkedList<Level>(level.getChildLevels());
 		for (final Level childLevel : childLevels)
 		{
@@ -227,11 +232,11 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			expand.setBranches(CollectionUtilities.toArrayList(expandTags));
 
 			final String expandString = mapper.writeValueAsString(expand);
-			final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+			//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 			/* Get the technology and common names categories */
-			final RESTCategoryV1 technologyCategroy = restClient.getJSONCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID, expandEncodedString);
-			final RESTCategoryV1 commonNamesCategory = restClient.getJSONCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID, expandEncodedString);
+			final RESTCategoryV1 technologyCategroy = restClient.getJSONCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID, expandString);
+			final RESTCategoryV1 commonNamesCategory = restClient.getJSONCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID, expandString);
 
 			/*
 			 * The top level TOC elements are made up of the technology and
@@ -243,32 +248,35 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			for (final RESTCategoryV1 category : new RESTCategoryV1[]
 			{ technologyCategroy, commonNamesCategory })
 			{
-				for (final RESTTagV1 tag : category.getTags().getItems())
+				if (category.getTags().getItems() != null)
 				{
-					boolean isEmcompassed = false;
-					for (final RESTTagV1 parentTag : tag.getParentTags().getItems())
+					for (final RESTTagV1 tag : category.getTags().getItems())
 					{
-						for (final RESTCategoryV1 parentTagCategory : parentTag.getCategories().getItems())
+						boolean isEmcompassed = false;
+						for (final RESTTagV1 parentTag : tag.getParentTags().getItems())
 						{
-							if (parentTagCategory.getId() == DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID || parentTagCategory.getId() == DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID)
+							for (final RESTCategoryV1 parentTagCategory : parentTag.getCategories().getItems())
 							{
-								isEmcompassed = true;
-								break;
+								if (parentTagCategory.getId() == DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID || parentTagCategory.getId() == DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID)
+								{
+									isEmcompassed = true;
+									break;
+								}
 							}
+	
+							if (isEmcompassed)
+								break;
 						}
-
-						if (isEmcompassed)
-							break;
-					}
-
-					/*
-					 * This tag is not encompassed by any other tech or common
-					 * name tags, so it is a candidate to appear on the top
-					 * level of the TOC
-					 */
-					if (!isEmcompassed)
-					{
-						topLevelTags.add(tag);
+	
+						/*
+						 * This tag is not encompassed by any other tech or common
+						 * name tags, so it is a candidate to appear on the top
+						 * level of the TOC
+						 */
+						if (!isEmcompassed)
+						{
+							topLevelTags.add(tag);
+						}
 					}
 				}
 			}

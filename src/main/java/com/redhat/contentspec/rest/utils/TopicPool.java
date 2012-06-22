@@ -1,6 +1,5 @@
 package com.redhat.contentspec.rest.utils;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.PathSegment;
@@ -64,12 +63,12 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 			expand.setBranches(CollectionUtilities.toArrayList(expandTopic));
 
 			final String expandString = mapper.writeValueAsString(expand);
-			final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+			//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 			// Save the new topics
 			if (!(newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty()))
 			{
-				RESTTopicCollectionV1 response = client.createJSONTopics(expandEncodedString, newTopicPool);
+				RESTTopicCollectionV1 response = client.createJSONTopics(expandString, newTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null)
 					return false;
@@ -82,7 +81,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 			// Update the existing topics
 			if (!(updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty()))
 			{
-				RESTTopicCollectionV1 response = client.updateJSONTopics(expandEncodedString, updatedTopicPool);
+				RESTTopicCollectionV1 response = client.updateJSONTopics(expandString, updatedTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null)
 					return false;
