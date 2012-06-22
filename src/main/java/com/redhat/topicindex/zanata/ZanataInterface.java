@@ -30,16 +30,18 @@ public class ZanataInterface
 	{
 		this(defaultDetails.getProject());
 	}
-	
+
 	/**
 	 * Constructs the interface with a custom project
-	 * @param projectOverride The name of the Zanata project to work with, which override the default specidie
+	 * 
+	 * @param projectOverride
+	 *            The name of the Zanata project to work with, which override the default specidie
 	 */
 	public ZanataInterface(final String projectOverride)
 	{
 		details = new ZanataDetails(defaultDetails);
 		details.setProject(projectOverride);
-		
+
 		URI URI = null;
 		try
 		{
@@ -159,16 +161,20 @@ public class ZanataInterface
 
 	public boolean getTranslationsExists(final String id, final LocaleId locale)
 	{
+		ITranslationResources client = null;
+		ClientResponse<TranslationsResource> response = null;
+
 		try
 		{
-			final ITranslationResources client = proxyFactory.getTranslationResources(details.getProject(), details.getVersion());
-			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
+			client = proxyFactory.getTranslationResources(details.getProject(), details.getVersion());
+			response = client.getTranslations(id, locale, null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			/* Remove the locale if it is forbidden */
 			if (status == Response.Status.FORBIDDEN)
 			{
+				System.out.println("Removing " + locale + " from further sync requests.");
 				localeManager.removeLocale(locale);
 			}
 
@@ -178,6 +184,16 @@ public class ZanataInterface
 		catch (final Exception ex)
 		{
 			ExceptionUtilities.handleException(ex);
+
+		}
+		finally
+		{
+			/*
+			 * If you are using RESTEasy client framework, and returning a Response from your service method, you will explicitly need to release the
+			 * connection.
+			 */
+			if (response != null)
+				response.releaseConnection();
 		}
 
 		return false;
@@ -191,7 +207,7 @@ public class ZanataInterface
 			final ClientResponse<TranslationsResource> response = client.getTranslations(id, locale, null);
 
 			final Status status = Response.Status.fromStatusCode(response.getStatus());
-			
+
 			/* Remove the locale if it is forbidden */
 			if (status == Response.Status.FORBIDDEN)
 			{
@@ -238,7 +254,7 @@ public class ZanataInterface
 
 		return null;
 	}
-	
+
 	public List<LocaleId> getZanataLocales()
 	{
 		return localeManager.getLocales();
@@ -264,7 +280,7 @@ class ZanataDetails
 		this.username = System.getProperty(CommonConstants.ZANATA_USERNAME_PROPERTY);
 		this.token = System.getProperty(CommonConstants.ZANATA_TOKEN_PROPERTY);
 	}
-	
+
 	public ZanataDetails(final ZanataDetails zanataDetails)
 	{
 		this.server = zanataDetails.server;
