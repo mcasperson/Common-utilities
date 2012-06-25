@@ -1,6 +1,5 @@
 package com.redhat.contentspec.utils;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -287,10 +286,10 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			concernCategoryExpand.setBranches(CollectionUtilities.toArrayList(concernCategoryExpandTags));
 
 			final String concernCategoryExpandString = mapper.writeValueAsString(concernCategoryExpand);
-			final String concernCategoryExpandStringEncoded = URLEncoder.encode(concernCategoryExpandString, "UTF-8");
+			//final String concernCategoryExpandStringEncoded = URLEncoder.encode(concernCategoryExpandString, "UTF-8");
 
 			/* Get the technology and common names categories */
-			final RESTCategoryV1 concernCategory = restClient.getJSONCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID, concernCategoryExpandStringEncoded);
+			final RESTCategoryV1 concernCategory = restClient.getJSONCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID, concernCategoryExpandString);
 
 			/* Get the task reference and concept tag*/
 			final RESTTagV1 referenceTag = restClient.getJSONTag(DocbookBuilderConstants.REFERENCE_TAG_ID, "");
