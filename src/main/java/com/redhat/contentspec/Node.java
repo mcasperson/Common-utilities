@@ -74,7 +74,8 @@ public abstract class Node {
 	 * 
 	 * @param parent The parent node.
 	 */
-	protected void setParent(Node parent) {
+	protected void setParent(final Node parent)
+	{
 		this.parent = parent;
 	}	
 	
@@ -83,7 +84,13 @@ public abstract class Node {
 	 * 
 	 * @return The column the node starts at.
 	 */
-	public Integer getColumn() {
+	public Integer getColumn()
+	{
 		return parent == null ? 0 : (parent.getColumn() + 1);
 	}
+	
+	/**
+	 * Removes the node from its parent.
+	 */
+	protected abstract void removeParent();
 }

@@ -348,10 +348,5 @@ public abstract class SpecNode extends Node {
 		return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
 	}
 	
-	/**
-	 * Removes the node from its parent.
-	 */
-	protected abstract void removeParent();
-	
 	public abstract String getUniqueLinkId(final boolean useFixedUrls);
 }

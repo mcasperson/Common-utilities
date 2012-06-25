@@ -15,40 +15,39 @@ import com.redhat.contentspec.entities.InjectionOptions;
 import com.redhat.contentspec.enums.LevelType;
 import com.redhat.ecs.commonutils.DocBookUtilities;
 import com.redhat.ecs.commonutils.HashUtilities;
-import com.redhat.ecs.commonutils.StringUtilities;
 
-public class ContentSpec {
-	
-	private int id = 0;
-	private String title = "";
-	private String product = "";
-	private String version = "";
-	private String brand = null;
-	private String subtitle = null;
-	private String edition = null;
-	private Integer pubsNumber = null;
-	private String publicanCfg = null;
+public class ContentSpec extends Node
+{	
+	private KeyValueNode<Integer> id = null;
+	private KeyValueNode<String> title = null;
+	private KeyValueNode<String> product = null;
+	private KeyValueNode<String> version = null;
+	private KeyValueNode<String> brand = null;
+	private KeyValueNode<String> subtitle = null;
+	private KeyValueNode<String> edition = null;
+	private KeyValueNode<Integer> pubsNumber = null;
+	private KeyValueNode<String> publicanCfg = null;
 	private ArrayList<String> text = new ArrayList<String>();
-	private String dtd = "Docbook 4.5";
-	private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);;
+	private KeyValueNode<String> dtd = null;
 	private String createdBy = null;
-	private Integer revision = null;
-	private String checksum = null;
-	private String copyrightHolder = "";
-	private String description = null;
-	private InjectionOptions injectionOptions = null;
-	private String bugzillaProduct = null;
-	private String bugzillaComponent = null;
-	private String bugzillaVersion = null;
-	private String bugzillaURL = null;
-	private boolean injectBugLinks = true;
-	private boolean injectSurveyLinks = false;
-	private String locale = null;
-	private String outputStyle = CSConstants.CSP_OUTOUT_FORMAT;
-	private Boolean allowDuplicateTopics = true; 
-	private Boolean allowEmptyLevels = false; 
+	private KeyValueNode<Integer> revision = null;
+	private KeyValueNode<String> checksum = null;
+	private KeyValueNode<String> copyrightHolder = null;
+	private KeyValueNode<String> description = null;
+	private KeyValueNode<InjectionOptions> injectionOptions = null;
+	private KeyValueNode<String> bugzillaProduct = null;
+	private KeyValueNode<String> bugzillaComponent = null;
+	private KeyValueNode<String> bugzillaVersion = null;
+	private KeyValueNode<String> bugzillaURL = null;
+	private KeyValueNode<Boolean> injectBugLinks = null;
+	private KeyValueNode<Boolean> injectSurveyLinks = null;
+	private KeyValueNode<String> locale = null;
+	private KeyValueNode<String> outputStyle = null;
+	private KeyValueNode<Boolean> allowDuplicateTopics = null; 
+	private KeyValueNode<Boolean> allowEmptyLevels = null; 
 	
-	private LinkedList<Comment> baseComments = new LinkedList<Comment>();
+	private final LinkedList<Node> nodes = new LinkedList<Node>();
+	private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);
 	
 	/**
 	 * Constructor
@@ -58,11 +57,12 @@ public class ContentSpec {
 	 * @param version The Version of the Product that the Content Specification documents.
 	 * @param copyrightHolder The Copyright Holder of the Content Specification and the book it creates.
 	 */
-	public ContentSpec(String title, String product, String version, String copyrightHolder) {
-		this.title = title;
-		this.product = product;
-		this.version = version;
-		this.copyrightHolder = copyrightHolder;
+	public ContentSpec(final String title, final String product, final String version, final String copyrightHolder)
+	{
+		setTitle(title);
+		setProduct(product);
+		setVersion(version);
+		setCopyrightHolder(copyrightHolder);
 	}
 	
 	/**
@@ -70,8 +70,9 @@ public class ContentSpec {
 	 * 
 	 * @param title The title of the Content Specification.
 	 */
-	public ContentSpec(String title) {
-		this.title = title;
+	public ContentSpec(final String title)
+	{
+		setTitle(title);
 	}
 	
 	/**
@@ -80,12 +81,14 @@ public class ContentSpec {
 	 * @param id The Database ID of the Content Specification.
 	 * @param title The title of the Content Specification.
 	 */
-	public ContentSpec(int id, String title) {
-		this.id = id;
-		this.title = title;
+	public ContentSpec(final int id, final String title)
+	{
+		this(title);
+		setId(id);
 	}
 	
-	public ContentSpec() {
+	public ContentSpec()
+	{
 	}
 	
 	// Start of the basic getter/setter methods for this Scope.
@@ -95,7 +98,8 @@ public class ContentSpec {
 	 * 
 	 * @return The Base Level object of a Content Specification.
 	 */
-	public Level getBaseLevel() {
+	public Level getBaseLevel()
+	{
 		return level;
 	}
 	
@@ -104,8 +108,9 @@ public class ContentSpec {
 	 * 
 	 * @return The name of the product.
 	 */
-	public String getProduct() {
-		return product;
+	public String getProduct()
+	{
+		return product == null ? "" : product.getValue();
 	}
 	
 	/**
@@ -113,17 +118,27 @@ public class ContentSpec {
 	 * 
 	 * @param product The name of the Product.
 	 */
-	public void setProduct(String product) {
-		this.product = product;
+	public void setProduct(final String product)
+	{
+		if (this.product == null)
+		{
+			this.product = new KeyValueNode<String>("Product", product);
+			nodes.add(this.product);
+		}
+		else
+		{
+			this.product.setValue(product);
+		}
 	}
 	
 	/**
 	 * Get the version of the product that the Content Specification documents.
 	 * 
-	 * @return The version of the product.
+	 * @return The version of the product or an empty string if the version is null.
 	 */
-	public String getVersion() {
-		return version;
+	public String getVersion()
+	{
+		return version == null ? "" : version.getValue();
 	}
 	
 	/**
@@ -131,8 +146,17 @@ public class ContentSpec {
 	 * 
 	 * @param version The product version.
 	 */
-	public void setVersion(String version) {
-		this.version = version;
+	public void setVersion(final String version)
+	{
+		if (this.version == null)
+		{
+			this.version = new KeyValueNode<String>("Version", version);
+			nodes.add(this.version);
+		}
+		else
+		{
+			this.version.setValue(version);
+		}
 	}
 	
 	/**
@@ -140,8 +164,9 @@ public class ContentSpec {
 	 * 
 	 * @return The brand of the product or null if one doesn't exist.
 	 */
-	public String getBrand() {
-		return brand;
+	public String getBrand()
+	{
+		return brand == null ? null : brand.getValue();
 	}
 	
 	/**
@@ -149,8 +174,17 @@ public class ContentSpec {
 	 * 
 	 * @param brand The brand of the product. 
 	 */
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrand(final String brand)
+	{
+		if (this.brand == null)
+		{
+			this.brand = new KeyValueNode<String>("Brand", brand);
+			appendChild(this.brand);
+		}
+		else
+		{
+			this.brand.setValue(brand);
+		}
 	}
 	
 	/**
@@ -158,8 +192,23 @@ public class ContentSpec {
 	 * 
 	 * @param id The database ID of the content specification.
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setId(final int id)
+	{
+		if (this.id == null)
+		{
+			this.id = new KeyValueNode<Integer>("ID", id);
+			appendChild(this.id);
+			nodes.addFirst(this.id);
+			if (this.id.getParent() != null)
+			{
+				this.id.removeParent();
+			}
+			this.id.setParent(this);
+		}
+		else
+		{
+			this.id.setValue(id);
+		}
 	}
 	
 	/**
@@ -167,17 +216,19 @@ public class ContentSpec {
 	 * 
 	 * @return The Content Specification database ID or 0 if one hasn't been set. 
 	 */
-	public int getId() {
-		return id;
+	public int getId()
+	{
+		return (Integer) (id == null ? 0 : id.getValue());
 	}
 	
 	/**
 	 * Gets the title of the Content Specification.
 	 * 
-	 * @return The Content Specification title.
+	 * @return The Content Specification title or an empty string if it is null.
 	 */
-	public String getTitle() {
-		return title;
+	public String getTitle()
+	{
+		return title == null ? "" : title.getValue();
 	}
 	
 	/**
@@ -186,7 +237,7 @@ public class ContentSpec {
 	 * @return The Content Specification title.
 	 */
 	public String getEscapedTitle() {
-		return DocBookUtilities.escapeTitle(title);
+		return DocBookUtilities.escapeTitle(getTitle());
 	}
 	
 	/**
@@ -194,8 +245,17 @@ public class ContentSpec {
 	 * 
 	 * @param title The title for the content specification
 	 */
-	public void setTitle(String title) {
-		this.title= title;
+	public void setTitle(final String title)
+	{
+		if (this.title == null)
+		{
+			this.title = new KeyValueNode<String>("Title", title);
+			appendChild(this.title);
+		}
+		else
+		{
+			this.title.setValue(title);
+		}
 	}
 	
 	/**
@@ -203,8 +263,9 @@ public class ContentSpec {
 	 * 
 	 * @return The Subtitle of the Content Specification or null if one doesn't exist.
 	 */
-	public String getSubtitle() {
-		return subtitle;
+	public String getSubtitle()
+	{
+		return subtitle == null ? null : subtitle.getValue();
 	}
 
 	/**
@@ -212,8 +273,17 @@ public class ContentSpec {
 	 * 
 	 * @param subtitle
 	 */
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
+	public void setSubtitle(final String subtitle)
+	{
+		if (this.subtitle == null)
+		{
+			this.subtitle = new KeyValueNode<String>("Subtitle", subtitle);
+			appendChild(this.subtitle);
+		}
+		else
+		{
+			this.subtitle.setValue(subtitle);
+		}
 	}
 
 	/**
@@ -221,8 +291,9 @@ public class ContentSpec {
 	 * 
 	 * @return The Content Specifications Book Edition or null if one doesn't exist.
 	 */
-	public String getEdition() {
-		return edition;
+	public String getEdition()
+	{
+		return edition == null ? null : edition.getValue();
 	}
 
 	/**
@@ -230,8 +301,17 @@ public class ContentSpec {
 	 * 
 	 * @param edition The Book Edition.
 	 */
-	public void setEdition(String edition) {
-		this.edition = edition;
+	public void setEdition(final String edition)
+	{
+		if (this.edition == null)
+		{
+			this.edition = new KeyValueNode<String>("Edition", edition);
+			appendChild(this.edition);
+		}
+		else
+		{
+			this.edition.setValue(edition);
+		}
 	}
 
 	/**
@@ -239,8 +319,9 @@ public class ContentSpec {
 	 * 
 	 * @return The publication number or null if one doesn't exist.
 	 */
-	public Integer getPubsNumber() {
-		return pubsNumber;
+	public Integer getPubsNumber()
+	{
+		return (Integer) (pubsNumber == null ? null : pubsNumber.getValue());
 	}
 
 	/**
@@ -248,8 +329,17 @@ public class ContentSpec {
 	 * 
 	 * @param pubsNumber The publication number.
 	 */
-	public void setPubsNumber(Integer pubsNumber) {
-		this.pubsNumber = pubsNumber;
+	public void setPubsNumber(final Integer pubsNumber)
+	{
+		if (this.pubsNumber == null)
+		{
+			this.pubsNumber = new KeyValueNode<Integer>("Pubsnumber", pubsNumber);
+			appendChild(this.pubsNumber);
+		}
+		else
+		{
+			this.pubsNumber.setValue(pubsNumber);
+		}
 	}
 	
 	/**
@@ -257,8 +347,9 @@ public class ContentSpec {
 	 * 
 	 * @return The data to be appended or null if none exist.
 	 */
-	public String getPublicanCfg() {
-		return publicanCfg;
+	public String getPublicanCfg()
+	{
+		return publicanCfg == null ? null : publicanCfg.getValue();
 	}
 
 	/**
@@ -266,8 +357,17 @@ public class ContentSpec {
 	 * 
 	 * @param publicanCfg The data to be appended.
 	 */
-	public void setPublicanCfg(String publicanCfg) {
-		this.publicanCfg = publicanCfg;
+	public void setPublicanCfg(final String publicanCfg)
+	{
+		if (this.publicanCfg == null)
+		{
+			this.publicanCfg = new KeyValueNode<String>("publican.cfg", publicanCfg);
+			appendChild(this.publicanCfg);
+		}
+		else
+		{
+			this.publicanCfg.setValue(publicanCfg);
+		}
 	}
 	
 	/**
@@ -276,7 +376,8 @@ public class ContentSpec {
 	 * @param line The line number of the text.
 	 * @return The text at "line" in the Content Specification or null if the line doesn't exist.
 	 */
-	public String getPreProcessedTextForLine(int line) {
+	public String getPreProcessedTextForLine(int line)
+	{
 		return text.size() >= line ? text.get(line - 1) : null;
 	}
 	
@@ -305,8 +406,9 @@ public class ContentSpec {
 	 * 
 	 * @return The DTD of the Content Specification or the default value if one isn't set.
 	 */
-	public String getDtd() {
-		return dtd;
+	public String getDtd()
+	{
+		return dtd == null ? "Docbook 4.5" : dtd.getValue();
 	}
 	
 	/**
@@ -314,8 +416,17 @@ public class ContentSpec {
 	 * 
 	 * @param dtd The DTD of the Content Specification.
 	 */
-	public void setDtd (String dtd) {
-		this.dtd = dtd;
+	public void setDtd (final String dtd)
+	{
+		if (this.dtd == null)
+		{
+			this.dtd = new KeyValueNode<String>("DTD", dtd);
+			appendChild(this.dtd);
+		}
+		else
+		{
+			this.dtd.setValue(dtd);
+		}
 	}
 	
 	/**
@@ -323,7 +434,8 @@ public class ContentSpec {
 	 * 
 	 * @param username The Username of the User who created/uploaded the Content Specification or null if one doesn't exist. 
 	 */
-	public void setCreatedBy(String username) {
+	public void setCreatedBy(final String username)
+	{
 		this.createdBy = username;
 	}
 	
@@ -343,8 +455,9 @@ public class ContentSpec {
 	 * @return The SpecRevision number or null if one doesn't exist.
 	 */
 	@Deprecated
-	public Integer getRevision() {
-		return revision;
+	public Integer getRevision()
+	{
+		return (Integer) (revision == null ? null : revision.getValue());
 	}
 
 	/**
@@ -353,8 +466,17 @@ public class ContentSpec {
 	 * @param revision The SpecRevision number.
 	 */
 	@Deprecated
-	public void setRevision(int revision) {
-		this.revision = revision;
+	public void setRevision(final int revision)
+	{
+		if (this.revision == null)
+		{
+			this.revision = new KeyValueNode<Integer>("SpecRevision", revision);
+			appendChild(this.revision);
+		}
+		else
+		{
+			this.revision.setValue(revision);
+		}
 	}
 	
 	/**
@@ -364,8 +486,9 @@ public class ContentSpec {
 	 * 
 	 * @return The set value of the Content Specifications Checksum or null if one doesn't exist.
 	 */
-	public String getChecksum() {
-		return checksum;
+	public String getChecksum()
+	{
+		return checksum == null ? null : checksum.getValue();
 	}
 
 	/**
@@ -375,8 +498,17 @@ public class ContentSpec {
 	 * 
 	 * @param checksum The Checksum of the Content Specification.
 	 */
-	public void setChecksum(String checksum) {
-		this.checksum = checksum;
+	public void setChecksum(final String checksum)
+	{
+		if (this.checksum == null)
+		{
+			this.checksum = new KeyValueNode<String>("CHECKSUM", checksum);
+			appendChild(this.checksum);
+		}
+		else
+		{
+			this.checksum.setValue(checksum);
+		}
 	}
 
 	/**
@@ -384,8 +516,9 @@ public class ContentSpec {
 	 * 
 	 * @return The abstract for the Content Specification or null if one doesn't exist.
 	 */
-	public String getAbstract() {
-		return description;
+	public String getAbstract()
+	{
+		return description == null ? null : description.getValue();
 	}
 
 	/**
@@ -393,8 +526,17 @@ public class ContentSpec {
 	 * 
 	 * @param description The Abstract for the Content Specifications book.
 	 */
-	public void setAbstract(String description) {
-		this.description = description;
+	public void setAbstract(final String description)
+	{
+		if (this.description == null)
+		{
+			this.description = new KeyValueNode<String>("Abstract", description);
+			appendChild(this.description);
+		}
+		else
+		{
+			this.description.setValue(description);
+		}
 	}
 	
 	/**
@@ -402,8 +544,9 @@ public class ContentSpec {
 	 * 
 	 * @return The name of the Copyright Holder.
 	 */
-	public String getCopyrightHolder() {
-		return copyrightHolder;
+	public String getCopyrightHolder()
+	{
+		return copyrightHolder == null ? "" : copyrightHolder.getValue();
 	}
 
 	/**
@@ -411,8 +554,17 @@ public class ContentSpec {
 	 * 
 	 * @param copyrightHolder The name of the Copyright Holder.
 	 */
-	public void setCopyrightHolder(String copyrightHolder) {
-		this.copyrightHolder = copyrightHolder;
+	public void setCopyrightHolder(final String copyrightHolder)
+	{
+		if (this.copyrightHolder == null)
+		{
+			this.copyrightHolder = new KeyValueNode<String>("Copyright Holder", copyrightHolder);
+			appendChild(this.copyrightHolder);
+		}
+		else
+		{
+			this.copyrightHolder.setValue(copyrightHolder);
+		}
 	}
 	
 	/**
@@ -420,8 +572,9 @@ public class ContentSpec {
 	 * 
 	 * @return A InjectionOptions object containing the Injection Options to be used when building.
 	 */
-	public InjectionOptions getInjectionOptions() {
-		return injectionOptions;
+	public InjectionOptions getInjectionOptions()
+	{
+		return injectionOptions == null ? null : injectionOptions.getValue();
 	}
 
 	/**
@@ -429,8 +582,17 @@ public class ContentSpec {
 	 * 
 	 * @param injectionOptions The InjectionOptions to be used when building a book.
 	 */
-	public void setInjectionOptions(InjectionOptions injectionOptions) {
-		this.injectionOptions = injectionOptions;
+	public void setInjectionOptions(final InjectionOptions injectionOptions)
+	{
+		if (this.injectionOptions == null)
+		{
+			this.injectionOptions = new KeyValueNode<InjectionOptions>("Inline Injection", injectionOptions);
+			appendChild(this.injectionOptions);
+		}
+		else
+		{
+			this.injectionOptions.setValue(injectionOptions);
+		}
 	}
 	
 	/**
@@ -438,7 +600,8 @@ public class ContentSpec {
 	 * 
 	 * @param desc The description.
 	 */
-	public void setDescription(String desc) {
+	public void setDescription(final String desc)
+	{
 		level.setDescription(desc);
 	}
 	
@@ -447,7 +610,8 @@ public class ContentSpec {
 	 * 
 	 * @return The description as a String
 	 */
-	public String getDescription() {
+	public String getDescription()
+	{
 		return level.getDescription(false);
 	}
 	
@@ -456,8 +620,9 @@ public class ContentSpec {
 	 * 
 	 * @return The Content Specification locale.
 	 */
-	public String getLocale() {
-		return locale;
+	public String getLocale()
+	{
+		return locale == null ? null : locale.getValue();
 	}
 	
 	/**
@@ -465,8 +630,17 @@ public class ContentSpec {
 	 * 
 	 * @param locale The locale for the content specification
 	 */
-	public void setLocale(String locale) {
-		this.locale= locale;
+	public void setLocale(final String locale)
+	{
+		if (this.locale == null)
+		{
+			this.locale = new KeyValueNode<String>("Translation Locale", locale);
+			appendChild(this.locale);
+		}
+		else
+		{
+			this.locale.setValue(locale);
+		}
 	}
 	
 	/**
@@ -474,8 +648,9 @@ public class ContentSpec {
 	 * 
 	 * @return The Content Specification output style.
 	 */
-	public String getOutputStyle() {
-		return outputStyle;
+	public String getOutputStyle()
+	{
+		return outputStyle == null ? CSConstants.CSP_OUTOUT_FORMAT : outputStyle.getValue();
 	}
 	
 	/**
@@ -483,8 +658,17 @@ public class ContentSpec {
 	 * 
 	 * @param outputStyle The output style for the content specification
 	 */
-	public void setOutputStyle(String outputStyle) {
-		this.outputStyle= outputStyle;
+	public void setOutputStyle(final String outputStyle)
+	{
+		if (this.outputStyle == null)
+		{
+			this.outputStyle = new KeyValueNode<String>("Output Style", outputStyle);
+			appendChild(this.outputStyle);
+		}
+		else
+		{
+			this.outputStyle.setValue(outputStyle);
+		}
 	}
 	
 	/**
@@ -492,7 +676,8 @@ public class ContentSpec {
 	 * 
 	 * @param writer The writers name that matches to the assigned writer tag in the database
 	 */
-	public void setAssignedWriter(String writer) {
+	public void setAssignedWriter(final String writer)
+	{
 		level.setAssignedWriter(writer);
 	}
 	
@@ -501,7 +686,8 @@ public class ContentSpec {
 	 * 
 	 * @return The Assigned Writers name as a String
 	 */
-	public String getAssignedWriter() {
+	public String getAssignedWriter()
+	{
 		return level.getAssignedWriter(false);
 	}
 	
@@ -559,20 +745,40 @@ public class ContentSpec {
 		return level.getSourceUrls();
 	}
 	
-	public Boolean getAllowDuplicateTopics() {
-		return allowDuplicateTopics;
+	public Boolean getAllowDuplicateTopics()
+	{
+		return (Boolean) (allowDuplicateTopics == null ? false : allowDuplicateTopics.getValue());
 	}
 
-	public void setAllowDuplicateTopics(Boolean allowDuplicateTopics) {
-		this.allowDuplicateTopics = allowDuplicateTopics;
+	public void setAllowDuplicateTopics(final Boolean allowDuplicateTopics)
+	{
+		if (this.allowDuplicateTopics == null)
+		{
+			this.allowDuplicateTopics = new KeyValueNode<Boolean>("Duplicate Topics", allowDuplicateTopics);
+			appendChild(this.allowDuplicateTopics);
+		}
+		else
+		{
+			this.allowDuplicateTopics.setValue(allowDuplicateTopics);
+		}
 	}
 	
-	public Boolean getAllowEmptyLevels() {
-		return allowEmptyLevels;
+	public Boolean getAllowEmptyLevels()
+	{
+		return (Boolean) (allowEmptyLevels == null ? false : allowEmptyLevels.getValue());
 	}
 
-	public void setAllowEmptyLevels(Boolean allowEmptyLevels) {
-		this.allowEmptyLevels = allowEmptyLevels;
+	public void setAllowEmptyLevels(final Boolean allowEmptyLevels)
+	{
+		if (this.allowEmptyLevels == null)
+		{
+			this.allowEmptyLevels = new KeyValueNode<Boolean>("Allow Empty Levels", allowEmptyLevels);
+			appendChild(this.allowEmptyLevels);
+		}
+		else
+		{
+			this.allowEmptyLevels.setValue(allowEmptyLevels);
+		}
 	}
 
 	/**
@@ -620,8 +826,20 @@ public class ContentSpec {
 	 * 
 	 * @param chapter A Chapter to be added to the Content Specification.
 	 */
-	public void appendChapter(Chapter chapter) {
+	public void appendChapter(final Chapter chapter)
+	{
 		level.appendChild(chapter);
+	}
+	
+	/**
+	 * Adds a Part to the Content Specification. If the Part already has a parent, then it is removed from that parent
+	 * and added to this level.
+	 * 
+	 * @param chapter A Part to be added to the Content Specification.
+	 */
+	public void appendPart(final Part part)
+	{
+		level.appendChild(part);
 	}
 	
 	/**
@@ -658,7 +876,8 @@ public class ContentSpec {
 	 * 
 	 * @return A List of Chapters.
 	 */
-	public List<Level> getChapters() {
+	public List<Level> getChapters()
+	{
 		return level.getChildLevels();
 	}
 	
@@ -667,8 +886,14 @@ public class ContentSpec {
 	 * 
 	 * @param comment The comment node to be appended to the Content Specification.
 	 */
-	public void appendComment(Comment comment) {
-		level.appendComment(comment);
+	public void appendComment(final Comment comment)
+	{
+		nodes.add(comment);
+		if (comment.getParent() != null)
+		{
+			comment.removeParent();
+		}
+		comment.setParent(this);
 	}
 	
 	/**
@@ -676,8 +901,9 @@ public class ContentSpec {
 	 * 
 	 * @param comment The Comment to be appended.
 	 */
-	public void appendComment(String comment) {
-		level.appendComment(new Comment(comment));
+	public void appendComment(final String comment)
+	{
+		appendComment(new Comment(comment));
 	}
 
 	/**
@@ -685,35 +911,10 @@ public class ContentSpec {
 	 * 
 	 * @param comment The Comment node to be removed.
 	 */
-	public void removeComment(Comment comment) {
-		level.removeComment(comment);
-	}
-	
-	/**
-	 * Adds a Comment to the top of the Content Specification before the Initial Content Specification data.
-	 * 
-	 * @param comment The Comment node to be added.
-	 */
-	public void appendInitialComment(Comment comment) {
-		baseComments.add(comment);
-	}
-	
-	/**
-	 * Creates and adds a Comment to the top of the Content Specification before the Initial Content Specification data.
-	 * 
-	 * @param comment The Comment to be added.
-	 */
-	public void appendInitialComment(String comment) {
-		baseComments.add(new Comment(comment));
-	}
-	
-	/**
-	 * Removes a Comment from the top of a Content Specification.
-	 * 
-	 * @param comment The Comment node to be removed.
-	 */
-	public void removeInitialComment(Comment comment) {
-		baseComments.remove(comment);
+	public void removeComment(final Comment comment)
+	{
+		nodes.remove(comment);
+		comment.removeParent();
 	}
 	
 	// End of the basic getter/setter methods for this ContentSpec.
@@ -734,7 +935,7 @@ public class ContentSpec {
 	 * @param text The text to be appended.
 	 * @param line The line number of the original text that the new text should be appended to.
 	 */
-	public void appendPreProcessedLineText (String text, int line) {
+	public void appendPreProcessedLineText (final String text, final int line) {
 		String temp = this.text.get(line-1) + text;
 		this.text.set(line-1, temp);
 	}
@@ -743,7 +944,7 @@ public class ContentSpec {
 		return getLevelSpecTopics(level);
 	}
 	
-	private List<SpecTopic> getLevelSpecTopics(Level level) {
+	private List<SpecTopic> getLevelSpecTopics(final Level level) {
 		List<SpecTopic> specTopics = level.getSpecTopics();
 		for (Level childLevel: level.getChildLevels()) {
 			specTopics.addAll(getLevelSpecTopics(childLevel));
@@ -751,28 +952,58 @@ public class ContentSpec {
 		return specTopics;
 	}
 
-	public String getBugzillaProduct() {
-		return bugzillaProduct;
+	public String getBugzillaProduct()
+	{
+		return bugzillaProduct == null ? null : bugzillaProduct.getValue().toString();
 	}
 
-	public void setBugzillaProduct(String bugzillaProduct) {
-		this.bugzillaProduct = bugzillaProduct;
+	public void setBugzillaProduct(final String bugzillaProduct)
+	{
+		if (this.bugzillaProduct == null)
+		{
+			this.bugzillaProduct = new KeyValueNode<String>("BZProduct", bugzillaProduct);
+			appendChild(this.bugzillaProduct);
+		}
+		else
+		{
+			this.bugzillaProduct.setValue(bugzillaProduct);
+		}
 	}
 
-	public String getBugzillaComponent() {
-		return bugzillaComponent;
+	public String getBugzillaComponent()
+	{
+		return bugzillaComponent == null ? null : bugzillaComponent.getValue().toString();
 	}
 
-	public void setBugzillaComponent(String bugzillaComponent) {
-		this.bugzillaComponent = bugzillaComponent;
+	public void setBugzillaComponent(final String bugzillaComponent)
+	{
+		if (this.bugzillaComponent == null)
+		{
+			this.bugzillaComponent = new KeyValueNode<String>("BZComponent", bugzillaComponent);
+			appendChild(this.bugzillaComponent);
+		}
+		else
+		{
+			this.bugzillaComponent.setValue(bugzillaComponent);
+		}
 	}
 
-	public String getBugzillaVersion() {
-		return bugzillaVersion;
+	public String getBugzillaVersion()
+	{
+		return bugzillaVersion == null ? null : bugzillaVersion.getValue().toString();
 	}
 
-	public void setBugzillaVersion(String bugzillaVersion) {
-		this.bugzillaVersion = bugzillaVersion;
+	public void setBugzillaVersion(final String bugzillaVersion)
+	{
+		if (this.bugzillaVersion == null)
+		{
+			this.bugzillaVersion = new KeyValueNode<String>("BZVersion", bugzillaVersion);
+			appendChild(this.bugzillaVersion);
+		}
+		else
+		{
+			this.bugzillaVersion.setValue(bugzillaVersion);
+		}
 	}
 	
 	/**
@@ -783,7 +1014,7 @@ public class ContentSpec {
 	 */
 	public String getBugzillaURL()
 	{
-		return bugzillaURL;
+		return bugzillaURL == null ? null : bugzillaURL.getValue().toString();
 	}
 
 	/**
@@ -794,42 +1025,115 @@ public class ContentSpec {
 	 */
 	public void setBugzillaURL(final String bugzillaURL)
 	{
-		this.bugzillaURL = bugzillaURL;
+		if (this.bugzillaURL == null)
+		{
+			this.bugzillaURL = new KeyValueNode<String>("BZURL", bugzillaURL);
+			appendChild(this.bugzillaURL);
+		}
+		else
+		{
+			this.bugzillaURL.setValue(bugzillaURL);
+		}
 	}
 	
-	public boolean isInjectBugLinks() {
-		return injectBugLinks;
+	public boolean isInjectBugLinks()
+	{
+		return (Boolean) (injectBugLinks == null ? true : injectBugLinks.getValue());
 	}
 
-	public void setInjectBugLinks(boolean injectBugLinks) {
-		this.injectBugLinks = injectBugLinks;
+	public void setInjectBugLinks(boolean injectBugLinks)
+	{
+		if (this.injectBugLinks == null)
+		{
+			this.injectBugLinks = new KeyValueNode<Boolean>("Bug Links", injectBugLinks);
+			appendChild(this.injectBugLinks);
+		}
+		else
+		{
+			this.injectBugLinks.setValue(injectBugLinks);
+		}
 	}
 
-	public boolean isInjectSurveyLinks() {
-		return injectSurveyLinks;
+	public boolean isInjectSurveyLinks()
+	{
+		return (Boolean) (injectSurveyLinks == null ? false : injectSurveyLinks.getValue());
 	}
 
-	public void setInjectSurveyLinks(boolean injectSurveyLinks) {
-		this.injectSurveyLinks = injectSurveyLinks;
+	public void setInjectSurveyLinks(boolean injectSurveyLinks)
+	{
+		if (this.injectSurveyLinks == null)
+		{
+			this.injectSurveyLinks = new KeyValueNode<Boolean>("Survey Links", injectSurveyLinks);
+			appendChild(this.injectSurveyLinks);
+		}
+		else
+		{
+			this.injectSurveyLinks.setValue(injectSurveyLinks);
+		}
 	}
 
 	public BugzillaOptions getBugzillaOptions() {
 		final BugzillaOptions bzOption = new BugzillaOptions();
-		bzOption.setProduct(bugzillaProduct);
-		bzOption.setComponent(bugzillaComponent);
-		bzOption.setVersion(bugzillaVersion);
-		bzOption.setUrlComponent(bugzillaURL);
-		bzOption.setBugzillaLinksEnabled(injectBugLinks);
+		bzOption.setProduct(getBugzillaProduct());
+		bzOption.setComponent(getBugzillaComponent());
+		bzOption.setVersion(getBugzillaVersion());
+		bzOption.setUrlComponent(getBugzillaURL());
+		bzOption.setBugzillaLinksEnabled(isInjectBugLinks());
 		return bzOption;
+	}
+	
+	/**
+	 * Adds a Child Level to the Level. If the Child Level already has a parent, then it is removed from that parent
+	 * and added to this level.
+	 * 
+	 * @param childLevel A Child Level to be added to the Level.
+	 */
+	protected void appendChild(final Node child)
+	{
+		nodes.add(child);
+		if (child.getParent() != null)
+		{
+			child.removeParent();
+		}
+		child.setParent(this);
+	}
+	
+	/**
+	 * Removes a child node from the content spec and removes the content as the childs parent.
+	 * 
+	 * @param child The Child Node to be removed from the Content Spec.
+	 */
+	protected void removeChild(final Node child)
+	{
+		nodes.remove(child);
+		child.setParent(null);
 	}
 
 	/**
 	 * Returns a String representation of the Content Specification. 
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String output = "";
-		for (Comment baseComment: baseComments) {
+		for (final Node node : nodes)
+		{
+			if (node instanceof KeyValueNode)
+			{
+				KeyValueNode keyValueNode = (KeyValueNode) node;
+				if (!keyValueNode.getKey().equals("CHECKSUM"))
+				{
+					output += node.toString() + "\n";
+				}
+			}
+			else
+			{
+				output += node.toString() + "\n";
+			}
+		}
+		
+		/*for (Comment baseComment: baseComments) {
 			output += baseComment.toString();
 		}
 		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
@@ -870,7 +1174,7 @@ public class ContentSpec {
 				output += "off";
 			}
 			output += "\n";
-		}
+		}*/
 		
 		// Append a new line to separate the metadata from content
 		output += "\n";
@@ -885,9 +1189,23 @@ public class ContentSpec {
 		output +=level.toString();
 		
 		// If the id isn't null then add the id and checksum
-		if (id != 0) {
-			output = "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id + "\n" + output) + "\n" + "ID = " + id + "\n" + output;
+		if (getId() != 0)
+		{
+			//output = "ID = " + id.getValue() + "\n" + output;
+			output = "CHECKSUM=" + HashUtilities.generateMD5(output) + "\n" + output;
 		}
 		return output;
+	}
+
+	@Override
+	public Integer getStep()
+	{
+		return null;
+	}
+	
+	@Override
+	protected void removeParent()
+	{
+		
 	}
 }

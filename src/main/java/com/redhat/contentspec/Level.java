@@ -163,13 +163,18 @@ public class Level extends SpecNode {
 	 * 
 	 * @param childLevel The Child Level to be removed from the level.
 	 */
-	public void removeChild(SpecNode child) {
-		if (child instanceof Level) {
+	public void removeChild(final SpecNode child)
+	{
+		if (child instanceof Level)
+		{
 			levels.remove((Level) child);
-		} else if (child instanceof SpecTopic) {
+		}
+		else if (child instanceof SpecTopic)
+		{
 			topics.remove((SpecTopic) child);
 		}
 		nodes.remove(child);
+		child.setParent(null);
 	}
 	
 	/**
@@ -274,10 +279,12 @@ public class Level extends SpecNode {
 	 * 
 	 * @param comment The Comment Node to be appended.
 	 */
-	public void appendComment(Comment comment) {
+	public void appendComment(final Comment comment)
+	{
 		nodes.add(comment);
-		if (comment.getParent() != null) {
-			comment.getParent().removeComment(comment);
+		if (comment.getParent() != null)
+		{
+			comment.removeParent();
 		}
 		comment.setParent(this);
 	}
@@ -287,7 +294,8 @@ public class Level extends SpecNode {
 	 * 
 	 * @param comment The Comment to be appended to the level.
 	 */
-	public void appendComment(String comment) {
+	public void appendComment(final String comment)
+	{
 		appendComment(new Comment(comment));
 	}
 	
@@ -296,8 +304,10 @@ public class Level extends SpecNode {
 	 * 
 	 * @param comment The Comment node to be removed.
 	 */
-	public void removeComment(Comment comment) {
+	public void removeComment(final Comment comment)
+	{
 		nodes.remove(comment);
+		comment.removeParent();
 	}
 	
 	/**

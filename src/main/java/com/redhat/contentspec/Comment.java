@@ -28,35 +28,45 @@ public class Comment extends Node {
 	}
 
 	@Override
-	public Integer getStep() {
-		if (getParent() == null) return null;
+	public Integer getStep()
+	{
+		final Node parent = getParent();
+		if (parent == null) return null;
 		Integer previousNode = 0;
 		
-		// Get the position of the level in its parents nodes
-		Integer nodePos = getParent().getChildNodes().indexOf(this);
-		
-		// If the level isn't the first node then get the previous nodes step
-		if (nodePos > 0) {
-			Node node = getParent().getChildNodes().get(nodePos - 1);
-			previousNode = node.getStep();
-			// If the add node is a level then add the number of nodes it contains
-			if (node instanceof Level) {
-				previousNode = (previousNode == null ? 0 : previousNode) + ((Level)node).getTotalNumberOfChildren();
+		if (parent instanceof Level)
+		{			
+			// Get the position of the level in its parents nodes
+			Integer nodePos = ((Level) parent).getChildNodes().indexOf(this);
+			
+			// If the level isn't the first node then get the previous nodes step
+			if (nodePos > 0) {
+				Node node = ((Level) parent).getChildNodes().get(nodePos - 1);
+				previousNode = node.getStep();
+				// If the add node is a level then add the number of nodes it contains
+				if (node instanceof Level) {
+					previousNode = (previousNode == null ? 0 : previousNode) + ((Level)node).getTotalNumberOfChildren();
+				}
+			// The node is the first item so use the parent levels step
+			} else {
+				previousNode = getParent().getStep();
 			}
-		// The node is the first item so use the parent levels step
-		} else {
-			previousNode = getParent().getStep();
+			// Make sure the previous nodes step isn't 0
+			previousNode = previousNode == null ? 0 : previousNode;
+			
+			// Add one since we got the previous nodes step
+			return previousNode + 1;
 		}
-		// Make sure the previous nodes step isn't 0
-		previousNode = previousNode == null ? 0 : previousNode;
-		
-		// Add one since we got the previous nodes step
-		return previousNode + 1;
+		else
+		{
+			return null;
+		}
 	}
 	
 	@Override
-	public Level getParent() {
-		return (Level) parent;
+	public Node getParent()
+	{
+		return parent;
 	}
 	
 	/**
@@ -64,7 +74,18 @@ public class Comment extends Node {
 	 * 
 	 * @param parent The parent node for the comment.
 	 */
-	protected void setParent(Level parent) {
+	protected void setParent(final Level parent)
+	{
+		super.setParent(parent);
+	}
+	
+	/**
+	 * Sets the Parent node for the Comment.
+	 * 
+	 * @param parent The parent node for the comment.
+	 */
+	protected void setParent(final ContentSpec parent)
+	{
 		super.setParent(parent);
 	}
 	
@@ -79,7 +100,18 @@ public class Comment extends Node {
 		for (int i = 1; i < (parent != null ? getColumn() : 0); i++) {
 			spacer += "  ";
 		}
-		return spacer + text + "\n";
+		return spacer + text;
+	}
+	
+	@Override
+	protected void removeParent()
+	{
+		final Node parent = getParent();
+		if (parent instanceof Level)
+			((Level) parent).removeComment(this);
+		else
+			((ContentSpec) parent).removeComment(this);
+		super.setParent(null);
 	}
 
 }
