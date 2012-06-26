@@ -330,8 +330,9 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The String representation of the options.
 	 */
-	protected String getOptionsString() {
-		ArrayList<String> vars = new ArrayList<String>();
+	protected String getOptionsString()
+	{
+		final ArrayList<String> vars = new ArrayList<String>();
 		if (!tags.isEmpty()) {
 			vars.addAll(tags);
 		}

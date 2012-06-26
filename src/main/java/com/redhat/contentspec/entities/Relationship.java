@@ -7,12 +7,11 @@ import com.redhat.contentspec.enums.RelationshipType;
  */
 public class Relationship
 {
-
 	private final String mainRelationshipTopicId;
 	private final String secondaryRelationshipTopicId;
 	private final RelationshipType type;
 
-	public Relationship(String mainId, String secondaryId, RelationshipType type)
+	public Relationship(final String mainId, final String secondaryId, final RelationshipType type)
 	{
 		this.mainRelationshipTopicId = mainId;
 		this.secondaryRelationshipTopicId = secondaryId;

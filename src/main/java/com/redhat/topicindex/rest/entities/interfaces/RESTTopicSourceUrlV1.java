@@ -8,9 +8,9 @@ public class RESTTopicSourceUrlV1 extends RESTBaseEntityV1<RESTTopicSourceUrlV1,
 	public static final String DESCRIPTION_NAME = "description";
 	public static final String TITLE_NAME = "title";
 	
-	private String url;
-	private String title;
-	private String description;
+	private String url = null;
+	private String title = null;
+	private String description = null;
 	/** A list of the Envers revision numbers */
 	private RESTTopicSourceUrlCollectionV1 revisions = null;
 	
@@ -36,6 +36,20 @@ public class RESTTopicSourceUrlV1 extends RESTBaseEntityV1<RESTTopicSourceUrlV1,
 		retValue.url = this.url;
 		retValue.description = description;
 		retValue.title = this.title;
+		
+		if (deepCopy)
+		{		
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTTopicSourceUrlCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
+		}
+		else
+		{
+			retValue.revisions = this.revisions;
+		}
+		
 		return retValue;
 	}
 

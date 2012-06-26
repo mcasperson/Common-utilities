@@ -10,7 +10,6 @@ import com.redhat.contentspec.enums.RelationshipType;
  */
 public class TargetRelationship extends Relationship
 {
-
 	private final SpecTopic topic;
 	private final SpecNode secondaryNode;
 
@@ -37,5 +36,4 @@ public class TargetRelationship extends Relationship
 	{
 		return secondaryNode;
 	}
-
 }

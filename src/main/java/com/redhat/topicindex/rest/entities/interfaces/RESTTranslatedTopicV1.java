@@ -18,12 +18,12 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 	public static final String ALL_LATEST_OUTGOING_NAME = "allLatestOutgoingRelationships";
 	public static final String ALL_LATEST_INCOMING_NAME = "allLatestIncomingRelationships";
 	
-	protected RESTTopicV1 topic;
-	protected Integer translatedTopicId;
-	protected Integer topicId;
-	protected Integer topicRevision;
-	protected Integer translationPercentage;
-	protected Date htmlUpdated;
+	protected RESTTopicV1 topic = null;
+	protected Integer translatedTopicId = null;
+	protected Integer topicId = null;
+	protected Integer topicRevision = null;
+	protected Integer translationPercentage = null;
+	protected Date htmlUpdated = null;
 	protected RESTTranslatedTopicStringCollectionV1 translatedTopicStrings = null;
 	protected RESTTranslatedTopicCollectionV1 outgoingTranslatedRelationships = null;
 	protected RESTTranslatedTopicCollectionV1 incomingTranslatedRelationships = null;
@@ -58,30 +58,41 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 		
 		if (deepCopy)
 		{
-			if (this.translatedTopicStrings == null)
-				retValue.translatedTopicStrings = null;
-			else
+			if (this.translatedTopicStrings != null)
+			{
+				retValue.translatedTopicStrings = new RESTTranslatedTopicStringCollectionV1();
 				this.translatedTopicStrings.cloneInto(retValue.translatedTopicStrings, deepCopy);
+			}
 			
-			if (this.outgoingTranslatedRelationships == null)
-				retValue.outgoingTranslatedRelationships = null;
-			else
+			if (this.outgoingTranslatedRelationships != null)
+			{
+				retValue.outgoingTranslatedRelationships = new RESTTranslatedTopicCollectionV1();
 				this.outgoingTranslatedRelationships.cloneInto(retValue.outgoingTranslatedRelationships, deepCopy);
+			}
 			
-			if (this.incomingTranslatedRelationships == null)
-				retValue.incomingTranslatedRelationships = null;
-			else
+			if (this.incomingTranslatedRelationships != null)
+			{
+				retValue.incomingTranslatedRelationships = new RESTTranslatedTopicCollectionV1();
 				this.incomingTranslatedRelationships.cloneInto(retValue.incomingTranslatedRelationships, deepCopy);
+			}
 			
-			if (this.incomingRelationships == null)
-				retValue.incomingRelationships = null;
-			else
+			if (this.incomingRelationships != null)
+			{
+				retValue.incomingRelationships = new RESTTranslatedTopicCollectionV1();
 				this.incomingRelationships.cloneInto(retValue.incomingRelationships, deepCopy);
+			}
 			
-			if (this.outgoingRelationships == null)
-				retValue.outgoingRelationships = null;
-			else
+			if (this.outgoingRelationships != null)
+			{
+				retValue.outgoingRelationships = new RESTTranslatedTopicCollectionV1();
 				this.outgoingRelationships.cloneInto(retValue.outgoingRelationships, deepCopy);
+			}
+			
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTTranslatedTopicCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
 
 			retValue.setTopic(this.topic != null ? this.topic.clone(deepCopy) : null);
 		}
@@ -93,6 +104,7 @@ public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1
 			retValue.incomingTranslatedRelationships = this.incomingTranslatedRelationships;
 			retValue.outgoingRelationships = this.outgoingRelationships;
 			retValue.incomingRelationships = this.incomingRelationships;
+			retValue.revisions = this.revisions;
 		}
 		return retValue;
 	}

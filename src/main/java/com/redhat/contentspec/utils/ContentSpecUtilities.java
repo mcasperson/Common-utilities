@@ -10,7 +10,8 @@ public class ContentSpecUtilities {
 	 * @param count The count of topics in the process.
 	 * @return The partially random target id.
 	 */
-	public static String generateRandomTargetId(int line, int count) {
+	public static String generateRandomTargetId(final int line, final int count)
+	{
 		return generateRandomTargetId(line) + count;
 	}
 	
@@ -21,7 +22,8 @@ public class ContentSpecUtilities {
 	 * @param line The line number the topic is on.
 	 * @return The partially random target id.
 	 */
-	public static String generateRandomTargetId(int line) {
+	public static String generateRandomTargetId(final int line)
+	{
 		int randomNum = (int) (Math.random() * 50);
 		return "T" + line + "0" + randomNum;
 	}

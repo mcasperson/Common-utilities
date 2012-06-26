@@ -11,13 +11,13 @@ public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1, R
 	public static final String IMAGE_NAME = "image";
 	public static final String FILENAME_NAME = "filename";
 	
-	private Integer id;
-	private RESTImageV1 image;
-	private byte[] imageData;
-	private byte[] thumbnail;
-	private byte[] imageDataBase64;
-	private String locale;
-	private String filename;
+	private Integer id = null;
+	private RESTImageV1 image = null;
+	private byte[] imageData = null;
+	private byte[] thumbnail = null;
+	private byte[] imageDataBase64 = null;
+	private String locale = null;
+	private String filename = null;
 	/** A list of the Envers revision numbers */
 	private RESTLanguageImageCollectionV1 revisions = null;
 	
@@ -77,13 +77,11 @@ public class RESTLanguageImageV1 extends RESTBaseEntityV1<RESTLanguageImageV1, R
 				retValue.imageDataBase64 = null;
 			}
 
-			if (this.getRevisions() == null)
-				retValue.revisions = null;
-			else
+			if (this.revisions != null)
 			{
 				retValue.revisions = new RESTLanguageImageCollectionV1();
 				this.revisions.cloneInto(retValue.revisions, deepCopy);
-			}			
+			}		
 		}
 		else
 		{

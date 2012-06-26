@@ -12,13 +12,13 @@ public abstract class Node
 	protected String text;
 	protected Node parent;
 
-	public Node(int lineNumber, String text)
+	public Node(final int lineNumber, final String text)
 	{
 		this.lineNumber = lineNumber;
 		this.text = text;
 	}
 
-	public Node(String text)
+	public Node(final String text)
 	{
 		this.lineNumber = -1;
 		this.text = text;
@@ -56,7 +56,7 @@ public abstract class Node
 	 * @param text
 	 *            The nodes text.
 	 */
-	protected void setText(String text)
+	protected void setText(final String text)
 	{
 		this.text = text;
 	}
@@ -84,7 +84,7 @@ public abstract class Node
 	 * @param parent
 	 *            The parent node.
 	 */
-	protected void setParent(Node parent)
+	protected void setParent(final Node parent)
 	{
 		this.parent = parent;
 	}

@@ -21,7 +21,7 @@ public class Appendix extends Level
 	 * @param lineNumber
 	 *            The Line Number of Appendix in the Content Specification.
 	 */
-	public Appendix(String title, int lineNumber, String specLine)
+	public Appendix(final String title, final int lineNumber, final String specLine)
 	{
 		super(title, lineNumber, specLine, LevelType.APPENDIX);
 	}
@@ -32,7 +32,7 @@ public class Appendix extends Level
 	 * @param title
 	 *            The title of the Appendix.
 	 */
-	public Appendix(String title)
+	public Appendix(final String title)
 	{
 		super(title, LevelType.APPENDIX);
 	}

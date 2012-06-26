@@ -8,9 +8,9 @@ public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1, RESTB
 	public static final String BUG_ISOPEN = "bugisopen";
 	public static final String BUG_SUMMARY = "bugsummary";
 	
-	private Integer bugId;
-	private Boolean isOpen;
-	private String summary;
+	private Integer bugId = null;
+	private Boolean isOpen = null;
+	private String summary = null;
 	/** A list of the Envers revision numbers */
 	private RESTBugzillaBugCollectionV1 revisions = null;
 	
@@ -21,7 +21,7 @@ public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1, RESTB
 	}
 
 	@Override
-	public void setRevisions(RESTBugzillaBugCollectionV1 revisions)
+	public void setRevisions(final RESTBugzillaBugCollectionV1 revisions)
 	{
 		this.revisions = revisions;
 	}
@@ -33,16 +33,14 @@ public class RESTBugzillaBugV1 extends RESTBaseEntityV1<RESTBugzillaBugV1, RESTB
 		
 		this.cloneInto(retValue, deepCopy);
 		
-		retValue.bugId = new Integer(this.bugId);
-		retValue.isOpen = new Boolean(this.isOpen);
+		retValue.bugId = this.bugId == null ? null : new Integer(this.bugId);
+		retValue.isOpen = this.isOpen == null ? null : new Boolean(this.isOpen);
 		retValue.summary = summary;
 		
 		
 		if (deepCopy)
 		{
-			if (this.getRevisions() == null)
-				retValue.revisions = null;
-			else
+			if (this.revisions != null)
 			{
 				retValue.revisions = new RESTBugzillaBugCollectionV1();
 				this.revisions.cloneInto(retValue.revisions, deepCopy);

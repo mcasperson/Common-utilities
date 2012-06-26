@@ -8,7 +8,7 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1, RESTImageCollecti
 	public static final String DESCRIPTION_NAME = "description";
 	public static final String LANGUAGEIMAGES_NAME = "languageimages";
 
-	private String description;
+	private String description = null;
 	private RESTLanguageImageCollectionV1 languageImages_OTM = null;
 	/** A list of the Envers revision numbers */
 	private RESTImageCollectionV1 revisions = null;
@@ -37,15 +37,13 @@ public class RESTImageV1 extends RESTBaseEntityV1<RESTImageV1, RESTImageCollecti
 		
 		if (deepCopy)
 		{
-			if (this.languageImages_OTM == null)
-				retValue.languageImages_OTM = null;
-			else
+			if (this.languageImages_OTM != null)
+			{
+				retValue.languageImages_OTM = new RESTLanguageImageCollectionV1();
 				this.languageImages_OTM.cloneInto(retValue.languageImages_OTM, deepCopy);
+			}
 			
-
-			if (this.getRevisions() == null)
-				retValue.revisions = null;
-			else
+			if (this.getRevisions() != null)
 			{
 				retValue.revisions = new RESTImageCollectionV1();
 				this.revisions.cloneInto(retValue.revisions, deepCopy);

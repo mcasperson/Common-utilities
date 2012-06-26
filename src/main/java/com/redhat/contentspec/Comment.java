@@ -92,12 +92,14 @@ public class Comment extends Node
 	@Override
 	public String toString()
 	{
-		String spacer = "";
-		for (int i = 1; i < (parent != null ? getColumn() : 0); i++)
+		final StringBuilder output = new StringBuilder();
+		final int indentationSize = parent != null ? getColumn() : 0;
+		for (int i = 1; i < indentationSize; i++)
 		{
-			spacer += "  ";
+			output.append("  ");
 		}
-		return spacer + text + "\n";
+		output.append(text + "\n");
+		return output.toString();
 	}
 
 }

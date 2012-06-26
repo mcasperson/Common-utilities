@@ -15,10 +15,10 @@ public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1, RESTTag
 	
 	protected String name = null;
 	protected String description = null;
-	protected RESTCategoryCollectionV1 categories = new RESTCategoryCollectionV1();
-	protected RESTTagCollectionV1 parentTags = new RESTTagCollectionV1();
-	protected RESTTagCollectionV1 childTags = new RESTTagCollectionV1();
-	protected RESTProjectCollectionV1 projects = new RESTProjectCollectionV1();
+	protected RESTCategoryCollectionV1 categories = null;
+	protected RESTTagCollectionV1 parentTags = null;
+	protected RESTTagCollectionV1 childTags = null;
+	protected RESTProjectCollectionV1 projects = null;
 	/** A list of the Envers revision numbers */
 	private RESTTagCollectionV1 revisions = null;
 	
@@ -46,25 +46,35 @@ public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1, RESTTag
 		
 		if (deepCopy)
 		{
-			if (this.categories == null)
-				retValue.categories = null;
-			else
+			if (this.categories != null)
+			{
+				retValue.categories = new RESTCategoryCollectionV1();
 				this.categories.cloneInto(retValue.categories, deepCopy);
+			}
 			
-			if (this.parentTags == null)
-				retValue.parentTags = null;
-			else
+			if (this.parentTags != null)
+			{
+				retValue.parentTags = new RESTTagCollectionV1();
 				this.parentTags.cloneInto(retValue.parentTags, deepCopy);
+			}
 			
-			if (this.childTags == null)
-				retValue.childTags = null;
-			else
+			if (this.childTags != null)
+			{
+				retValue.childTags = new RESTTagCollectionV1();
 				this.childTags.cloneInto(retValue.childTags, deepCopy);
+			}
 			
-			if (this.projects == null)
-				retValue.projects = null;
-			else
+			if (this.projects != null)
+			{
+				retValue.projects = new RESTProjectCollectionV1();
 				this.projects.cloneInto(retValue.projects, deepCopy);
+			}
+			
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTTagCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
 		}
 		else
 		{
@@ -72,6 +82,7 @@ public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1, RESTTag
 			retValue.parentTags = this.parentTags;
 			retValue.childTags = this.childTags;
 			retValue.projects = this.projects;
+			retValue.revisions = this.revisions;
 		}
 		
 		return retValue;

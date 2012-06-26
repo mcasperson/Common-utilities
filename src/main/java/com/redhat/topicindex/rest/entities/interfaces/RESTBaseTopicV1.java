@@ -21,7 +21,7 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends
 	protected String xml = null;
 	protected String xmlErrors = null;
 	protected String html = null;
-	protected Integer revision = 0;
+	protected Integer revision = null;
 	protected String locale = null;
 	protected RESTTagCollectionV1 tags = null;
 	protected RESTTopicSourceUrlCollectionV1 sourceUrls_OTM = null;
@@ -44,15 +44,17 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends
 		
 		if (deepCopy)
 		{
-			if (this.tags == null)
-				clone.tags = null;
-			else
+			if (this.tags != null)
+			{
+				clone.tags = new RESTTagCollectionV1();
 				this.tags.cloneInto(clone.tags, deepCopy);
+			}
 						
-			if (this.sourceUrls_OTM == null)
-				clone.sourceUrls_OTM = null;
-			else
+			if (this.sourceUrls_OTM != null)
+			{
+				clone.sourceUrls_OTM = new RESTTopicSourceUrlCollectionV1();
 				this.sourceUrls_OTM.cloneInto(clone.sourceUrls_OTM, deepCopy);
+			}
 		}
 		else
 		{

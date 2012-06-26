@@ -10,9 +10,9 @@ public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T, U>, U exten
 	public static final String REVISIONS_NAME = "revisions";
 	
 	/** The id of the entity */
-	private Integer id;
+	private Integer id = null;
 	/** The revision of the entity */
-	private Integer revision;
+	private Integer revision = null;
 	/**
 	 * Maintains a list of the database fields that have been specifically set
 	 * on this object. This allows us to distinguish them from those that are
@@ -36,7 +36,7 @@ public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T, U>, U exten
 		
 	public void cloneInto(final RESTBaseEntityV1<T, U> clone, final boolean deepCopy)
 	{
-		clone.setId(new Integer(this.id));
+		clone.setId(this.id == null ? null : new Integer(this.id));
 		clone.setRevision(this.revision);
 		clone.setSelfLink(this.selfLink);
 		clone.setEditLink(this.editLink);

@@ -12,8 +12,8 @@ public class RESTStringConstantV1 extends RESTBaseEntityV1<RESTStringConstantV1,
 	public static final String NAME_NAME = "name";
 	public static final String VALUE_NAME = "value";
 	
-	private String name;
-	private String value;
+	private String name = null;
+	private String value = null;
 	/** A list of the Envers revision numbers */
 	private RESTStringConstantCollectionV1 revisions = null;
 	
@@ -38,6 +38,20 @@ public class RESTStringConstantV1 extends RESTBaseEntityV1<RESTStringConstantV1,
 		
 		retValue.name = this.name;
 		retValue.value = value;
+		
+		if (deepCopy)
+		{		
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTStringConstantCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
+		}
+		else
+		{
+			retValue.revisions = this.revisions;
+		}
+		
 		return retValue;
 	}
 

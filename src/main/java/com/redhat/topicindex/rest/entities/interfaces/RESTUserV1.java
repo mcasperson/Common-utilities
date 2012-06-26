@@ -9,8 +9,8 @@ public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1, RESTUserCollectionV
 	public static final String DESCRIPTION_NAME = "description";
 	public static final String ROLES_NAME = "roles";
 
-	private String name;
-	private String description;
+	private String name = null;
+	private String description = null;
 	private RESTRoleCollectionV1 roles = null;
 	/** A list of the Envers revision numbers */
 	private RESTUserCollectionV1 revisions = null;
@@ -39,14 +39,22 @@ public class RESTUserV1 extends RESTBaseEntityV1<RESTUserV1, RESTUserCollectionV
 		
 		if (deepCopy)
 		{
-			if (this.roles == null)
-				retValue.roles = null;
-			else
+			if (this.roles != null)
+			{
+				retValue.roles = new RESTRoleCollectionV1();
 				this.roles.cloneInto(retValue.roles, deepCopy);
+			}
+			
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTUserCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
 		}
 		else
 		{
 			retValue.roles = this.roles;
+			retValue.revisions = this.revisions;
 		}
 		
 		return retValue;

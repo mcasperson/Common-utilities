@@ -507,7 +507,7 @@ public class SpecTopic extends SpecNode
 		return id.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX);
 	}
 
-	/*
+	/**
 	 * Gets the list of Topic to Topic relationships where the main Topic matches the topic parameter.
 	 * 
 	 * @param topicId The topic object of the main topic to be found.
@@ -534,9 +534,15 @@ public class SpecTopic extends SpecNode
 		return levelRelationships;
 	}
 
+	/**
+	 * Gets the list of Topic Relationships for this topic whose type is "RELATED".
+	 * 
+	 * @return A list of related topic relationships
+	 */
 	public List<TopicRelationship> getRelatedTopicRelationships()
 	{
 		final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
+		/* Check the topic to topic relationships for related relationships */
 		for (final TopicRelationship relationship : topicRelationships)
 		{
 			if (relationship.getType() == RelationshipType.RELATED)
@@ -544,6 +550,7 @@ public class SpecTopic extends SpecNode
 				relationships.add(relationship);
 			}
 		}
+		/* Check the topic to target relationships for related relationships */
 		for (final TargetRelationship relationship : topicTargetRelationships)
 		{
 			if (relationship.getType() == RelationshipType.RELATED)
@@ -554,6 +561,11 @@ public class SpecTopic extends SpecNode
 		return relationships;
 	}
 
+	/**
+	 * Gets the list of Level Relationships for this topic whose type is "RELATED".
+	 * 
+	 * @return A list of related level relationships
+	 */
 	public List<TargetRelationship> getRelatedLevelRelationships()
 	{
 		final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
@@ -566,7 +578,12 @@ public class SpecTopic extends SpecNode
 		}
 		return relationships;
 	}
-
+	
+	/**
+	 * Gets the list of Topic Relationships for this topic whose type is "PREREQUISITE".
+	 * 
+	 * @return A list of prerequisite topic relationships
+	 */
 	public List<TopicRelationship> getPrerequisiteTopicRelationships()
 	{
 		final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
@@ -587,6 +604,11 @@ public class SpecTopic extends SpecNode
 		return relationships;
 	}
 
+	/**
+	 * Gets the list of Level Relationships for this topic whose type is "PREREQUISITE".
+	 * 
+	 * @return A list of prerequisite level relationships
+	 */
 	public List<TargetRelationship> getPrerequisiteLevelRelationships()
 	{
 		final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
@@ -600,6 +622,11 @@ public class SpecTopic extends SpecNode
 		return relationships;
 	}
 
+	/**
+	 * Gets the list of Topic Relationships for this topic whose type is "NEXT".
+	 * 
+	 * @return A list of next topic relationships
+	 */
 	public List<TopicRelationship> getNextTopicRelationships()
 	{
 		ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
@@ -619,7 +646,12 @@ public class SpecTopic extends SpecNode
 		}
 		return relationships;
 	}
-
+	
+	/**
+	 * Gets the list of Topic Relationships for this topic whose type is "PREVIOUS".
+	 * 
+	 * @return A list of previous topic relationships
+	 */
 	public List<TopicRelationship> getPrevTopicRelationships()
 	{
 		ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
@@ -676,20 +708,20 @@ public class SpecTopic extends SpecNode
 	@Override
 	public String getText()
 	{
-		String output = "";
+		final StringBuilder output = new StringBuilder();
 		if (DBId == 0)
 		{
 			String options = getOptionsString();
-			output += title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]";
+			output.append(title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
 		}
 		else
 		{
-			output += title + " [" + id + (revision == null ? "" : (", rev: " + revision)) + "]";
+			output.append(title + " [" + id + (revision == null ? "" : (", rev: " + revision)) + "]");
 		}
 		
 		if (targetId != null)
 		{
-			output += " [" + targetId + "]";
+			output.append(" [" + targetId + "]");
 		}
 		
 		if (!getRelatedRelationships().isEmpty())
@@ -699,7 +731,7 @@ public class SpecTopic extends SpecNode
 			{
 				relatedIds.add(related.getSecondaryRelationshipTopicId());
 			}
-			output += " [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
+			output.append(" [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]");
 		}
 		
 		if (!getPrerequisiteRelationships().isEmpty())
@@ -709,20 +741,21 @@ public class SpecTopic extends SpecNode
 			{
 				relatedIds.add(related.getSecondaryRelationshipTopicId());
 			}
-			output += " [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]";
+			output.append(" [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]");
 		}
 		
-		setText(output);
-		return output;
+		setText(output.toString());
+		return text;
 	}
 
 	@Override
 	public String toString()
 	{
-		String spacer = "";
-		for (int i = 1; i < (parent != null ? getColumn() : 0); i++)
+		final StringBuilder spacer = new StringBuilder();
+		final int indentationSize = parent != null ? getColumn() : 0;
+		for (int i = 1; i < indentationSize; i++)
 		{
-			spacer += "  ";
+			spacer.append("  ");
 		}
 		return spacer + getText() + "\n";
 	}

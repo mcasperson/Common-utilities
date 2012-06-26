@@ -15,7 +15,7 @@ public class Part extends Level
 	 * @param lineNumber
 	 *            The Line Number of Part in the Content Specification.
 	 */
-	public Part(String title, int lineNumber, String specLine)
+	public Part(final String title, final int lineNumber, final String specLine)
 	{
 		super(title, lineNumber, specLine, LevelType.PART);
 	}
@@ -26,7 +26,7 @@ public class Part extends Level
 	 * @param title
 	 *            The title of the Part.
 	 */
-	public Part(String title)
+	public Part(final String title)
 	{
 		super(title, LevelType.PART);
 	}

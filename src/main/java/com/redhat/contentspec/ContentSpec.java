@@ -963,59 +963,71 @@ public class ContentSpec
 	@Override
 	public String toString()
 	{
-		String output = "";
-		for (Comment baseComment : baseComments)
+		final StringBuilder output = new StringBuilder();
+		for (final Comment baseComment : baseComments)
 		{
-			output += baseComment.toString();
+			output.append(baseComment.toString());
 		}
-		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
-		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) + (bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) + (bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"))
-				+ (bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n"));
+		final StringBuilder bugzillaDetails = new StringBuilder("Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n");
+		bugzillaDetails.append((bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n"))
+				+ (bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n"))
+				+ (bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n"))
+				+ (bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n")));
 
-		String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) + (allowEmptyLevels == null || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
+		final String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) + (allowEmptyLevels == null || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
 
-		output += "Title = " + (title == null ? "" : title) + "\n" + "Product = " + (product == null ? "" : product) + "\n" + "Version = " + (version == null ? "" : version) + "\n" + "Copyright Holder = " + (copyrightHolder == null ? "" : copyrightHolder) + "\n" + "DTD = " + (dtd == null ? "" : dtd) + "\n"
-				+ (subtitle == null ? "" : ("Subtitle = " + subtitle + "\n")) + (edition == null ? "" : ("Edition = " + edition + "\n")) + (brand == null ? "" : ("Brand = " + brand + "\n")) + (pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n"))
-				+ (description == null ? "" : ("Abstract = " + description + "\n")) + (allowDetails.isEmpty() ? "" : allowDetails) + (outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTOUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n"))
-				+ (locale == null ? "" : ("Translation Locale = " + locale + "\n")) + "\n" + bugzillaDetails + (injectSurveyLinks ? "Survey Links = On\n" : "") + (publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n"));
+		output.append("Title = " + (title == null ? "" : title) + "\n" 
+				+ "Product = " + (product == null ? "" : product) + "\n" 
+				+ "Version = " + (version == null ? "" : version) + "\n" 
+				+ "Copyright Holder = " + (copyrightHolder == null ? "" : copyrightHolder) + "\n" 
+				+ "DTD = " + (dtd == null ? "" : dtd) + "\n"
+				+ (subtitle == null ? "" : ("Subtitle = " + subtitle + "\n")) 
+				+ (edition == null ? "" : ("Edition = " + edition + "\n")) 
+				+ (brand == null ? "" : ("Brand = " + brand + "\n"))
+				+ (pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n"))
+				+ (description == null ? "" : ("Abstract = " + description + "\n"))
+				+ (allowDetails.isEmpty() ? "" : allowDetails)
+				+ (outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTOUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n"))
+				+ (locale == null ? "" : ("Translation Locale = " + locale + "\n"))
+				+ "\n" + bugzillaDetails + (injectSurveyLinks ? "Survey Links = On\n" : "") + (publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n")));
 
 		// Add the injection options if they exist
 		if (injectionOptions != null && injectionOptions.getStrictTopicTypes() != null && !injectionOptions.getStrictTopicTypes().isEmpty() && injectionOptions.getContentSpecType() != null)
 		{
-			output += "Inline Injection = ";
+			output.append("Inline Injection = ");
 			if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.STRICT)
 			{
-				output += "on [" + StringUtilities.buildString(injectionOptions.getStrictTopicTypes().toArray(new String[0]), ", ") + "]";
+				output.append("on [" + StringUtilities.buildString(injectionOptions.getStrictTopicTypes().toArray(new String[0]), ", ") + "]");
 			}
 			else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.ON)
 			{
-				output += "on";
+				output.append("on");
 			}
 			else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.OFF)
 			{
-				output += "off";
+				output.append("off");
 			}
-			output += "\n";
+			output.append("\n");
 		}
 
 		// Append a new line to separate the metadata from content
-		output += "\n";
+		output.append("\n");
 
 		// Add any global options
 		String options = level.getOptionsString();
 		if (!options.equals(""))
 		{
-			output += "[" + options + "]\n";
+			output.append("[" + options + "]\n");
 		}
 
 		// Append the String representation of each level
-		output += level.toString();
+		output.append(level.toString());
 
 		// If the id isn't null then add the id and checksum
 		if (id != 0)
 		{
-			output = "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id + "\n" + output) + "\n" + "ID = " + id + "\n" + output;
+			output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id + "\n" + output) + "\n" + "ID = " + id + "\n");
 		}
-		return output;
+		return output.toString();
 	}
 }

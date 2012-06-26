@@ -34,7 +34,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	private final ObjectMapper mapper = new ObjectMapper();
 	private boolean initialised = false;
 
-	public TopicPool(RESTInterfaceV1 client)
+	public TopicPool(final RESTInterfaceV1 client)
 	{
 		this.client = client;
 	}
@@ -68,7 +68,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 			// Save the new topics
 			if (!(newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty()))
 			{
-				RESTTopicCollectionV1 response = client.createJSONTopics(expandString, newTopicPool);
+				final RESTTopicCollectionV1 response = client.createJSONTopics(expandString, newTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null)
 					return false;
@@ -81,7 +81,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 			// Update the existing topics
 			if (!(updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty()))
 			{
-				RESTTopicCollectionV1 response = client.updateJSONTopics(expandString, updatedTopicPool);
+				final RESTTopicCollectionV1 response = client.updateJSONTopics(expandString, updatedTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null)
 					return false;
@@ -100,11 +100,11 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		}
 	}
 
-	public SpecTopic initialiseFromPool(SpecTopic specTopic)
+	public SpecTopic initialiseFromPool(final SpecTopic specTopic)
 	{
 		if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty())
 		{
-			for (RESTTopicV1 topic : newTopicPool.getItems())
+			for (final RESTTopicV1 topic : newTopicPool.getItems())
 			{
 				if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
 				{
@@ -118,7 +118,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		}
 		if (updatedTopicPool.getItems() != null && !updatedTopicPool.getItems().isEmpty())
 		{
-			for (RESTTopicV1 topic : updatedTopicPool.getItems())
+			for (final RESTTopicV1 topic : updatedTopicPool.getItems())
 			{
 				if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
 				{
@@ -148,8 +148,8 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	{
 		if (newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty())
 			return;
-		PathSegment path = new PathSegmentImpl("ids", false);
-		for (RESTTopicV1 topic : newTopicPool.getItems())
+		final PathSegment path = new PathSegmentImpl("ids", false);
+		for (final RESTTopicV1 topic : newTopicPool.getItems())
 		{
 			path.getMatrixParameters().put(topic.getId().toString(), new ArrayList<String>()
 			{

@@ -10,9 +10,10 @@ import com.redhat.contentspec.sort.LogMessageComparator;
 /**
  * An Error logger manager that manages error logs. 
  */
-public class ErrorLoggerManager {
+public class ErrorLoggerManager
+{
 	
-	private Map<String, ErrorLogger> logs = Collections.synchronizedMap(new HashMap<String, ErrorLogger>());
+	private final Map<String, ErrorLogger> logs = Collections.synchronizedMap(new HashMap<String, ErrorLogger>());
 	private int debugLevel = 0;
 	
 	/**
@@ -20,7 +21,8 @@ public class ErrorLoggerManager {
 	 * 
 	 * @return An error logger object for the specified name
 	 */
-	public ErrorLogger getLogger(String name) {
+	public ErrorLogger getLogger(final String name)
+	{
 		if (name == null || name.equals("")) return null;
 		if (!hasLog(name)) {
 			addLog(name);
@@ -33,15 +35,16 @@ public class ErrorLoggerManager {
 	 * 
 	 * @return An error logger object for the specified class
 	 */
-	@SuppressWarnings("rawtypes")
-	public ErrorLogger getLogger(Class clazz) {
+	public <T> ErrorLogger getLogger(final Class<T> clazz)
+	{
 		return getLogger(clazz.getCanonicalName());
 	}
 	
 	/**
 	 * Prints all the logger messages to the server console.
 	 */
-	public void printAll() {
+	public void printAll()
+	{
 		System.out.print(generateLogs());
 	}
 	
@@ -57,7 +60,8 @@ public class ErrorLoggerManager {
 	 * @param name The logger name
 	 * @return boolean True if the error log is found
 	 */
-	public boolean hasLog(String name) {
+	public boolean hasLog(final String name)
+	{
 		return logs.containsKey(name);
 	}
 	
@@ -68,7 +72,8 @@ public class ErrorLoggerManager {
 	 * 
 	 * @return ErrorLogger
 	 */
-	public ErrorLogger getLog(String name) {
+	public ErrorLogger getLog(final String name)
+	{
 		return hasLog(name) ? logs.get(name) : null;
 	}
 	
@@ -77,7 +82,8 @@ public class ErrorLoggerManager {
 	 * 
 	 * @param name The logger name
 	 */
-	public void addLog(String name) {
+	public void addLog(final String name)
+	{
 		ErrorLogger log = new ErrorLogger(name);
 		logs.put(name, log);
 		log.setVerboseDebug(debugLevel);
@@ -88,9 +94,11 @@ public class ErrorLoggerManager {
 	 * 
 	 * @param level verbose debug level
 	 */
-	public void setVerboseDebug(int level) {
+	public void setVerboseDebug(final int level)
+	{
 		debugLevel = level;
-		for (String logName: logs.keySet()) {
+		for (final String logName: logs.keySet())
+		{
 			logs.get(logName).setVerboseDebug(level);
 		}
 	}
@@ -100,15 +108,17 @@ public class ErrorLoggerManager {
 	 * 
 	 * @return A string containing the contents of the logs
 	 */
-	@SuppressWarnings("unchecked")
-	public String generateLogs() {
+	public String generateLogs()
+	{
 		String output = "";
-		ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
-		for (String logName: logs.keySet()) {
+		final ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
+		for (final String logName: logs.keySet())
+		{
 			messages.addAll(logs.get(logName).getLogMessages());
 		}
 		Collections.sort(messages, new LogMessageComparator());
-		for (LogMessage msg: messages) {
+		for (final LogMessage msg: messages)
+		{
 			output += msg.getMessage() + "\n";
 		}
 		return output;
@@ -119,10 +129,10 @@ public class ErrorLoggerManager {
 	 * 
 	 * @return A List of all the log messages ordered by their timestamp.
 	 */
-	@SuppressWarnings("unchecked")
-	public List<LogMessage> getLogs() {
-		ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
-		for (String logName: logs.keySet()) {
+	public List<LogMessage> getLogs()
+	{
+		final ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
+		for (final String logName: logs.keySet()) {
 			messages.addAll(logs.get(logName).getLogMessages());
 		}
 		Collections.sort(messages, new LogMessageComparator());
@@ -132,8 +142,9 @@ public class ErrorLoggerManager {
 	/**
 	 * Clears the error logs
 	 */
-	public void clearLogs() {
-		for (String logName: logs.keySet()) {
+	public void clearLogs()
+	{
+		for (final String logName: logs.keySet()) {
 			logs.get(logName).clearLogs();
 		}
 	}

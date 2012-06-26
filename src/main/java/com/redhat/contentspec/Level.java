@@ -39,7 +39,7 @@ public class Level extends SpecNode
 	 * @param lineNumber
 	 *            The Line Number of Level in the Content Specification.
 	 */
-	public Level(String title, int lineNumber, String specLine, LevelType type)
+	public Level(final String title, final int lineNumber, final String specLine, final LevelType type)
 	{
 		super(lineNumber, specLine);
 		this.type = type;
@@ -54,7 +54,7 @@ public class Level extends SpecNode
 	 * @param type
 	 *            The type that the Level is (Chapter, Section, etc...).
 	 */
-	public Level(String title, LevelType type)
+	public Level(final String title, final LevelType type)
 	{
 		super();
 		this.type = type;
@@ -79,7 +79,7 @@ public class Level extends SpecNode
 	 * @param title
 	 *            The title for the Level.
 	 */
-	public void setTitle(String title)
+	public void setTitle(final String title)
 	{
 		this.title = title;
 	}
@@ -101,7 +101,7 @@ public class Level extends SpecNode
 	 * @param parent
 	 *            A Level that will act as the parent to this level.
 	 */
-	protected void setParent(Level parent)
+	protected void setParent(final Level parent)
 	{
 		super.setParent(parent);
 	}
@@ -141,7 +141,7 @@ public class Level extends SpecNode
 	 * @param specTopic
 	 *            The Content Specification Topic to be removed from the level.
 	 */
-	public void removeSpecTopic(SpecTopic specTopic)
+	public void removeSpecTopic(final SpecTopic specTopic)
 	{
 		topics.remove(specTopic);
 		nodes.remove(specTopic);
@@ -166,7 +166,7 @@ public class Level extends SpecNode
 	 * @param childLevel
 	 *            A Child Level to be added to the Level.
 	 */
-	public void appendChild(SpecNode child)
+	public void appendChild(final SpecNode child)
 	{
 		if (child instanceof Level)
 		{
@@ -190,7 +190,7 @@ public class Level extends SpecNode
 	 * @param childLevel
 	 *            The Child Level to be removed from the level.
 	 */
-	public void removeChild(SpecNode child)
+	public void removeChild(final SpecNode child)
 	{
 		if (child instanceof Level)
 		{
@@ -232,7 +232,7 @@ public class Level extends SpecNode
 	 *            The node that the new node should be inserted in front of.
 	 * @return True if the node was inserted correctly otherwise false.
 	 */
-	public boolean insertBefore(SpecNode newNode, SpecNode oldNode)
+	public boolean insertBefore(final SpecNode newNode, final SpecNode oldNode)
 	{
 		if (oldNode == null || newNode == null)
 			return false;
@@ -356,7 +356,7 @@ public class Level extends SpecNode
 	 * @param comment
 	 *            The Comment node to be removed.
 	 */
-	public void removeComment(Comment comment)
+	public void removeComment(final Comment comment)
 	{
 		nodes.remove(comment);
 	}
@@ -402,6 +402,13 @@ public class Level extends SpecNode
 		return null;
 	}
 
+	/**
+	 * Checks to see if this level or any of its children contain
+	 * SpecTopics.
+	 * 
+	 * @return True if the level or the levels children contain at least
+	 * one SpecTopic.
+	 */
 	public boolean hasSpecTopics()
 	{
 		if (getSpecTopics().size() > 0)
@@ -454,14 +461,15 @@ public class Level extends SpecNode
 	{
 		if (text == null)
 		{
-			String options = getOptionsString();
-			String output = type != LevelType.BASE ? (type.getTitle() + ": " + title + (
-			// Add the target id if one exists
-					targetId == null ? "" : (" [" + targetId + "]")) + (
+			final String options = getOptionsString();
+			final String output = type != LevelType.BASE ? 
+					(type.getTitle() + ": " + title
+					// Add the target id if one exists
+					+ (targetId == null ? "" : (" [" + targetId + "]"))
 					// Add the external target id if one exists
-					externalTargetId == null ? "" : (" [" + externalTargetId + "]")) + (
-			// Add any options
-			options.equals("") ? "" : (" [" + options + "]")))
+					+ (externalTargetId == null ? "" : (" [" + externalTargetId + "]"))
+					// Add any options
+					+ (options.equals("") ? "" : (" [" + options + "]")))
 					: "";
 			setText(output);
 			return output;
@@ -480,26 +488,27 @@ public class Level extends SpecNode
 	{
 		if (hasSpecTopics())
 		{
-			String spacer = "";
-			for (int i = 1; i < getColumn(); i++)
+			final StringBuilder output = new StringBuilder();
+			final int indentationSize = parent != null ? getColumn() : 0;
+			for (int i = 1; i < indentationSize; i++)
 			{
-				spacer += "  ";
+				output.append("  ");
 			}
-			String output = spacer + getText() + "\n";
+			output.append(getText() + "\n");
 
-			for (Node node : nodes)
+			for (final Node node : nodes)
 			{
-				String nodeOutput = node.toString();
-				output += nodeOutput;
+				final String nodeOutput = node.toString();
+				output.append(nodeOutput);
 				if (node instanceof Level)
 				{
 					if (((Level) node).getType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) && !nodeOutput.isEmpty())
 					{
-						output += "\n";
+						output.append("\n");
 					}
 				}
 			}
-			return output;
+			return output.toString();
 		}
 		else
 		{

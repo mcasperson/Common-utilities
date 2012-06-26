@@ -11,11 +11,11 @@ public class RESTPropertyTagV1 extends RESTBaseEntityV1<RESTPropertyTagV1, RESTP
 	public static String CANBENULL_NAME = "canbenull";
 	public static String ISUNIQUE_NAME = "isunique";
 	
-	private String name;
-	private String description;
-	private String value;
+	private String name = null;
+	private String description = null;
+	private String value = null;
 	private boolean valid;
-	private String regex;
+	private String regex = null;
 	private boolean canBeNull;
 	private boolean isUnique;
 	/** A list of the Envers revision numbers */
@@ -47,6 +47,19 @@ public class RESTPropertyTagV1 extends RESTBaseEntityV1<RESTPropertyTagV1, RESTP
 		retValue.regex = this.regex;
 		retValue.canBeNull = this.canBeNull;
 		retValue.isUnique = this.isUnique;
+		
+		if (deepCopy)
+		{		
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTPropertyTagCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
+		}
+		else
+		{
+			retValue.revisions = this.revisions;
+		}
 		
 		return retValue;
 	}

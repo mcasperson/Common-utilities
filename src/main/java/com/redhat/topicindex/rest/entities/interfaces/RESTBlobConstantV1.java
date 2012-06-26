@@ -11,8 +11,8 @@ public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1, RES
 	public static final String NAME_NAME = "name";
 	public static final String VALUE_NAME = "value";
 	
-	private String name;
-	private byte[] value;
+	private String name = null;
+	private byte[] value = null;
 	/** A list of the Envers revision numbers */
 	private RESTBlobConstantCollectionV1 revisions = null;
 	
@@ -39,9 +39,9 @@ public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1, RES
 		
 		if (deepCopy)
 		{
-			retValue.value = new byte[value.length];
 			if (value != null)
 			{
+				retValue.value = new byte[value.length];
 				System.arraycopy(value, 0, retValue.value, 0, value.length);
 			}
 			else
@@ -49,13 +49,11 @@ public class RESTBlobConstantV1 extends RESTBaseEntityV1<RESTBlobConstantV1, RES
 				retValue.value = null;
 			}
 			
-			if (this.getRevisions() == null)
-				retValue.revisions = null;
-			else
+			if (this.revisions != null)
 			{
 				retValue.revisions = new RESTBlobConstantCollectionV1();
 				this.revisions.cloneInto(retValue.revisions, deepCopy);
-			}			
+			}
 		}
 		else
 		{

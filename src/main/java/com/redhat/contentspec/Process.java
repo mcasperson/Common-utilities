@@ -14,6 +14,7 @@ import com.redhat.contentspec.enums.LevelType;
 import com.redhat.contentspec.enums.RelationshipType;
 import com.redhat.contentspec.rest.RESTReader;
 import com.redhat.contentspec.utils.ContentSpecUtilities;
+import com.redhat.ecs.commonutils.CollectionUtilities;
 import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 
@@ -26,11 +27,11 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
 public class Process extends Level
 {
 
-	private LinkedHashMap<String, SpecTopic> topics = new LinkedHashMap<String, SpecTopic>();
+	private final LinkedHashMap<String, SpecTopic> topics = new LinkedHashMap<String, SpecTopic>();
 	private boolean topicsProcessed = false;
-	private HashMap<String, ArrayList<Relationship>> relationships = new HashMap<String, ArrayList<Relationship>>();
-	private HashMap<String, SpecTopic> targets = new HashMap<String, SpecTopic>();
-	private HashMap<String, List<String>> branches = new HashMap<String, List<String>>();
+	private final HashMap<String, ArrayList<Relationship>> relationships = new HashMap<String, ArrayList<Relationship>>();
+	private final HashMap<String, SpecTopic> targets = new HashMap<String, SpecTopic>();
+	private final HashMap<String, List<String>> branches = new HashMap<String, List<String>>();
 
 	/**
 	 * Constructor
@@ -42,7 +43,7 @@ public class Process extends Level
 	 * @param specLine
 	 *            The Content Specification Line that is used to create the Process.
 	 */
-	public Process(String title, int lineNumber, String specLine)
+	public Process(final String title, final int lineNumber, final String specLine)
 	{
 		super(title, lineNumber, specLine, LevelType.PROCESS);
 	}
@@ -53,13 +54,13 @@ public class Process extends Level
 	 * @param title
 	 *            The Title of the Process.
 	 */
-	public Process(String title)
+	public Process(final String title)
 	{
 		super(title, LevelType.PROCESS);
 	}
 
 	@Override
-	public void appendSpecTopic(SpecTopic specTopic)
+	public void appendSpecTopic(final SpecTopic specTopic)
 	{
 		String topicId = specTopic.getId();
 		if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
@@ -72,7 +73,7 @@ public class Process extends Level
 	}
 
 	@Override
-	public void removeSpecTopic(SpecTopic specTopic)
+	public void removeSpecTopic(final SpecTopic specTopic)
 	{
 		String topicId = specTopic.getId();
 		if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
@@ -92,7 +93,7 @@ public class Process extends Level
 	 * @param branchIds
 	 *            The List of branch IDs to add for the topic
 	 */
-	public void addBranches(String topicId, List<String> branchIds)
+	public void addBranches(final String topicId, final List<String> branchIds)
 	{
 		if (branches.containsKey(topicId))
 		{
@@ -119,11 +120,9 @@ public class Process extends Level
 	 * @param branchId
 	 *            The ID of the Branch to be added
 	 */
-	public void addBranch(String topicId, String branchId)
+	public void addBranch(final String topicId, final String branchId)
 	{
-		List<String> branchIds = new ArrayList<String>();
-		branchIds.add(branchId);
-		addBranches(topicId, branchIds);
+		addBranches(topicId, CollectionUtilities.toArrayList(branchId));
 	}
 
 	@Override
@@ -142,12 +141,12 @@ public class Process extends Level
 	 * 
 	 * @return A list of all the branch root node ID's for the specified Topic/Target ID.
 	 */
-	private List<String> getBranchRootIdsForTopicId(String topicId, String topicTargetId)
+	private List<String> getBranchRootIdsForTopicId(final String topicId, final String topicTargetId)
 	{
-		List<String> branchRootIds = new ArrayList<String>();
-		for (String branchRootId : branches.keySet())
+		final List<String> branchRootIds = new ArrayList<String>();
+		for (final String branchRootId : branches.keySet())
 		{
-			for (String branchId : branches.get(branchRootId))
+			for (final String branchId : branches.get(branchRootId))
 			{
 				if (topicId.matches("((^[0-9]*-)|(^))" + branchId + "$") || branchId.equals(topicTargetId))
 					branchRootIds.add(branchRootId);
@@ -205,8 +204,8 @@ public class Process extends Level
 	@Override
 	public LinkedList<SpecTopic> getSpecTopics()
 	{
-		LinkedList<SpecTopic> topicList = new LinkedList<SpecTopic>();
-		Iterator<Entry<String, SpecTopic>> i = topics.entrySet().iterator();
+		final LinkedList<SpecTopic> topicList = new LinkedList<SpecTopic>();
+		final Iterator<Entry<String, SpecTopic>> i = topics.entrySet().iterator();
 		while (i.hasNext())
 		{
 			topicList.add(i.next().getValue());
@@ -225,23 +224,23 @@ public class Process extends Level
 	 *            A DBReader object that is used to access database objects via the REST Interface
 	 * @return True if everything loaded successfully otherwise false
 	 */
-	public boolean processTopics(HashMap<String, SpecTopic> specTopics, HashMap<String, SpecTopic> topicTargets, RESTReader reader)
+	public boolean processTopics(final HashMap<String, SpecTopic> specTopics, final HashMap<String, SpecTopic> topicTargets, final RESTReader reader)
 	{
 		boolean successfullyLoaded = true;
 		SpecTopic prevTopic = null;
 		String prevTopicTargetId = null;
 		int count = 1;
-		LinkedList<String> processTopics = new LinkedList<String>(this.getTopicIds());
-		for (String topicId : processTopics)
+		final LinkedList<String> processTopics = new LinkedList<String>(this.getTopicIds());
+		for (final String topicId : processTopics)
 		{
-			String nonUniqueId = topicId.replaceAll("^[0-9]+-", "");
-			SpecTopic specTopic = topics.get(topicId);
+			final String nonUniqueId = topicId.replaceAll("^[0-9]+-", "");
+			final SpecTopic specTopic = topics.get(topicId);
 
 			// If the topic is an existing or cloned topic then use the database information
 			if (nonUniqueId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX))
 			{
 				// Get the topic information from the database
-				RESTTopicV1 topic;
+				final RESTTopicV1 topic;
 				if (nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX))
 				{
 					topic = reader.getTopicById(Integer.parseInt(nonUniqueId.substring(1)), null);
@@ -254,6 +253,7 @@ public class Process extends Level
 				{
 					topic = reader.getTopicById(Integer.parseInt(nonUniqueId), null);
 				}
+				
 				if (topic != null)
 				{
 					// Add relationships if the topic is a task
@@ -347,14 +347,16 @@ public class Process extends Level
 	 *            The Target ID of the topic.
 	 * @return True if the relationship was created successfully otherwise false.
 	 */
-	private boolean createProcessRelationships(SpecTopic prevTopic, String topicId, String prevTopicTargetId, String topicTargetId)
+	private boolean createProcessRelationships(final SpecTopic prevTopic, final String topicId, final String prevTopicTargetId, final String topicTargetId)
 	{
 		// Get the id of the parent branching node(s) for this topic for the
-		List<String> branchRootIds = getBranchRootIdsForTopicId(topicId, topicTargetId);
+		final List<String> branchRootIds = getBranchRootIdsForTopicId(topicId, topicTargetId);
 		if (branchRootIds != null)
 		{
-			for (String branchRootId : branchRootIds)
+			for (final String id : branchRootIds)
 			{
+				String branchRootId = id;
+				
 				// Add this topic to the previous topics next relationship
 				int count = 0;
 				SpecTopic relatedTopic = null;
@@ -389,7 +391,7 @@ public class Process extends Level
 						relationships.put(branchRootId, new ArrayList<Relationship>());
 
 					// Create the relationship and add it to the parent topic
-					Relationship nextRelationship = new Relationship(branchRootId, topicTargetId, RelationshipType.NEXT);
+					final Relationship nextRelationship = new Relationship(branchRootId, topicTargetId, RelationshipType.NEXT);
 					relationships.get(branchRootId).add(nextRelationship);
 
 					// If the previous topic is the parent topic and this topic only has one parent branch then add a previous link
@@ -407,7 +409,7 @@ public class Process extends Level
 							relationships.put(uniquePrevTopicId, new ArrayList<Relationship>());
 
 						// Add the previous relationship for this topic
-						Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId, RelationshipType.PREVIOUS);
+						final Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId, RelationshipType.PREVIOUS);
 						relationships.get(topicId).add(prevRelationship);
 					}
 				}
@@ -430,10 +432,10 @@ public class Process extends Level
 					relationships.put(uniquePrevTopicId, new ArrayList<Relationship>());
 
 				// Add the previous relationship for this topic
-				Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId, RelationshipType.PREVIOUS);
+				final Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId, RelationshipType.PREVIOUS);
 				relationships.get(topicId).add(prevRelationship);
 
-				Relationship nextRelationship = new Relationship(uniquePrevTopicId, topicTargetId, RelationshipType.NEXT);
+				final Relationship nextRelationship = new Relationship(uniquePrevTopicId, topicTargetId, RelationshipType.NEXT);
 				relationships.get(uniquePrevTopicId).add(nextRelationship);
 			}
 		}
@@ -445,18 +447,19 @@ public class Process extends Level
 	{
 		if (hasSpecTopics())
 		{
-			String spacer = "";
-			for (int i = 1; i < getColumn(); i++)
+			final StringBuilder output = new StringBuilder();
+			final int indentationSize = parent != null ? getColumn() : 0;
+			for (int i = 1; i < indentationSize; i++)
 			{
-				spacer += "  ";
+				output.append("  ");
 			}
-			String output = spacer + getText() + "\n";
+			output.append(getText() + "\n");
 
-			for (Node node : nodes)
+			for (final Node node : nodes)
 			{
-				output += node.toString();
+				output.append(node.toString());
 			}
-			return output;
+			return output.toString();
 		}
 		else
 		{

@@ -21,7 +21,7 @@ public class Section extends Level
 	 * @param lineNumber
 	 *            The Line Number of Section in the Content Specification.
 	 */
-	public Section(String title, int lineNumber, String specLine)
+	public Section(final String title, final int lineNumber, final String specLine)
 	{
 		super(title, lineNumber, specLine, LevelType.SECTION);
 	}
@@ -32,7 +32,7 @@ public class Section extends Level
 	 * @param title
 	 *            The title of the Section.
 	 */
-	public Section(String title)
+	public Section(final String title)
 	{
 		super(title, LevelType.SECTION);
 	}

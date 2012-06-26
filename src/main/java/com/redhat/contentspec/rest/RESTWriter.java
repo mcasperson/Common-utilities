@@ -29,7 +29,7 @@ public class RESTWriter
 	private final RESTEntityCache entityCache;
 	private final RESTCollectionCache collectionsCache;
 
-	public RESTWriter(RESTReader reader, RESTInterfaceV1 client, RESTEntityCache cache, RESTCollectionCache collectionsCache)
+	public RESTWriter(final RESTReader reader, final RESTInterfaceV1 client, final RESTEntityCache cache, final RESTCollectionCache collectionsCache)
 	{
 		this.reader = reader;
 		this.client = client;
@@ -37,7 +37,7 @@ public class RESTWriter
 		this.collectionsCache = collectionsCache;
 	}
 
-	/*
+	/**
 	 * Writes a Category tuple to the database using the data provided.
 	 */
 	public Integer createCategory(boolean mutuallyExclusive, String name)
@@ -61,10 +61,10 @@ public class RESTWriter
 		return insertId;
 	}
 
-	/*
+	/**
 	 * Writes a Tag tuple to the database using the data provided.
 	 */
-	public Integer createTag(String name, String description, RESTCategoryCollectionV1 categories)
+	public Integer createTag(final String name, final String description, final RESTCategoryCollectionV1 categories)
 	{
 		Integer insertId = null;
 		try
@@ -89,19 +89,20 @@ public class RESTWriter
 		return insertId;
 	}
 
-	/*
+	/**
 	 * Writes a Topic tuple to the database using the data provided.
 	 */
-	public Integer createTopic(String title, String text, String description, Date timestamp)
+	public Integer createTopic(final String title, final String text, final String description, final Date timestamp)
 	{
 		return createTopic(title, text, description, timestamp, null, null, null, null, null);
 	}
 
-	/*
+	/**
 	 * Writes a Topic tuple to the database using the data provided.
 	 */
-	public Integer createTopic(String title, String text, String description, Date timestamp, RESTTopicSourceUrlCollectionV1 sourceUrls, RESTTopicCollectionV1 incomingRelationships, RESTTopicCollectionV1 outgoingRelationships, RESTTagCollectionV1 tags,
-			RESTPropertyTagCollectionV1 properties)
+	public Integer createTopic(final String title, final String text, final String description, final Date timestamp, final RESTTopicSourceUrlCollectionV1 sourceUrls, 
+			final RESTTopicCollectionV1 incomingRelationships, final RESTTopicCollectionV1 outgoingRelationships, final RESTTagCollectionV1 tags,
+			final RESTPropertyTagCollectionV1 properties)
 	{
 		Integer insertId = null;
 		try
@@ -171,19 +172,20 @@ public class RESTWriter
 		return insertId;
 	}
 
-	/*
+	/**
 	 * Updates a Topic tuple in the database using the data provided.
 	 */
-	public Integer updateTopic(Integer topicId, String title, String text, String description, Date timestamp)
+	public Integer updateTopic(final Integer topicId, final String title, final String text, final String description, final Date timestamp)
 	{
 		return updateTopic(topicId, title, text, description, timestamp, null, null, null, null, null);
 	}
 
-	/*
+	/**
 	 * Updates a Topic tuple in the database using the data provided.
 	 */
-	public Integer updateTopic(Integer topicId, String title, String text, String description, Date timestamp, RESTTopicSourceUrlCollectionV1 sourceUrls, RESTTopicCollectionV1 incomingRelationships, RESTTopicCollectionV1 outgoingRelationships, RESTTagCollectionV1 tags,
-			RESTPropertyTagCollectionV1 properties)
+	public Integer updateTopic(final Integer topicId, final String title, final String text, final String description, final Date timestamp,
+			final RESTTopicSourceUrlCollectionV1 sourceUrls, final RESTTopicCollectionV1 incomingRelationships, final RESTTopicCollectionV1 outgoingRelationships,
+			final RESTTagCollectionV1 tags, final RESTPropertyTagCollectionV1 properties)
 	{
 		Integer insertId = null;
 		try
@@ -260,10 +262,10 @@ public class RESTWriter
 		return insertId;
 	}
 
-	/*
+	/**
 	 * Writes a ContentSpecs tuple to the database using the data provided.
 	 */
-	public Integer createContentSpec(String title, String preContentSpec, String dtd, String createdBy)
+	public Integer createContentSpec(final String title, final String preContentSpec, final String dtd, final String createdBy)
 	{
 		try
 		{
@@ -311,10 +313,10 @@ public class RESTWriter
 		return null;
 	}
 
-	/*
+	/**
 	 * Updates a ContentSpecs tuple from the database using the data provided.
 	 */
-	public boolean updateContentSpec(Integer id, String title, String preContentSpec, String dtd)
+	public boolean updateContentSpec(final Integer id, final String title, final String preContentSpec, final String dtd)
 	{
 		try
 		{
@@ -332,7 +334,7 @@ public class RESTWriter
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Update the Content Spec Type and DTD property tags
-			RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
+			final RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 
@@ -340,7 +342,7 @@ public class RESTWriter
 
 				// Loop through and remove any Type or DTD tags if they don't
 				// match
-				for (RESTPropertyTagV1 property : properties.getItems())
+				for (final RESTPropertyTagV1 property : properties.getItems())
 				{
 					if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID))
 					{
@@ -357,7 +359,7 @@ public class RESTWriter
 				}
 
 				// The property tag should never match a pre tag
-				RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+				final RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
 				typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
 				typePropertyTag.setAddItem(true);
 
@@ -366,7 +368,7 @@ public class RESTWriter
 				// If the DTD has changed then it needs to be re-added
 				if (newDTD)
 				{
-					RESTPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
+					final RESTPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
 					dtdPropertyTag.explicitSetValue(dtd);
 					dtdPropertyTag.setAddItem(true);
 
@@ -391,10 +393,10 @@ public class RESTWriter
 		return false;
 	}
 
-	/*
+	/**
 	 * Writes a ContentSpecs tuple to the database using the data provided.
 	 */
-	public boolean updatePostContentSpec(Integer id, String postContentSpec)
+	public boolean updatePostContentSpec(final Integer id, final String postContentSpec)
 	{
 		try
 		{
@@ -405,12 +407,12 @@ public class RESTWriter
 			contentSpec.explicitSetXml(postContentSpec);
 
 			// Update Content Spec Type
-			RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
+			final RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 
 				// Loop through and remove the type
-				for (RESTPropertyTagV1 property : properties.getItems())
+				for (final RESTPropertyTagV1 property : properties.getItems())
 				{
 					if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID))
 					{
@@ -418,7 +420,7 @@ public class RESTWriter
 					}
 				}
 
-				RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+				final RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
 				typePropertyTag.explicitSetValue(CSConstants.CSP_POST_PROCESSED_STRING);
 				typePropertyTag.setAddItem(true);
 
@@ -442,10 +444,10 @@ public class RESTWriter
 		return false;
 	}
 
-	/*
+	/**
 	 * Delete a Content Specification from the database.
 	 */
-	public boolean deleteContentSpec(Integer id)
+	public boolean deleteContentSpec(final Integer id)
 	{
 		try
 		{

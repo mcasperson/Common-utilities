@@ -6,20 +6,22 @@ import org.apache.log4j.*;
 /**
  * This is the error logger class, this is managed by the ErrorLoggerManager, its in charge of logging different types of messages.
  */
-public class ErrorLogger {
-	private Logger log = null;
-	private String name = null;
+public class ErrorLogger
+{
+	private final Logger log;
+	private final String name;
 	private int debugLevel = 0;
-	private Vector<LogMessage> messages = new Vector<LogMessage>();
+	private final Vector<LogMessage> messages = new Vector<LogMessage>();
 
 	/**
 	 * ErrorLogger constructor
 	 * 
 	 * @param name The name of the error logger
 	 */
-	public ErrorLogger(String name) {
+	public ErrorLogger(final String name)
+	{
 		log = Logger.getLogger(name);
-		this.setName(name);
+		this.name = name;
 	}
 	
 	/**
@@ -27,7 +29,8 @@ public class ErrorLogger {
 	 * 
 	 * @param state The state the debug should be in. True = On, False = Off
 	 */
-	public void setVerboseDebug(int level) {
+	public void setVerboseDebug(final int level)
+	{
 		debugLevel = level;
 	}
 	
@@ -36,7 +39,8 @@ public class ErrorLogger {
 	 * 
 	 * @return The state of the debugger.
 	 */
-	public int getDebugLevel() {
+	public int getDebugLevel()
+	{
 		return debugLevel;
 	}
 	
@@ -45,7 +49,8 @@ public class ErrorLogger {
 	 * 
 	 * @param message The error message 
 	 */
-	public void error(String message) {
+	public void error(final String message)
+	{
 		messages.add(new LogMessage(message, LogMessage.Type.ERROR));
 		log.error(message);
 	}
@@ -55,7 +60,8 @@ public class ErrorLogger {
 	 * 
 	 * @param message The debug message 
 	 */
-	public void debug(String message, int level) {
+	public void debug(final String message, final int level)
+	{
 		messages.add(new LogMessage(message, LogMessage.Type.DEBUG, level));
 		log.debug(message);
 	}
@@ -65,7 +71,8 @@ public class ErrorLogger {
 	 * 
 	 * @param message The debug message 
 	 */
-	public void debug(String message) {
+	public void debug(final String message)
+	{
 		messages.add(new LogMessage(message, LogMessage.Type.DEBUG));
 		log.debug(message);
 	}
@@ -75,7 +82,8 @@ public class ErrorLogger {
 	 * 
 	 * @param message The information message 
 	 */
-	public void info(String message) {
+	public void info(final String message)
+	{
 		messages.add(new LogMessage(message, LogMessage.Type.INFO));
 		log.info(message);
 	}
@@ -85,7 +93,7 @@ public class ErrorLogger {
 	 * 
 	 * @param message The warning message 
 	 */
-	public void warn(String message) {
+	public void warn(final String message) {
 		messages.add(new LogMessage(message, LogMessage.Type.WARN));
 		log.warn(message);
 	}
@@ -95,23 +103,16 @@ public class ErrorLogger {
 	 * 
 	 * @return The name of the logger
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
-	}
-
-	/**
-	 * Sets the name of the logger
-	 * 
-	 * @param name The new name for the log
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	/**
 	 * Clears the custom log messages.
 	 */
-	public void clearLogs() {
+	public void clearLogs()
+	{
 		messages.clear();
 	}
 	
@@ -120,9 +121,10 @@ public class ErrorLogger {
 	 * 
 	 * @return A vector based array containing the LogMessage's
 	 */
-	public Vector<LogMessage> getLogMessages() {
-		Vector<LogMessage> output = new Vector<LogMessage>();
-		for (LogMessage msg: messages) {
+	public Vector<LogMessage> getLogMessages()
+	{
+		final Vector<LogMessage> output = new Vector<LogMessage>();
+		for (final LogMessage msg: messages) {
 			if (msg.getType() == LogMessage.Type.DEBUG) {
 				if (msg.getDebugLevel() <= debugLevel) {
 					output.add(msg);

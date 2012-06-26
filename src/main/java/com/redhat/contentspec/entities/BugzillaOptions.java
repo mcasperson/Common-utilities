@@ -14,35 +14,40 @@ public class BugzillaOptions {
 	/**
 	 * @return the product
 	 */
-	public String getProduct() {
+	public String getProduct()
+	{
 		return product;
 	}
 
 	/**
 	 * @param product the product to set
 	 */
-	public void setProduct(String product) {
+	public void setProduct(final String product)
+	{
 		this.product = product;
 	}
 
 	/**
 	 * @return the component
 	 */
-	public String getComponent() {
+	public String getComponent()
+	{
 		return component;
 	}
 
 	/**
 	 * @param component the component to set
 	 */
-	public void setComponent(final String component) {
+	public void setComponent(final String component)
+	{
 		this.component = component;
 	}
 
 	/**
 	 * @return the version
 	 */
-	public String getVersion() {
+	public String getVersion()
+	{
 		return version;
 	}
 

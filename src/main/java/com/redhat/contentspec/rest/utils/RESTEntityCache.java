@@ -12,16 +12,16 @@ public class RESTEntityCache
 
 	private HashMap<Class<?>, HashMap<String, RESTBaseEntityV1<?, ?>>> singleEntities = new HashMap<Class<?>, HashMap<String, RESTBaseEntityV1<?, ?>>>();
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(BaseRestCollectionV1<T, U> value)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final BaseRestCollectionV1<T, U> value)
 	{
 		add(value, false);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(BaseRestCollectionV1<T, U> value, boolean isRevisions)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final BaseRestCollectionV1<T, U> value, final boolean isRevisions)
 	{
 		if (value != null && value.getItems() != null)
 		{
-			for (T item : value.getItems())
+			for (final T item : value.getItems())
 			{
 				if (item.getClass() == RESTTranslatedTopicV1.class)
 				{
@@ -36,7 +36,7 @@ public class RESTEntityCache
 		}
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(Class<T> clazz, Integer id, Number revision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final Integer id, final Number revision)
 	{
 		if (singleEntities.containsKey(clazz))
 			return revision == null ? singleEntities.get(clazz).containsKey(clazz.getSimpleName() + "-" + id) : singleEntities.get(clazz).containsKey(clazz.getSimpleName() + "-" + id + "-" + revision);
@@ -44,22 +44,22 @@ public class RESTEntityCache
 			return false;
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(Class<T> clazz, Integer id)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final Integer id)
 	{
 		return containsKeyValue(clazz, id, null);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(T value)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value)
 	{
 		add(value, false);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(T value, final Number id, boolean isRevision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final Number id, final boolean isRevision)
 	{
 		add(value, id.toString(), isRevision);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(T value, final String id, boolean isRevision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final String id, final boolean isRevision)
 	{
 		// Add the map if one doesn't exist for the current class
 		if (!singleEntities.containsKey(value.getClass()))
@@ -77,16 +77,16 @@ public class RESTEntityCache
 		add(value.getRevisions(), true);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(T value, boolean isRevision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final boolean isRevision)
 	{
-		add(value, value.getId().toString(), isRevision);
+		add(value, value.getId(), isRevision);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> BaseRestCollectionV1<T, U> get(Class<T> clazz, Class<U> collectionClass)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> BaseRestCollectionV1<T, U> get(final Class<T> clazz, final Class<U> collectionClass)
 	{
 		try
 		{
-			BaseRestCollectionV1<T, U> values = collectionClass.newInstance();
+			final BaseRestCollectionV1<T, U> values = collectionClass.newInstance();
 			if (singleEntities.containsKey(clazz))
 			{
 				for (String key : singleEntities.get(clazz).keySet())
@@ -102,26 +102,26 @@ public class RESTEntityCache
 		}
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(Class<T> clazz, Integer id)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final Integer id)
 	{
 		return get(clazz, id, null);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(Class<T> clazz, Integer id, Number revision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final Integer id, final Number revision)
 	{
 		if (!containsKeyValue(clazz, id, revision))
 			return null;
 		return clazz.cast(revision == null ? singleEntities.get(clazz).get(clazz.getSimpleName() + "-" + id) : singleEntities.get(clazz).get(clazz.getSimpleName() + "-" + id + "-" + revision));
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void expire(Class<T> clazz, Integer id)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void expire(final Class<T> clazz, final Integer id)
 	{
 		expire(clazz, id, null);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void expire(Class<T> clazz, Integer id, Number revision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void expire(final Class<T> clazz, final Integer id, final Number revision)
 	{
-		String keyValue = revision == null ? (clazz.getSimpleName() + "-" + id) : (clazz.getSimpleName() + "-" + id + "-" + revision);
+		final String keyValue = revision == null ? (clazz.getSimpleName() + "-" + id) : (clazz.getSimpleName() + "-" + id + "-" + revision);
 		if (singleEntities.containsKey(clazz))
 		{
 			if (singleEntities.get(clazz).containsKey(keyValue))
@@ -131,11 +131,11 @@ public class RESTEntityCache
 		}
 	}
 
-	public void expireByRegex(String regex)
+	public void expireByRegex(final String regex)
 	{
-		for (Class<?> clazz : singleEntities.keySet())
+		for (final Class<?> clazz : singleEntities.keySet())
 		{
-			for (String key : singleEntities.get(clazz).keySet())
+			for (final String key : singleEntities.get(clazz).keySet())
 			{
 				if (key.matches(regex))
 					singleEntities.remove(key);

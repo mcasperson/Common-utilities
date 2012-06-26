@@ -41,19 +41,17 @@ public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1, RESTCategor
 		retValue.name = this.name;
 		retValue.description = description;
 		retValue.mutuallyExclusive = this.mutuallyExclusive;
-		retValue.sort = new Integer(this.sort);
+		retValue.sort = this.sort == null ? null : new Integer(this.sort);
 		
 		if (deepCopy)
 		{
-			if (this.tags == null)
-				retValue.tags = null;
-			else
+			if (this.tags != null)
+			{
+				retValue.tags = new RESTTagCollectionV1();
 				this.tags.cloneInto(retValue.tags, deepCopy);
+			}
 			
-
-			if (this.getRevisions() == null)
-				retValue.revisions = null;
-			else
+			if (this.getRevisions() != null)
 			{
 				retValue.revisions = new RESTCategoryCollectionV1();
 				this.revisions.cloneInto(retValue.revisions, deepCopy);

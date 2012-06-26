@@ -8,9 +8,9 @@ public class RESTTranslatedTopicStringV1 extends RESTBaseEntityV1<RESTTranslated
 	public static final String TRANSLATEDSTRING_NAME = "translatedstring";
 	public static final String TRANSLATEDTOPIC_NAME = "translatedtopic";
 	
-	private RESTTranslatedTopicV1 translatedTopic;
-	private String originalString;
-	private String translatedString;
+	private RESTTranslatedTopicV1 translatedTopic = null;
+	private String originalString = null;
+	private String translatedString = null;
 	/** A list of the Envers revision numbers */
 	private RESTTranslatedTopicStringCollectionV1 revisions = null;
 	
@@ -39,10 +39,17 @@ public class RESTTranslatedTopicStringV1 extends RESTBaseEntityV1<RESTTranslated
 		if (deepCopy)
 		{
 			retValue.setTranslatedTopic(translatedTopic != null ? this.translatedTopic.clone(deepCopy) : null);
+			
+			if (this.revisions != null)
+			{
+				retValue.revisions = new RESTTranslatedTopicStringCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}
 		}
 		else
 		{
 			retValue.setTranslatedTopic(this.translatedTopic);
+			retValue.setRevisions(this.revisions);
 		}
 		return retValue;
 	}

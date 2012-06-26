@@ -15,10 +15,11 @@ public abstract class RESTBaseEntityWithPropertiesV1<T extends RESTBaseEntityV1<
 		
 		if (deepCopy)
 		{
-			if (this.properties == null)
-				clone.properties = null;
-			else
+			if (this.properties != null)
+			{
+				clone.properties = new RESTPropertyTagCollectionV1();
 				this.properties.cloneInto(clone.properties, deepCopy);
+			}
 		}
 		else
 		{
