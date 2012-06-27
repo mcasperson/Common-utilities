@@ -452,6 +452,7 @@ public class Level extends SpecNode {
 		/*
 		 * Check this level to see if the topic exists
 		 */
+		final List<SpecTopic> topics = getSpecTopics();
 		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic == topic || childTopic.getId().equals(topic.getId())) return childTopic;
@@ -502,6 +503,7 @@ public class Level extends SpecNode {
 		/*
 		 * Check this level to see if the topic exists
 		 */
+		final List<SpecTopic> topics = getSpecTopics();
 		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic.getDBId() == DBId) return childTopic;
@@ -545,6 +547,7 @@ public class Level extends SpecNode {
 		/*
 		 * Check this level to see if the topic exists
 		 */
+		final List<SpecTopic> topics = getSpecTopics();
 		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic == topic || childTopic.getId().equals(topic.getId())) return true;
@@ -573,6 +576,7 @@ public class Level extends SpecNode {
 		/*
 		 * Check this level to see if the topic exists
 		 */
+		final List<SpecTopic> topics = getSpecTopics();
 		for (final SpecTopic childTopic : topics)
 		{
 			if (childTopic.getDBId() == topicId) return true;
