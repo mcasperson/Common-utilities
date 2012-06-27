@@ -251,6 +251,14 @@ public class RESTReader
 	 */
 	public RESTTopicV1 getTopicById(final int id, final Integer rev)
 	{
+		return getTopicById(id, rev, false);
+	}
+	
+	/*
+	 * Gets a specific tag tuple from the database as specified by the tags ID.
+	 */
+	public RESTTopicV1 getTopicById(final int id, final Integer rev, final boolean expandTranslations)
+	{
 		try
 		{
 			final RESTTopicV1 topic;
@@ -263,10 +271,16 @@ public class RESTReader
 				/* We need to expand the all the items in the topic collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk expandTopicTranslations = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
 				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")),
 						new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
 
+				if (expandTranslations)
+				{
+					expand.getBranches().add(expandTopicTranslations);
+				}
+				
 				final String expandString = mapper.writeValueAsString(expand);
 				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 				if (rev == null)
@@ -752,7 +766,7 @@ public class RESTReader
 	 */
 	public RESTTopicV1 getContentSpecById(final int id, final Integer rev)
 	{
-		final RESTTopicV1 cs = getTopicById(id, rev);
+		final RESTTopicV1 cs = getTopicById(id, rev, false);
 		if (cs == null)
 			return null;
 		
@@ -760,7 +774,34 @@ public class RESTReader
 		for (final RESTTagV1 type : topicTypes)
 		{
 			if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
+			{
 				return cs;
+			}
+		}
+		return null;
+	}
+	
+	/*
+	 * Gets a ContentSpec tuple for a specified id.
+	 */
+	public RESTTranslatedTopicV1 getTranslatedContentSpecById(final int id, final Integer rev, final String locale)
+	{
+		if (locale == null) return null;
+		final RESTTopicV1 cs = getTopicById(id, rev, true);
+		if (cs == null)
+			return null;
+		
+		final List<RESTTagV1> topicTypes = ComponentBaseTopicV1.returnTagsInCategoriesByID(cs, CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
+		for (final RESTTagV1 type : topicTypes)
+		{
+			if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
+			{
+				for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
+				{
+					if (topic.getLocale().equals(locale))
+						return topic;
+				}
+			}
 		}
 		return null;
 	}
@@ -889,7 +930,7 @@ public class RESTReader
 	 */
 	public Integer getLatestCSRevById(final Integer csId)
 	{
-		final RESTTopicV1 cs = getTopicById(csId, null);
+		final RESTTopicV1 cs = getTopicById(csId, null, false);
 		if (cs != null)
 		{
 			return cs.getRevision();

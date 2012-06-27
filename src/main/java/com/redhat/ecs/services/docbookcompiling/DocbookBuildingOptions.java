@@ -98,7 +98,11 @@ public class DocbookBuildingOptions
 	/**
 	 * The value assigned to the FilterOptionName field in the FilterOption table for the "Book Subtitle" value
 	 */
-	public static String DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE = "Book Subtitle";
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE = "Book Subtitle";	
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption table for the "Insert editor links" option
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS = "Insert editor links";
 
 	private Boolean suppressContentSpecPage = false;
 	private Boolean insertBugzillaLinks = true;
@@ -112,6 +116,7 @@ public class DocbookBuildingOptions
 	private Boolean taskAndOverviewOnly = true;
 	private Boolean insertSurveyLink = true;
 	private String emailTo = null;
+	private Boolean insertEditorLinks = false;
 
 	/** The cvs_pkg option in the publican.cfg file */
 	private String cvsPkgOption = null;
@@ -249,6 +254,7 @@ public class DocbookBuildingOptions
 		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_TITLE);
 		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT);
 		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE);
+		retValue.add(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS);
 
 		return retValue;
 	}
@@ -319,6 +325,9 @@ public class DocbookBuildingOptions
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
 			return this.getBookSubtitle();
+		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS))
+			return this.getInsertEditorLinks() == null ? null : this.insertEditorLinks.toString();
 
 		return null;
 	}
@@ -385,6 +394,9 @@ public class DocbookBuildingOptions
 
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION))
 				this.setBookEdition(fieldValue);
+			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS))
+				this.setInsertEditorLinks(Boolean.parseBoolean(fieldValue));
 
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
 			{
@@ -516,5 +528,15 @@ public class DocbookBuildingOptions
 	public void setBookSubtitle(final String bookSubtitle)
 	{
 		this.bookSubtitle = bookSubtitle;
+	}
+
+	public Boolean getInsertEditorLinks()
+	{
+		return insertEditorLinks;
+	}
+
+	public void setInsertEditorLinks(final Boolean insertEditorLinks)
+	{
+		this.insertEditorLinks = insertEditorLinks;
 	}
 }

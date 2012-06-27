@@ -278,4 +278,5 @@ public abstract class ComponentBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U ex
 	public abstract String returnErrorXRefID();
 	public abstract String returnXrefPropertyOrId(final Integer propertyTagId);
 	public abstract String returnXRefID();
+	public abstract String returnEditorURL();
 }

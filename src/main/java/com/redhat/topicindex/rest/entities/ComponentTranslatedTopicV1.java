@@ -60,7 +60,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		}
 		else if (hasBeenPushedForTranslation(source))
 		{
-			return CommonConstants.SERVER_URL + "/TopicIndex/TranslatedTopic.seam?translatedTopicId=" + returnPushedTranslationTopicId(source) + "&amp;locale=" + source.getLocale();
+			return CommonConstants.SERVER_URL + "/TopicIndex/TranslatedTopic.seam?translatedTopicId=" + returnPushedTranslationTopicId(source) + "&amp;locale=" + source.getTopic().getLocale();
 		}
 		else
 		{
@@ -227,6 +227,33 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		else
 		{
 			return returnXRefID(source);
+		}
+	}
+	
+	@Override
+	public String returnEditorURL()
+	{
+		return returnEditorURL(source);
+	}
+	
+	static public String returnEditorURL(final RESTTranslatedTopicV1 source)
+	{
+		/*
+		 * If the topic isn't a dummy then link to the translated counterpart. If the topic is a dummy URL and the locale doesn't match the historical topic's
+		 * locale then it means that the topic has been pushed to zanata so link to the original pushed translation. If neither of these rules apply then link
+		 * to the standard topic.
+		 */
+		if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
+		{
+			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + returnZanataId(source) + "&amp;locale=" + source.getLocale();
+		}
+		else if (hasBeenPushedForTranslation(source))
+		{
+			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + returnZanataId(source) + "&amp;locale=" + source.getLocale();
+		}
+		else
+		{
+			return ComponentTopicV1.returnEditorURL(source.getTopic());
 		}
 	}
 }

@@ -127,4 +127,15 @@ public class ComponentTopicV1 extends ComponentBaseTopicV1<RESTTopicV1, RESTTopi
 			return returnXRefID(source);
 		}
 	}
+	
+	@Override
+	public String returnEditorURL()
+	{
+		return returnEditorURL(source);
+	}
+	
+	static public String returnEditorURL(final RESTTopicV1 source)
+	{
+		return CommonConstants.SERVER_URL + "/TopicIndex/TopicEdit.seam?topicTopicId=" + source.getId();
+	}
 }

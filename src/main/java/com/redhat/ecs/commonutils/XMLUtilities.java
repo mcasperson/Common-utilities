@@ -1155,7 +1155,7 @@ class XMLProperties {
 		
 	}
 	
-	public XMLProperties(XMLProperties props) {
+	public XMLProperties(final XMLProperties props) {
 		if (props != null) {
 			this.inline = props.isInline();
 			this.verbatim = props.isVerbatim();

@@ -292,9 +292,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	/**
 	 * Adds some debug information and links to the end of the topic
 	 */
+	@SuppressWarnings("unchecked")
 	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
-	{		
-		if ((docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink()) || searchTagsUrl != null)
+	{
+		final T topic = (T) specTopic.getTopic();
+		
+		if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions.getInsertEditorLinks())) || searchTagsUrl != null)
 		{
 			/* SIMPLESECT TO HOLD OTHER LINKS */
 			final Element bugzillaSection = document.createElement("simplesect");
@@ -322,6 +325,24 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 				final Text endSurveyText = document.createTextNode(".");
 				surveyPara.appendChild(endSurveyText);
 			}
+			
+			// EDITOR LINK
+			if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertEditorLinks())
+			{
+				final String editorUrl = topic instanceof RESTTopicV1 ? ComponentTopicV1.returnEditorURL((RESTTopicV1)topic) : ComponentTranslatedTopicV1.returnEditorURL((RESTTranslatedTopicV1)topic);
+				
+				final Element editorLinkPara = document.createElement("para");
+				editorLinkPara.setAttribute("role", DocbookBuilderConstants.ROLE_CREATE_BUG_PARA);
+				bugzillaSection.appendChild(editorLinkPara);
+	
+				final Element surveyULink = document.createElement("ulink");
+				editorLinkPara.appendChild(surveyULink);
+				surveyULink.setTextContent("Edit this topic");
+				surveyULink.setAttribute("url", editorUrl);
+	
+				final Text endSurveyText = document.createTextNode(".");
+				editorLinkPara.appendChild(endSurveyText);
+			}
 	
 			/* searchTagsUrl will be null for internal (i.e. HTML rendering) builds */
 			if (searchTagsUrl != null)
@@ -336,7 +357,6 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 				skynetElement.appendChild(skynetLinkULink);
 				skynetLinkULink.setTextContent("View in Skynet");
 				
-				final RESTBaseTopicV1<? extends RESTBaseTopicV1<?, ?>, ? extends BaseRestCollectionV1<?, ?>> topic = specTopic.getTopic();
 				final String url = topic instanceof RESTTopicV1 ? ComponentTopicV1.returnSkynetURL((RESTTopicV1)topic) : ComponentTranslatedTopicV1.returnSkynetURL((RESTTranslatedTopicV1)topic); 
 				skynetLinkULink.setAttribute("url", url);
 	
@@ -351,10 +371,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 				skynetVersionElementULink.setTextContent("Built with " + buildName);
 				skynetVersionElementULink.setAttribute("url", searchTagsUrl);
 			}
+			
 		}
 		
 		// BUGZILLA LINK
-		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
+		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks())
+		{
 			processTopicBugzillaLink(specTopic, document, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
 		}
 	}
