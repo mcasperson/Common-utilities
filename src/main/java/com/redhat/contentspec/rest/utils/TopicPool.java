@@ -23,6 +23,16 @@ import com.redhat.topicindex.rest.expand.ExpandDataDetails;
 import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
 import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
 
+/**
+ * A fairly simple container class to hold a set of topics that need to be updated or created
+ * using the REST API. By using the topic pool it allows for all the topics to be updated or created
+ * in one REST call and therefore one transaction.
+ * 
+ * @author lnewson
+ *
+ * @param <T> The Topic Type eg RESTTranslatedTopicV1 or RESTTopicV1
+ * @param <U> The Topics Collection Type eg RESTTranslatedTopicCollectionV1 or RESTTopicCollectionV1
+ */
 public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 
@@ -39,16 +49,32 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		this.client = client;
 	}
 
+	/**
+	 * Add a topic that is to be created to the topic pool.
+	 * 
+	 * @param topic The topic to be created.
+	 */
 	public void addNewTopic(final RESTTopicV1 topic)
 	{
 		newTopicPool.addItem(topic);
 	}
 
+	/**
+	 * Add a topic that is to be updated to the topic pool.
+	 * 
+	 * @param topic The topic to be updated.
+	 */
 	public void addUpdatedTopic(final RESTTopicV1 topic)
 	{
 		updatedTopicPool.addItem(topic);
 	}
 
+	/**
+	 * Saves all the topics in the pool to the database using the REST API.
+	 * 
+	 * @return True if all the topics in the pool were saved successfully,
+	 * otherwise false.
+	 */
 	public boolean savePool()
 	{
 		if ((newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty()) && (updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty()))
@@ -100,32 +126,43 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		}
 	}
 
+	/**
+	 * Initialises a content spec topic using the REST topics that exist
+	 * within this pool. The topic pool must be saved and initialised before
+	 * this call will work.
+	 * 
+	 * @param specTopic
+	 * @return
+	 */
 	public SpecTopic initialiseFromPool(final SpecTopic specTopic)
 	{
-		if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty())
+		if (initialised)
 		{
-			for (final RESTTopicV1 topic : newTopicPool.getItems())
+			if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty())
 			{
-				if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
+				for (final RESTTopicV1 topic : newTopicPool.getItems())
 				{
-					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber())))
+					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
 					{
-						specTopic.setDBId(topic.getId());
-						return specTopic;
+						if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber())))
+						{
+							specTopic.setDBId(topic.getId());
+							return specTopic;
+						}
 					}
 				}
 			}
-		}
-		if (updatedTopicPool.getItems() != null && !updatedTopicPool.getItems().isEmpty())
-		{
-			for (final RESTTopicV1 topic : updatedTopicPool.getItems())
+			if (updatedTopicPool.getItems() != null && !updatedTopicPool.getItems().isEmpty())
 			{
-				if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
+				for (final RESTTopicV1 topic : updatedTopicPool.getItems())
 				{
-					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber())))
+					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
 					{
-						specTopic.setDBId(topic.getId());
-						return specTopic;
+						if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber())))
+						{
+							specTopic.setDBId(topic.getId());
+							return specTopic;
+						}
 					}
 				}
 			}
@@ -133,16 +170,31 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 		return specTopic;
 	}
 
+	/**
+	 * Checks to see if the topic pool has been saved and initialised against
+	 * the REST Interface.
+	 * 
+	 * @return True if the topics have been saved and initialised.
+	 */
 	public boolean isInitialised()
 	{
 		return initialised;
 	}
 
+	/**
+	 * Checks to see if the topic pool is empty.
+	 * 
+	 * @return True if the pool is empty otherwise false.
+	 */
 	public boolean isEmpty()
 	{
 		return newTopicPool.getItems() == null ? true : newTopicPool.getItems().isEmpty();
 	}
 
+	/**
+	 * Rolls back any new topics that were created. Since existing topics are stored 
+	 * in revision data when edited we can't roll back that data properly.
+	 */
 	@SuppressWarnings("serial")
 	public void rollbackPool()
 	{
