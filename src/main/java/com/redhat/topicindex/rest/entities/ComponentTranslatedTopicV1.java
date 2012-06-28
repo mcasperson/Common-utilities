@@ -238,6 +238,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	
 	static public String returnEditorURL(final RESTTranslatedTopicV1 source)
 	{
+		final String zanataId = returnZanataId(source);
 		/*
 		 * If the topic isn't a dummy then link to the translated counterpart. If the topic is a dummy URL and the locale doesn't match the historical topic's
 		 * locale then it means that the topic has been pushed to zanata so link to the original pushed translation. If neither of these rules apply then link
@@ -245,11 +246,11 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		 */
 		if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
 		{
-			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + returnZanataId(source) + "&amp;locale=" + source.getLocale();
+			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 		}
 		else if (hasBeenPushedForTranslation(source))
 		{
-			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + returnZanataId(source) + "&amp;locale=" + source.getLocale();
+			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 		}
 		else
 		{
