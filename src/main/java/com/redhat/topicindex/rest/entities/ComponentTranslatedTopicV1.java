@@ -175,6 +175,29 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		return null;
 	}
 	
+	public RESTTranslatedTopicV1 returnPushedTranslatedTopic()
+	{
+		return returnPushedTranslatedTopic(source);
+	}
+	
+	static public RESTTranslatedTopicV1 returnPushedTranslatedTopic(final RESTTranslatedTopicV1 source)
+	{
+		if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
+			return source;
+
+		/* Check that a translation exists that is the same locale as the base topic */
+		if (source.getTopic().getTranslatedTopics_OTM() != null && source.getTopic().getTranslatedTopics_OTM().getItems() != null)
+		{
+			for (final RESTTranslatedTopicV1 translatedTopic : source.getTopic().getTranslatedTopics_OTM().getItems())
+			{
+				if (translatedTopic.getLocale().equals(source.getTopic().getLocale()))
+					return translatedTopic;
+			}
+		}
+
+		return null;
+	}
+	
 	public boolean hasBeenPushedForTranslation()
 	{
 		return hasBeenPushedForTranslation(source);
@@ -238,7 +261,6 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	
 	static public String returnEditorURL(final RESTTranslatedTopicV1 source)
 	{
-		final String zanataId = returnZanataId(source);
 		/*
 		 * If the topic isn't a dummy then link to the translated counterpart. If the topic is a dummy URL and the locale doesn't match the historical topic's
 		 * locale then it means that the topic has been pushed to zanata so link to the original pushed translation. If neither of these rules apply then link
@@ -246,10 +268,13 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		 */
 		if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
 		{
+			final String zanataId = returnZanataId(source);
 			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 		}
 		else if (hasBeenPushedForTranslation(source))
 		{
+			final RESTTranslatedTopicV1 pushedTranslatedTopic = returnPushedTranslatedTopic(source);
+			final String zanataId = returnZanataId(pushedTranslatedTopic);
 			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 		}
 		else
