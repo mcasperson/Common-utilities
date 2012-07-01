@@ -140,4 +140,9 @@ public class CommonConstants
 	 * The default locale to be used on all new topics
 	 */
 	public static final String DEFAULT_LOCALE = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY) == null ? "en-US" : System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+
+	/**
+	 * The regular expression string used to check if an email is valid.
+	 */
+	public static final String EMAIL_REGEX = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
 }

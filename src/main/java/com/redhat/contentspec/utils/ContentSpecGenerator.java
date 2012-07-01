@@ -209,7 +209,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			retValue.setVersion(docbookBuildingOptions.getBookProductVersion());
 			retValue.setEdition(docbookBuildingOptions.getBookEdition() == null || docbookBuildingOptions.getBookEdition().isEmpty() ? null : docbookBuildingOptions.getBookEdition());
 			retValue.setSubtitle(docbookBuildingOptions.getBookSubtitle() == null || docbookBuildingOptions.getBookSubtitle().isEmpty() ? null : docbookBuildingOptions.getBookSubtitle());
-			retValue.setPubsNumber(docbookBuildingOptions.getBookPubsnumber());
+			retValue.setPubsNumber(Integer.parseInt(docbookBuildingOptions.getBookPubsnumber()));
 			retValue.setDtd("Docbook 4.5");
 			retValue.setOutputStyle(CSConstants.SKYNET_OUTPUT_FORMAT);
 			retValue.setCopyrightHolder("Red Hat, Inc");

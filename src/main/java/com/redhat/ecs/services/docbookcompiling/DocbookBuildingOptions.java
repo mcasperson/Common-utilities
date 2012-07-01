@@ -6,6 +6,7 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.redhat.ecs.commonutils.ExceptionUtilities;
+import com.redhat.ecs.constants.CommonConstants;
 
 /**
  * This class contains the options associated with building the docbook zip file.
@@ -128,13 +129,46 @@ public class DocbookBuildingOptions
 	private String bookProduct = "Documentation 0.1";
 	private String bookProductVersion = "0.1";
 	private String bookEdition = null;
-	private Integer bookPubsnumber = null;
+	private String bookPubsnumber = null;
 	private String bookSubtitle = null;
 
 	@JsonIgnore
 	public boolean isValid()
 	{
-		return emailTo != null && !emailTo.trim().isEmpty();
+		if (emailTo == null || emailTo.trim().isEmpty() || !emailTo.matches(CommonConstants.EMAIL_REGEX))
+		{
+			return false;
+		}
+			
+		if (bookTitle == null || bookTitle.isEmpty())
+		{
+			return false;
+		}
+		
+		if (bookProduct == null || bookProduct.isEmpty())
+		{
+			return false;
+		}
+		
+		if (bookProductVersion == null || bookProductVersion.isEmpty()
+				|| !bookProductVersion.matches("[0-9]+(.[0-9+](.[0-9]+)?)?"))
+		{
+			return false;
+		}
+		
+		if (bookEdition != null && !bookEdition.isEmpty() 
+				&& !bookEdition.matches("[0-9]+(.[0-9+](.[0-9]+)?)?"))
+		{
+			return false;
+		}
+		
+		if (bookPubsnumber != null && !bookPubsnumber.isEmpty() 
+				&& !bookPubsnumber.matches("[0-9]+"))
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
 	public Boolean getIncludeUntranslatedTopics()
@@ -400,14 +434,7 @@ public class DocbookBuildingOptions
 
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
 			{
-				try
-				{
-					this.setBookPubsnumber(Integer.parseInt(fieldValue));
-				}
-				catch (final NumberFormatException ex)
-				{
-					this.setBookPubsnumber(null);
-				}
+				this.setBookPubsnumber(fieldValue);
 			}
 
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
@@ -510,12 +537,12 @@ public class DocbookBuildingOptions
 		this.bookEdition = bookEdition;
 	}
 
-	public Integer getBookPubsnumber()
+	public String getBookPubsnumber()
 	{
 		return bookPubsnumber;
 	}
 
-	public void setBookPubsnumber(final Integer bookPubsnumber)
+	public void setBookPubsnumber(final String bookPubsnumber)
 	{
 		this.bookPubsnumber = bookPubsnumber;
 	}
