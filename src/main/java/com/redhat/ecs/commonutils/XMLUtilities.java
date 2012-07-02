@@ -942,22 +942,9 @@ public class XMLUtilities
 			if (nodeCollections != null && nodeCollections.size() != 0)
 			{
 				/* Zanata will change the format of the strings that it returns. Here we account for any trimming that was done. */
-				final String lTrimtString = StringUtilities.ltrim(originalString);
-				final String rTrimString = StringUtilities.rtrim(originalString);
-				final String trimString = originalString.trim();
+				final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
 
-				final boolean containsExactMacth = translations.containsKey(originalString);
-				final boolean lTrimMatch = translations.containsKey(lTrimtString);
-				final boolean rTrimMatch = translations.containsKey(rTrimString);
-				final boolean trimMatch = translations.containsKey(trimString);
-
-				/* remember the details of the trimming, so we can add the padding back */
-				final ZanataStringDetails fixedStringDetails = containsExactMacth ? new ZanataStringDetails(0, 0, originalString) : 
-					lTrimMatch ? new ZanataStringDetails(originalString.length() - lTrimtString.length(), 0, lTrimtString) : 
-					rTrimMatch ? new ZanataStringDetails(0, originalString.length() - rTrimString.length(), rTrimString) : 
-					trimMatch ? new ZanataStringDetails(StringUtilities.ltrimCount(originalString), StringUtilities.rtrimCount(originalString), trimString) : null;
-
-				if (fixedStringDetails != null)
+				if (fixedStringDetails.getFixedString() != null)
 				{
 					final String translation = translations.get(fixedStringDetails.getFixedString());
 
@@ -1125,21 +1112,61 @@ public class XMLUtilities
 	}
 }
 
-/** Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match it to the source XML */
+/** Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match it to the source XML. */
 class ZanataStringDetails
 {
 	/** The number of spaces that Zanata removed from the left */
 	private final int leftTrimCount;
 	/** The number of spaces that Zanata removed from the right */
 	private final int rightTrimCount;
-	/** The string that was matched to the one returned by Zanata */
+	/** The string that was matched to the one returned by Zanata. This will be null if there was no match. */
 	private final String fixedString;
 
-	ZanataStringDetails(final int leftTrimCount, final int rightTrimCount, final String fixedString)
+	ZanataStringDetails(final Map<String, String> translations, final String originalString)
 	{
-		this.leftTrimCount = leftTrimCount;
-		this.rightTrimCount = rightTrimCount;
-		this.fixedString = fixedString;
+		/*
+		 * Here we account for any trimming that is done by Zanata.
+		 */
+		final String lTrimtString = StringUtilities.ltrim(originalString);
+		final String rTrimString = StringUtilities.rtrim(originalString);
+		final String trimString = originalString.trim();
+
+		final boolean containsExactMacth = translations.containsKey(originalString);
+		final boolean lTrimMatch = translations.containsKey(lTrimtString);
+		final boolean rTrimMatch = translations.containsKey(rTrimString);
+		final boolean trimMatch = translations.containsKey(trimString);
+
+		/* remember the details of the trimming, so we can add the padding back */
+		if (containsExactMacth)
+		{
+			this.leftTrimCount = 0;
+			this.rightTrimCount = 0;
+			this.fixedString = originalString;
+		}
+		else if (lTrimMatch)
+		{
+			this.leftTrimCount = originalString.length() - lTrimtString.length();
+			this.rightTrimCount = 0;
+			this.fixedString = lTrimtString;
+		}
+		else if (rTrimMatch)
+		{
+			this.leftTrimCount = 0;
+			this.rightTrimCount = originalString.length() - rTrimString.length();
+			this.fixedString = rTrimString;
+		}
+		else if (trimMatch)
+		{
+			this.leftTrimCount = StringUtilities.ltrimCount(originalString);
+			this.rightTrimCount = StringUtilities.rtrimCount(originalString);
+			this.fixedString = trimString;
+		}
+		else
+		{
+			this.leftTrimCount = 0;
+			this.rightTrimCount = 0;
+			this.fixedString = null;
+		}
 	}
 
 	public int getLeftTrimCount()
