@@ -6,6 +6,54 @@ import java.util.regex.Pattern;
 
 public class StringUtilities
 {
+	public static int rtrimCount(final String input)
+	{
+		if (input == null)
+			return 0;
+		if (input.isEmpty())
+			return 0;
+		int i = input.length() - 1;
+		while (i >= 0 && input.charAt(i) == ' ') 
+			--i;
+		return  input.length() - i;
+	}
+	
+	public static int ltrimCount(final String input)
+	{
+		if (input == null)
+			return 0;
+		if (input.isEmpty())
+			return 0;
+		int i = 0;
+		while (i < input.length() && input.charAt(i) == ' ') 
+			++i;
+		return i;			
+	}
+	
+	public static String rtrim(final String input)
+	{
+		if (input == null)
+			return null;
+		if (input.isEmpty())
+			return input;
+		int i = input.length() - 1;
+		while (i >= 0 && input.charAt(i) == ' ') 
+			--i;
+		return input.substring(0, i+1);			
+	}
+	
+	public static String ltrim(final String input)
+	{
+		if (input == null)
+			return null;
+		if (input.isEmpty())
+			return input;
+		int i = 0;
+		while (i < input.length() && input.charAt(i) == ' ') 
+			++i;
+		return input.substring(i, input.length());			
+	}
+	
 	public static String cleanTextForCSV(final String input)
 	{
 		if (input == null)
