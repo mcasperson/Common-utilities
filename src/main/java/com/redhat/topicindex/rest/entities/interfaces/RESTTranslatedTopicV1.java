@@ -5,6 +5,13 @@ import java.util.Date;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicStringCollectionV1;
 
+/**
+ * The RESTTranslatedTopicV1 class is a combination of the TranslatedTopic and TranslatedTopicData classes. In the database, a TranslatedTopic
+ * is a reference to a particular revision of a topic, and it has multiple TranslatedTopicData children for each locale. From the REST point of view
+ * each RESTTranslatedTopicV1 combines the topic information from the TranslatedTopic, and the translation information from the TranslatedTopicData class.
+ * 
+ * @author Matthew Casperson
+ */
 public class RESTTranslatedTopicV1 extends RESTBaseTopicV1<RESTTranslatedTopicV1, RESTTranslatedTopicCollectionV1>
 {
 	public static final String TOPICID_NAME = "topicid";
