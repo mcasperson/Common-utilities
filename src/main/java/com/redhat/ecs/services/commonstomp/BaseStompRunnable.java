@@ -18,7 +18,7 @@ public abstract class BaseStompRunnable implements Runnable
 	 * true if a shutdown has been initialised. This variable should be checked
 	 * at regular intervals in long running processes.
 	 * 
-	 * Maybe
+	 * TODO: Should use Thread.interrupted() here instead.
 	 */
 	private AtomicBoolean shutdownRequested = new AtomicBoolean(false);
 	/** a reference to the STOMP client */
