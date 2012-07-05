@@ -5,6 +5,7 @@ import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
 import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
+import com.redhat.topicindex.zanata.ZanataDetails;
 
 /**
  * This component contains methods that can be applied against translated topics
@@ -38,7 +39,14 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	
 	static public String returnBugzillaBuildId(final RESTTranslatedTopicV1 source)
 	{
-		return "Translation " + returnZanataId(source) + " " + source.getLocale();
+		if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
+		{
+			return "Translation " + returnZanataId(source) + " " + source.getLocale();
+		}
+		else
+		{
+			return ComponentTopicV1.returnBugzillaBuildId(source.getTopic());
+		}
 	}
 
 	@Override
@@ -256,30 +264,48 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	@Override
 	public String returnEditorURL()
 	{
-		return returnEditorURL(source);
+		return returnEditorURL(source, new ZanataDetails());
 	}
 	
-	static public String returnEditorURL(final RESTTranslatedTopicV1 source)
+	public String returnEditorURL(final ZanataDetails zanataDetails)
 	{
-		/*
-		 * If the topic isn't a dummy then link to the translated counterpart. If the topic is a dummy URL and the locale doesn't match the historical topic's
-		 * locale then it means that the topic has been pushed to zanata so link to the original pushed translation. If neither of these rules apply then link
-		 * to the standard topic.
-		 */
-		if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
+		return returnEditorURL(source, zanataDetails);
+	}
+	
+	static public String returnEditorURL(final RESTTranslatedTopicV1 source, final ZanataDetails zanataDetails)
+	{
+		final String zanataServerUrl = zanataDetails == null ? null : zanataDetails.getServer();
+		final String zanataProject = zanataDetails == null ? null : zanataDetails.getProject();
+		final String zanataVersion = zanataDetails == null ? null : zanataDetails.getVersion();
+		
+		if (zanataServerUrl != null && !zanataServerUrl.isEmpty()
+				&& zanataProject != null && !zanataProject.isEmpty()
+				&& zanataVersion != null && !zanataVersion.isEmpty())
 		{
-			final String zanataId = returnZanataId(source);
-			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
-		}
-		else if (hasBeenPushedForTranslation(source))
-		{
-			final RESTTranslatedTopicV1 pushedTranslatedTopic = returnPushedTranslatedTopic(source);
-			final String zanataId = returnZanataId(pushedTranslatedTopic);
-			return "http://translate.engineering.redhat.com/webtrans/Application.html?project=skynet-topics&amp;iteration=1&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+			/*
+			 * If the topic isn't a dummy then link to the translated counterpart. If the topic is a dummy URL and the locale doesn't match the historical topic's
+			 * locale then it means that the topic has been pushed to zanata so link to the original pushed translation. If neither of these rules apply then link
+			 * to the standard topic.
+			 */
+			if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
+			{
+				final String zanataId = returnZanataId(source);
+				return zanataServerUrl + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+			}
+			else if (hasBeenPushedForTranslation(source))
+			{
+				final RESTTranslatedTopicV1 pushedTranslatedTopic = returnPushedTranslatedTopic(source);
+				final String zanataId = returnZanataId(pushedTranslatedTopic);
+				return zanataServerUrl + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+			}
+			else
+			{
+				return null;
+			}
 		}
 		else
 		{
-			return ComponentTopicV1.returnEditorURL(source.getTopic());
+			return null;
 		}
 	}
 }

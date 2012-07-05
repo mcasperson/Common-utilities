@@ -193,17 +193,7 @@ public class StringUtilities
 	 */
 	public static int indexOf(final String input, final char delim)
 	{
-		if (input == null) return -1;
-		int index = input.indexOf(delim);
-		if (index != 0)
-		{
-			while (index != -1 && index != (input.length() - 1))
-			{
-				if (input.charAt(index - 1) != '\\') break;
-				index = input.indexOf(delim, index + 1);
-			}	
-		}
-		return index;
+		return indexOf(input, delim, 0);
 	}
 	
 	/**
@@ -236,14 +226,9 @@ public class StringUtilities
 	 * @param delim The character to be found
 	 * @return The index of the found character or -1 if the character wasn't found
 	 */
-	public static int lastIndexOf(final String input, final char delim) {
-		if (input == null) return -1;
-		int index = input.lastIndexOf(delim);
-		while (index != -1 && index != 0) {
-			if (input.charAt(index-1) != '\\') break;
-			index = input.lastIndexOf(delim, index-1);
-		}
-		return index;
+	public static int lastIndexOf(final String input, final char delim)
+	{
+		return input == null ? -1 : lastIndexOf(input, delim, input.length());
 	}
 	
 	/**

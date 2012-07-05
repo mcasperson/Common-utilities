@@ -35,7 +35,6 @@ public class SpecTopic extends SpecNode
 	private ArrayList<TargetRelationship> topicTargetRelationships = new ArrayList<TargetRelationship>();
 	private ArrayList<TargetRelationship> levelRelationships = new ArrayList<TargetRelationship>();
 	private String targetId = null;
-	private int preProcessedLineNumber = 0;
 	private String title = null;
 	private String duplicateId = null;
 	private RESTBaseTopicV1<?, ?> topic = null;
@@ -58,7 +57,7 @@ public class SpecTopic extends SpecNode
 	 * @param type
 	 *            The Topic Type for this topic (Concept, Task, etc...).
 	 */
-	public SpecTopic(String id, String title, int lineNumber, String specLine, int preProcessedLineNumber, String type)
+	public SpecTopic(final String id, final String title, final int lineNumber, final String specLine, final String type)
 	{
 		super(lineNumber, specLine);
 		if (id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
@@ -67,7 +66,6 @@ public class SpecTopic extends SpecNode
 		}
 		this.id = id;
 		this.type = type;
-		this.preProcessedLineNumber = preProcessedLineNumber;
 		this.title = title;
 	}
 
@@ -85,10 +83,9 @@ public class SpecTopic extends SpecNode
 	 * @param type
 	 *            The Topic Type for this topic (Concept, Task, etc...).
 	 */
-	public SpecTopic(String title, int lineNumber, String specLine, int preProcessedLineNumber, String type)
+	public SpecTopic(final String title, final int lineNumber, final String specLine, final String type)
 	{
 		super(lineNumber, specLine);
-		this.preProcessedLineNumber = preProcessedLineNumber;
 		this.title = title;
 		this.type = type;
 	}
@@ -168,7 +165,7 @@ public class SpecTopic extends SpecNode
 	{
 		if (id.equals("N") || id.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || id.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || id.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX))
 		{
-			return Integer.toString(preProcessedLineNumber) + "-" + id;
+			return Integer.toString(getLineNumber()) + "-" + id;
 		}
 		else
 		{
@@ -263,16 +260,6 @@ public class SpecTopic extends SpecNode
 	}
 
 	/**
-	 * Gets the pre processed line number for the Content Specification Topic.
-	 * 
-	 * @return The pre processed line number or null if one wasn't set.
-	 */
-	public int getPreProcessedLineNumber()
-	{
-		return preProcessedLineNumber;
-	}
-
-	/**
 	 * Gets the Target ID for the Content Specification Topic if one exists.
 	 * 
 	 * @return The Target ID or null if none exist.
@@ -285,10 +272,9 @@ public class SpecTopic extends SpecNode
 	/**
 	 * Set the Target ID for the Content Specification Topic.
 	 * 
-	 * @param targetId
-	 *            The Target ID for the Topic.
+	 * @param targetId The Target ID for the Topic.
 	 */
-	public void setTargetId(String targetId)
+	public void setTargetId(final String targetId)
 	{
 		this.targetId = targetId;
 	}
@@ -296,40 +282,70 @@ public class SpecTopic extends SpecNode
 	/**
 	 * Add a relationship to the topic.
 	 * 
-	 * @param topic
-	 *            The topic that is to be related to.
-	 * @param type
-	 *            The type of the relationship.
+	 * @param topic The topic that is to be related to.
+	 * @param type The type of the relationship.
 	 */
-	public void addRelationshipToTopic(SpecTopic topic, RelationshipType type)
+	public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type)
 	{
 		topicRelationships.add(new TopicRelationship(this, topic, type));
 	}
-
+	
 	/**
 	 * Add a relationship to the topic.
 	 * 
-	 * @param topic
-	 *            The topic that is to be related to.
-	 * @param type
-	 *            The type of the relationship.
+	 * @param topic The topic that is to be related to.
+	 * @param type The type of the relationship.
+	 * @param title The title of the topic to be related to.
 	 */
-	public void addRelationshipToTarget(SpecTopic topic, RelationshipType type)
+	public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type, final String title)
 	{
-		topicTargetRelationships.add(new TargetRelationship(this, topic, type));
+		topicRelationships.add(new TopicRelationship(this, topic, type, title));
 	}
 
 	/**
 	 * Add a relationship to the topic.
 	 * 
-	 * @param topic
-	 *            The topic that is to be related to.
-	 * @param type
-	 *            The type of the relationship.
+	 * @param topic The topic that is to be related to.
+	 * @param type The type of the relationship.
 	 */
-	public void addRelationshipToTarget(Level level, RelationshipType type)
+	public void addRelationshipToTarget(final SpecTopic topic, final RelationshipType type)
+	{
+		topicTargetRelationships.add(new TargetRelationship(this, topic, type));
+	}
+	
+	/**
+	 * Add a relationship to the topic.
+	 * 
+	 * @param topic The topic that is to be related to.
+	 * @param type The type of the relationship.
+	 * @param title The title of the topic to be related to.
+	 */
+	public void addRelationshipToTarget(final SpecTopic topic, final RelationshipType type, final String title)
+	{
+		topicTargetRelationships.add(new TargetRelationship(this, topic, type, title));
+	}
+
+	/**
+	 * Add a relationship to the topic.
+	 * 
+	 * @param topic The topic that is to be related to.
+	 * @param type The type of the relationship.
+	 */
+	public void addRelationshipToTarget(final Level level, final RelationshipType type)
 	{
 		levelRelationships.add(new TargetRelationship(this, level, type));
+	}
+	
+	/**
+	 * Add a relationship to the topic.
+	 * 
+	 * @param topic The topic that is to be related to.
+	 * @param type The type of the relationship.
+	 * @param title The title of the topic to be related to.
+	 */
+	public void addRelationshipToTarget(final Level level, final RelationshipType type, final String title)
+	{
+		levelRelationships.add(new TargetRelationship(this, level, type, title));
 	}
 
 	// End of the basic getter/setter methods for this Topic.
@@ -438,6 +454,36 @@ public class SpecTopic extends SpecNode
 			}
 		}
 		return relatedRelationships;
+	}
+	
+	/**
+	 * Gets a list of link-list relationships for the topic.
+	 */
+	public List<Relationship> getLinkListRelationships()
+	{
+		final ArrayList<Relationship> linkListRelationships = new ArrayList<Relationship>();
+		for (final Relationship r : topicRelationships)
+		{
+			if (r.getType() == RelationshipType.LINKLIST)
+			{
+				linkListRelationships.add(r);
+			}
+		}
+		for (final Relationship r : topicTargetRelationships)
+		{
+			if (r.getType() == RelationshipType.LINKLIST)
+			{
+				linkListRelationships.add(r);
+			}
+		}
+		for (final Relationship r : levelRelationships)
+		{
+			if (r.getType() == RelationshipType.LINKLIST)
+			{
+				linkListRelationships.add(r);
+			}
+		}
+		return linkListRelationships;
 	}
 
 	@Override
@@ -615,6 +661,49 @@ public class SpecTopic extends SpecNode
 		for (final TargetRelationship relationship : levelRelationships)
 		{
 			if (relationship.getType() == RelationshipType.PREREQUISITE)
+			{
+				relationships.add(relationship);
+			}
+		}
+		return relationships;
+	}
+	
+	/**
+	 * Gets the list of Topic Relationships for this topic whose type is "LINKLIST".
+	 * 
+	 * @return A list of link list topic relationships
+	 */
+	public List<TopicRelationship> getLinkListTopicRelationships()
+	{
+		final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
+		for (final TopicRelationship relationship : topicRelationships)
+		{
+			if (relationship.getType() == RelationshipType.LINKLIST)
+			{
+				relationships.add(relationship);
+			}
+		}
+		for (final TargetRelationship relationship : topicTargetRelationships)
+		{
+			if (relationship.getType() == RelationshipType.LINKLIST)
+			{
+				relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+			}
+		}
+		return relationships;
+	}
+
+	/**
+	 * Gets the list of Level Relationships for this topic whose type is "LINKLIST".
+	 * 
+	 * @return A list of link list level relationships
+	 */
+	public List<TargetRelationship> getLinkListLevelRelationships()
+	{
+		final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
+		for (final TargetRelationship relationship : levelRelationships)
+		{
+			if (relationship.getType() == RelationshipType.LINKLIST)
 			{
 				relationships.add(relationship);
 			}
