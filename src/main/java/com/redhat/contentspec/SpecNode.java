@@ -37,6 +37,7 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The Line Number for the node.
 	 */
+	@Override
 	public int getLineNumber() {
 		return lineNumber;
 	}
@@ -46,6 +47,7 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The line of text for the node.
 	 */
+	@Override
 	public String getText() {
 		return text;
 	}
@@ -55,6 +57,7 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param text The nodes text.
 	 */
+	@Override
 	protected void setText(String text) {
 		this.text = text;
 	}
@@ -64,6 +67,7 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The Step of the node.
 	 */
+	@Override
 	public abstract Integer getStep();
 	
 	/**
@@ -71,6 +75,7 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The column the node starts at.
 	 */
+	@Override
 	public Integer getColumn() {
 		return parent == null ? 0 : (parent.getColumn() + 1);
 	}
@@ -80,6 +85,7 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The nodes parent.
 	 */
+	@Override
 	public SpecNode getParent() {
 		return (SpecNode) parent;
 	}
@@ -324,8 +330,9 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return The String representation of the options.
 	 */
-	protected String getOptionsString() {
-		ArrayList<String> vars = new ArrayList<String>();
+	protected String getOptionsString()
+	{
+		final ArrayList<String> vars = new ArrayList<String>();
 		if (!tags.isEmpty()) {
 			vars.addAll(tags);
 		}

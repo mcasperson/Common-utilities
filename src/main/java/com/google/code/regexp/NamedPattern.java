@@ -59,6 +59,7 @@ public class NamedPattern {
 		return pattern.split(input);
 	}
 
+	@Override
 	public String toString() {
 		return namedPattern;
 	}

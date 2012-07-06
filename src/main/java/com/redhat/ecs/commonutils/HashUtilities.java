@@ -12,13 +12,16 @@ public class HashUtilities {
 	 * @param input The string to be converted into an MD5 hash.
 	 * @return The MD5 Hash string of the input string.
 	 */
-	public static String generateMD5(String input) {
-		try {
-			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+	public static String generateMD5(final String input) {
+		try
+		{
+			final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 			messageDigest.reset();
 			byte[] digest = messageDigest.digest(input.getBytes());
-			return new String(Hex.encodeHex(digest));
-		} catch (Exception e) {
+			return Hex.encodeHex(digest);
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			return null;
 		}

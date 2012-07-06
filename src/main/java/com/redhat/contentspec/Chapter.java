@@ -9,8 +9,8 @@ import com.redhat.contentspec.enums.LevelType;
  * @author lnewson
  *
  */
-public class Chapter extends Level {
-
+public class Chapter extends Level
+{
 	/**
 	 * Constructor
 	 * 
@@ -18,7 +18,8 @@ public class Chapter extends Level {
 	 * @param specLine The Content Specification Line that is used to create the Chapter.
 	 * @param lineNumber The Line Number of Chapter in the Content Specification.
 	 */
-	public Chapter(String title, int lineNumber, String specLine) {
+	public Chapter(final String title, final int lineNumber, final String specLine)
+	{
 		super(title, lineNumber, specLine, LevelType.CHAPTER);
 	}
 	
@@ -27,7 +28,8 @@ public class Chapter extends Level {
 	 * 
 	 * @param title The title of the Chapter.
 	 */
-	public Chapter(String title) {
+	public Chapter(final String title)
+	{
 		super(title, LevelType.CHAPTER);
 	}
 

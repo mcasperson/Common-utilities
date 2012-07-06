@@ -6,6 +6,54 @@ import java.util.regex.Pattern;
 
 public class StringUtilities
 {
+	public static int rtrimCount(final String input)
+	{
+		if (input == null)
+			return 0;
+		if (input.isEmpty())
+			return 0;
+		int i = input.length() - 1;
+		while (i >= 0 && input.charAt(i) == ' ') 
+			--i;
+		return  input.length() - i;
+	}
+	
+	public static int ltrimCount(final String input)
+	{
+		if (input == null)
+			return 0;
+		if (input.isEmpty())
+			return 0;
+		int i = 0;
+		while (i < input.length() && input.charAt(i) == ' ') 
+			++i;
+		return i;			
+	}
+	
+	public static String rtrim(final String input)
+	{
+		if (input == null)
+			return null;
+		if (input.isEmpty())
+			return input;
+		int i = input.length() - 1;
+		while (i >= 0 && input.charAt(i) == ' ') 
+			--i;
+		return input.substring(0, i+1);			
+	}
+	
+	public static String ltrim(final String input)
+	{
+		if (input == null)
+			return null;
+		if (input.isEmpty())
+			return input;
+		int i = 0;
+		while (i < input.length() && input.charAt(i) == ' ') 
+			++i;
+		return input.substring(i, input.length());			
+	}
+	
 	public static String cleanTextForCSV(final String input)
 	{
 		if (input == null)
@@ -13,6 +61,20 @@ public class StringUtilities
 
 		//return input.replaceAll(",", "").replace("\r\n", " ").replaceAll("\n", " ").replaceAll("", "");
 		return "\"" + input.replaceAll("\"", "\"\"") + "\"";
+	}
+	
+	public static String uncapatiliseFirstCharatcer(final String input)
+	{
+		if (input == null)
+			return null;
+		
+		if (input.isEmpty())
+			return "";
+		
+		final String firstChar = input.substring(0, 1).toLowerCase();
+		final String remaining = input.length() > 1 ? input.substring(1) : "";
+		
+		return firstChar + remaining;
 	}
 	
 	/**
@@ -59,15 +121,15 @@ public class StringUtilities
 
 	public static String buildString(final String[] lines, final String seperator)
 	{
-		String retValue = "";
+		final StringBuilder retValue = new StringBuilder();
 		for (final String line : lines)
 		{
 			if (retValue.length() != 0)
-				retValue += seperator;
-			retValue += line;
+				retValue.append(seperator);
+			retValue.append(line);
 		}
 
-		return retValue;
+		return retValue.toString();
 	}
 	
 	public static boolean startsWithWhitespace(final String input)
@@ -129,16 +191,9 @@ public class StringUtilities
 	 * @param delim The character to be found
 	 * @return The index of the found character or -1 if the character wasn't found
 	 */
-	public static int indexOf(String input, char delim) {
-		if (input == null) return -1;
-		int index = input.indexOf(delim);
-		if (index != 0) {
-			while (index != -1 && index != (input.length() - 1)) {
-				if (input.charAt(index - 1) != '\\') break;
-				index = input.indexOf(delim, index + 1);
-			}	
-		}
-		return index;
+	public static int indexOf(final String input, final char delim)
+	{
+		return indexOf(input, delim, 0);
 	}
 	
 	/**
@@ -149,11 +204,14 @@ public class StringUtilities
 	 * @param fromIndex Start searching from this index
 	 * @return The index of the found character or -1 if the character wasn't found
 	 */
-	public static int indexOf(String input, char delim, int fromIndex) {
+	public static int indexOf(final String input, final char delim, final int fromIndex)
+	{
 		if (input == null) return -1;
 		int index = input.indexOf(delim, fromIndex);
-		if (index != 0) {
-			while (index != -1 && index != (input.length() - 1)) {
+		if (index != 0)
+		{
+			while (index != -1 && index != (input.length() - 1))
+			{
 				if (input.charAt(index - 1) != '\\') break;
 				index = input.indexOf(delim, index + 1);
 			}	
@@ -168,14 +226,9 @@ public class StringUtilities
 	 * @param delim The character to be found
 	 * @return The index of the found character or -1 if the character wasn't found
 	 */
-	public static int lastIndexOf(String input, char delim) {
-		if (input == null) return -1;
-		int index = input.lastIndexOf(delim);
-		while (index != -1 && index != 0) {
-			if (input.charAt(index-1) != '\\') break;
-			index = input.lastIndexOf(delim, index-1);
-		}
-		return index;
+	public static int lastIndexOf(final String input, final char delim)
+	{
+		return input == null ? -1 : lastIndexOf(input, delim, input.length());
 	}
 	
 	/**
@@ -186,10 +239,12 @@ public class StringUtilities
 	 * @param fromIndex Start searching from this index
 	 * @return The index of the found character or -1 if the character wasn't found
 	 */
-	public static int lastIndexOf(String input, char delim, int fromIndex) {
+	public static int lastIndexOf(final String input, final char delim, final int fromIndex)
+	{
 		if (input == null) return -1;
 		int index = input.lastIndexOf(delim, fromIndex);
-		while (index != -1 && index != 0) {
+		while (index != -1 && index != 0)
+		{
 			if (input.charAt(index-1) != '\\') break;
 			index = input.lastIndexOf(delim, index-1);
 		}
@@ -203,21 +258,23 @@ public class StringUtilities
 	 * @param split The char to be used to split the input string
 	 * @return An array of split strings
 	 */
-	public static String[] split(String input, char split) {
+	public static String[] split(final String input, final char split) {
 		int index = indexOf(input, split);
 		int prevIndex = 0;
-		ArrayList<String> output = new ArrayList<String>();
-		if (index == -1) {
+		final ArrayList<String> output = new ArrayList<String>();
+		if (index == -1)
+		{
 			output.add(input);
 			return output.toArray(new String[1]);
 		}
-		while (index != -1) {
+		while (index != -1)
+		{
 			output.add(input.substring(prevIndex, index));
 			prevIndex = index + 1;
 			index = indexOf(input, split, index+1);
 		}
 		output.add(input.substring(prevIndex, input.length()));
-		return output.toArray(new String[1]);
+		return output.toArray(new String[output.size()]);
 	}
 	
 	/**
@@ -228,23 +285,25 @@ public class StringUtilities
 	 * @param limit The maximum number of times to split the string
 	 * @return An array of split strings
 	 */
-	public static String[] split(String input, char split, int limit) {
+	public static String[] split(final String input, final char split, final int limit)
+	{
 		int index = indexOf(input, split);
 		int prevIndex = 0, count = 1;
-		ArrayList<String> output = new ArrayList<String>();
-		if (index == -1) {
+		final ArrayList<String> output = new ArrayList<String>();
+		if (index == -1)
+		{
 			output.add(input);
 			return output.toArray(new String[1]);
 		}
-		while (index != -1 && count != limit) {
+		while (index != -1 && count != limit)
+		{
 			output.add(input.substring(prevIndex, index));
 			prevIndex = index + 1;
 			index = indexOf(input, split, index+1);
 			count++;
 		}
 		output.add(input.substring(prevIndex, input.length()));
-		return output.toArray(new String[1]);
-		
+		return output.toArray(new String[output.size()]);
 	}
 	
 	/**
@@ -253,8 +312,10 @@ public class StringUtilities
 	 * @param input The string to be tested
 	 * @return True if the string is alpha numeric otherwise false
 	 */
-	public static boolean isAlphanumeric(String input) {
-		for (int i = 0; i < input.length(); i++) {
+	public static boolean isAlphanumeric(final String input)
+	{
+		for (int i = 0; i < input.length(); i++)
+		{
 			if (!Character.isLetterOrDigit(input.charAt(i))) return false;
 		}
 		return true;
@@ -266,18 +327,16 @@ public class StringUtilities
 	 * @param input The string to have all its escaped characters replaced.
 	 * @return The input string with the escaped characters replaced back to normal.
 	 */
-	public static String replaceEscapeChars(String input) {
-		String output = new String(input);
-		output = output.replaceAll("\\\\\\[", "[");
-		output = output.replaceAll("\\\\\\]", "]");
-		output = output.replaceAll("\\\\\\(", "(");
-		output = output.replaceAll("\\\\\\)", ")");
-		output = output.replaceAll("\\\\:", ":");
-		output = output.replaceAll("\\\\,", ",");
-		output = output.replaceAll("\\\\=", "=");
-		output = output.replaceAll("\\\\\\+", "+");
-		output = output.replaceAll("\\\\-", "-");
-		return output;
+	public static String replaceEscapeChars(final String input) {
+		return input.replaceAll("\\\\\\[", "[")
+				.replaceAll("\\\\\\]", "]")
+				.replaceAll("\\\\\\(", "(")
+				.replaceAll("\\\\\\)", ")")
+				.replaceAll("\\\\:", ":")
+				.replaceAll("\\\\,", ",")
+				.replaceAll("\\\\=", "=")
+				.replaceAll("\\\\\\+", "+")
+				.replaceAll("\\\\-", "-");
 	}
 	
 	/**
@@ -286,8 +345,10 @@ public class StringUtilities
 	 * @param input The string to be checked
 	 * @return True of the replacement character is found otherwise false
 	 */
-	public static boolean hasInvalidUTF8Character(String input) {
-		for (char c: input.toCharArray()) {
+	public static boolean hasInvalidUTF8Character(final String input)
+	{
+		for (char c: input.toCharArray())
+		{
 			if (c == 0xFFFD) return true;
 		}
 		return false;
@@ -299,9 +360,9 @@ public class StringUtilities
 	 * @param input The string to be converted.
 	 * @return An escaped string that can be used in a regular expression.
 	 */
-	public static String convertToRegexString(String input) {
-		String output = new String(input);
-		output = output.replaceAll("\\\\", "\\\\")
+	public static String convertToRegexString(final String input)
+	{
+		return input.replaceAll("\\\\", "\\\\")
 				.replaceAll("\\*", "\\*")
 				.replaceAll("\\+", "\\+")
 				.replaceAll("\\]", "\\]")
@@ -313,6 +374,5 @@ public class StringUtilities
 				.replaceAll("\\|", "\\|")
 				.replaceAll("\\^", "\\^")
 				.replaceAll("\\.", "\\.");
-		return output;
 	}
 }

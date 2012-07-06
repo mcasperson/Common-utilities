@@ -37,7 +37,7 @@ public class ExpandDataTrunk
 	{
 		if (branches != null)
 			for (final ExpandDataTrunk branch : branches)
-				if (branch.getTrunk().getName().equals(name))
+				if (branch.getTrunk().getName() != null && branch.getTrunk().getName().equals(name))
 					return branch;
 
 		return null;

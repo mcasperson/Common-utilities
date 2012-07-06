@@ -3,46 +3,46 @@ package com.redhat.topicindex.rest.collections;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
-import com.redhat.topicindex.rest.entities.BaseRESTEntityV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTBaseEntityV1;
 
 /**
- * The base class for all collections used in the REST interface.
+ * @author Matthew Casperson
+ *
+ * @param <T> The REST entity type
+ * @param <U> The REST Collection type 
  */
-public class BaseRestCollectionV1<T extends BaseRESTEntityV1<T>>
+abstract public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 	private Integer size = 0;
 	private String expand = null;
 	private Integer startExpandIndex = null;
 	private Integer endExpandIndex = null;
-	private List<T> items = null;
 	
-	public BaseRestCollectionV1<T> clone(final boolean deepCopy)
+	abstract public List<T> getItems();
+	abstract public void setItems(final List<T> items);
+
+	public void cloneInto(final BaseRestCollectionV1<T, U> dest, final boolean deepCopy)
 	{
-		final BaseRestCollectionV1<T> retValue  = new BaseRestCollectionV1<T>();
-		retValue.size = this.size;
-		retValue.expand = this.expand;
-		retValue.startExpandIndex = this.startExpandIndex;
-		retValue.endExpandIndex = this.endExpandIndex;
-		
-		if (this.items != null)
+		dest.size = this.size;
+		dest.expand = this.expand;
+		dest.startExpandIndex = this.startExpandIndex;
+		dest.endExpandIndex = this.endExpandIndex;
+
+		if (this.getItems() != null)
 		{
-			retValue.items = new ArrayList<T>();
+			dest.setItems(new ArrayList<T>());
 			if (deepCopy)
 			{
-				for (final T item : this.items)
-					retValue.items.add(item.clone(deepCopy));
+				for (final T item : this.getItems())
+					dest.getItems().add(item.clone(deepCopy));
 			}
 			else
 			{
-				retValue.items.addAll(this.items);
+				dest.getItems().addAll(this.getItems());
 			}
 		}
-		return retValue;
 	}
-	
-	@XmlElement
+
 	public Integer getSize()
 	{
 		return size;
@@ -53,7 +53,6 @@ public class BaseRestCollectionV1<T extends BaseRESTEntityV1<T>>
 		this.size = size;
 	}
 
-	@XmlElement
 	public String getExpand()
 	{
 		return expand;
@@ -64,18 +63,6 @@ public class BaseRestCollectionV1<T extends BaseRESTEntityV1<T>>
 		this.expand = expand;
 	}
 
-	@XmlElement
-	public List<T> getItems()
-	{
-		return items;
-	}
-
-	public void setItems(final List<T> items)
-	{
-		this.items = items;
-	}
-
-	@XmlElement
 	public Integer getStartExpandIndex()
 	{
 		return startExpandIndex;
@@ -86,7 +73,6 @@ public class BaseRestCollectionV1<T extends BaseRESTEntityV1<T>>
 		this.startExpandIndex = startExpandIndex;
 	}
 
-	@XmlElement
 	public Integer getEndExpandIndex()
 	{
 		return endExpandIndex;
@@ -96,11 +82,11 @@ public class BaseRestCollectionV1<T extends BaseRESTEntityV1<T>>
 	{
 		this.endExpandIndex = endExpandIndex;
 	}
-	
+
 	public void addItem(final T item)
 	{
-		if (this.items == null)
-			this.items = new ArrayList<T>();
-		this.items.add(item);
+		if (this.getItems() == null)
+			this.setItems(new ArrayList<T>());
+		this.getItems().add(item);
 	}
 }

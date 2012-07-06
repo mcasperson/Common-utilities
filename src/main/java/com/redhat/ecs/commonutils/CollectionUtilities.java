@@ -208,8 +208,9 @@ public class CollectionUtilities
 	 * @param input The array of strings to be trimmed
 	 * @return The same array of strings but all elements have been trimmed of whitespace
 	 */
-	public static String[] trimStringArray(String[] input) {
-		ArrayList<String> output = new ArrayList<String>();
+	public static String[] trimStringArray(final String[] input)
+	{
+		final ArrayList<String> output = new ArrayList<String>();
 		for (int i = 0; i < input.length; i++) {
 			String s = input[i].trim();
 			if (!s.equals("")) output.add(s);

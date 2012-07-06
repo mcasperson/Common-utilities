@@ -8,13 +8,15 @@ import com.redhat.contentspec.constants.CSConstants;
  * @author lnewson
  *
  */
-public enum LevelType {
+public enum LevelType
+{
 	BASE(CSConstants.LEVEL_BASE), CHAPTER(CSConstants.LEVEL_CHAPTER), APPENDIX(CSConstants.LEVEL_APPENDIX), PROCESS(CSConstants.LEVEL_PROCESS), SECTION(CSConstants.LEVEL_SECTION),
 	PART(CSConstants.LEVEL_PART);
 	
 	private final int type;
 	
-	LevelType(int id) {
+	LevelType(final int id)
+	{
 		this.type = id;
 	}
 	
@@ -23,7 +25,8 @@ public enum LevelType {
 	 * 
 	 * @return The unique ID.
 	 */
-	public int getId() {
+	public int getId()
+	{
 		return type;
 	}
 	
@@ -32,8 +35,10 @@ public enum LevelType {
 	 * 
 	 * @return The title for the Enumerator.
 	 */
-	public String getTitle() {
-		switch (this.getId()) {
+	public String getTitle()
+	{
+		switch (this.getId())
+		{
 		case CSConstants.LEVEL_CHAPTER:
 			return CSConstants.CHAPTER;
 		case CSConstants.LEVEL_SECTION:

@@ -6,6 +6,7 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.redhat.ecs.commonutils.ExceptionUtilities;
+import com.redhat.ecs.constants.CommonConstants;
 
 /**
  * This class contains the options associated with building the docbook zip
@@ -28,7 +29,7 @@ public class DocbookBuildingOptions
 	 * table for the "Suppress Content Specification Page" option
 	 */
 	public static String DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE = "Suppress Content Specification Page";
-	
+
 	/**
 	 * The value assigned to the FilterOptionName field in the FilterOption
 	 * table for the "Insert bugzilla links" option
@@ -122,8 +123,12 @@ public class DocbookBuildingOptions
 	 * The value assigned to the FilterOptionName field in the FilterOption
 	 * table for the "Book Subtitle" value
 	 */
-	public static String DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE = "Book Subtitle";
-	
+	public static String DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE = "Book Subtitle";	
+	/**
+	 * The value assigned to the FilterOptionName field in the FilterOption
+	 * table for the "Insert editor links" option
+	 */
+	public static String DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS = "Insert editor links";
 
 	private Boolean suppressContentSpecPage = false;
 	private Boolean insertBugzillaLinks = true;
@@ -137,31 +142,67 @@ public class DocbookBuildingOptions
 	private Boolean taskAndOverviewOnly = true;
 	private Boolean insertSurveyLink = true;
 	private String emailTo = null;
+	private Boolean insertEditorLinks = false;
 
 	/** The cvs_pkg option in the publican.cfg file */
 	private String cvsPkgOption = null;
-	
+
 	private String buildName = null;
-	
+
 	// Book name options
 	private String bookTitle = "Book";
 	private String bookProduct = "Documentation 0.1";
 	private String bookProductVersion = "0.1";
 	private String bookEdition = null;
-	private Integer bookPubsnumber = null;
+	private String bookPubsnumber = null;
 	private String bookSubtitle = null;
 
 	@JsonIgnore
 	public boolean isValid()
 	{
-		return emailTo != null && !emailTo.trim().isEmpty();
+		if (emailTo == null || emailTo.trim().isEmpty() || !emailTo.matches(CommonConstants.EMAIL_REGEX))
+		{
+			return false;
+		}
+			
+		if (bookTitle == null || bookTitle.isEmpty())
+		{
+			return false;
+		}
+		
+		if (bookProduct == null || bookProduct.isEmpty())
+		{
+			return false;
+		}
+		
+		if (bookProductVersion == null || bookProductVersion.isEmpty()
+				|| !bookProductVersion.matches("[0-9]+(.[0-9+](.[0-9]+)?)?"))
+		{
+			return false;
+		}
+		
+		if (bookEdition != null && !bookEdition.isEmpty() 
+				&& !bookEdition.matches("[0-9]+(.[0-9+](.[0-9]+)?)?"))
+		{
+			return false;
+		}
+		
+		if (bookPubsnumber != null && !bookPubsnumber.isEmpty() 
+				&& !bookPubsnumber.matches("[0-9]+"))
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
-	public Boolean getIncludeUntranslatedTopics() {
+	public Boolean getIncludeUntranslatedTopics()
+	{
 		return includeUntranslatedTopics;
 	}
 
-	public void setIncludeUntranslatedTopics(Boolean includeUntranslatedTopics) {
+	public void setIncludeUntranslatedTopics(Boolean includeUntranslatedTopics)
+	{
 		this.includeUntranslatedTopics = includeUntranslatedTopics;
 	}
 
@@ -273,7 +314,8 @@ public class DocbookBuildingOptions
 		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_TITLE);
 		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT);
 		retValue.add(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE);
-		
+		retValue.add(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS);
+
 		return retValue;
 	}
 
@@ -313,37 +355,40 @@ public class DocbookBuildingOptions
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO))
 			return this.getEmailTo();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME))
 			return this.getBuildName();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
 			return this.getIncludeUntranslatedTopics() == null ? null : this.getIncludeUntranslatedTopics().toString();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
 			return this.getInsertBugzillaLinks() == null ? null : this.getInsertBugzillaLinks().toString();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
 			return this.getSuppressContentSpecPage() == null ? null : this.getSuppressContentSpecPage().toString();
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE))
 			return this.getBookTitle();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT))
 			return this.getBookProduct();
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION))
 			return this.getBookProductVersion();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION))
 			return this.getBookEdition();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
 			return this.getBookPubsnumber() == null ? "" : this.getBookPubsnumber().toString();
-		
+
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
 			return this.getBookSubtitle();
 		
+		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS))
+			return this.getInsertEditorLinks() == null ? null : this.insertEditorLinks.toString();
+
 		return null;
 	}
 
@@ -385,34 +430,39 @@ public class DocbookBuildingOptions
 
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO))
 				this.setEmailTo(fieldValue);
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME))
 				this.setBuildName(fieldValue);
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
 				this.setIncludeUntranslatedTopics(Boolean.parseBoolean(fieldValue));
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
 				this.setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
 				this.setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE))
 				this.setBookTitle(fieldValue);
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT))
 				this.setBookProduct(fieldValue);
 
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION))
 				this.setBookProductVersion(fieldValue);
-			
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION))
 				this.setBookEdition(fieldValue);
 			
+			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS))
+				this.setInsertEditorLinks(Boolean.parseBoolean(fieldValue));
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
-				this.setBookPubsnumber(Integer.parseInt(fieldValue));
-			
+			{
+				this.setBookPubsnumber(fieldValue);
+			}
+
 			if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
 				this.setBookSubtitle(fieldValue);
 
@@ -453,67 +503,93 @@ public class DocbookBuildingOptions
 		this.buildName = buildName;
 	}
 
-	public Boolean getInsertBugzillaLinks() {
+	public Boolean getInsertBugzillaLinks()
+	{
 		return insertBugzillaLinks;
 	}
 
-	public void setInsertBugzillaLinks(Boolean insertBugzillaLinks) {
+	public void setInsertBugzillaLinks(Boolean insertBugzillaLinks)
+	{
 		this.insertBugzillaLinks = insertBugzillaLinks;
 	}
 
-	public Boolean getSuppressContentSpecPage() {
+	public Boolean getSuppressContentSpecPage()
+	{
 		return suppressContentSpecPage;
 	}
 
-	public void setSuppressContentSpecPage(Boolean suppressContentSpecPage) {
+	public void setSuppressContentSpecPage(Boolean suppressContentSpecPage)
+	{
 		this.suppressContentSpecPage = suppressContentSpecPage;
 	}
 
-	public String getBookTitle() {
+	public String getBookTitle()
+	{
 		return bookTitle;
 	}
 
-	public void setBookTitle(String bookTitle) {
+	public void setBookTitle(final String bookTitle)
+	{
 		this.bookTitle = bookTitle;
 	}
 
-	public String getBookProduct() {
+	public String getBookProduct()
+	{
 		return bookProduct;
 	}
 
-	public void setBookProduct(String bookProduct) {
+	public void setBookProduct(final String bookProduct)
+	{
 		this.bookProduct = bookProduct;
 	}
 
-	public String getBookProductVersion() {
+	public String getBookProductVersion()
+	{
 		return bookProductVersion;
 	}
 
-	public void setBookProductVersion(String bookProductVersion) {
+	public void setBookProductVersion(final String bookProductVersion)
+	{
 		this.bookProductVersion = bookProductVersion;
 	}
 
-	public String getBookEdition() {
+	public String getBookEdition()
+	{
 		return bookEdition;
 	}
 
-	public void setBookEdition(String bookEdition) {
+	public void setBookEdition(final String bookEdition)
+	{
 		this.bookEdition = bookEdition;
 	}
 
-	public Integer getBookPubsnumber() {
+	public String getBookPubsnumber()
+	{
 		return bookPubsnumber;
 	}
 
-	public void setBookPubsnumber(Integer bookPubsnumber) {
+	public void setBookPubsnumber(final String bookPubsnumber)
+	{
 		this.bookPubsnumber = bookPubsnumber;
 	}
 
-	public String getBookSubtitle() {
+	public String getBookSubtitle()
+	{
 		return bookSubtitle;
 	}
 
-	public void setBookSubtitle(String bookSubtitle) {
+	public void setBookSubtitle(final String bookSubtitle)
+	{
 		this.bookSubtitle = bookSubtitle;
+	}
+
+	public Boolean getInsertEditorLinks()
+	{
+		return insertEditorLinks;
+	}
+
+	public void setInsertEditorLinks(final Boolean insertEditorLinks)
+	{
+		this.insertEditorLinks = insertEditorLinks;
 	}
 }
