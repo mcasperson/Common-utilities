@@ -87,10 +87,19 @@ abstract public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T, U>, U e
 						final boolean add2 = child2.getAddItem();
 						final boolean remove2 = child2.getRemoveItem();
 						
-						/* check for double add, double remove, add and remove, remove and add */
-						if ((add1 && add2) || (remove1 && remove2) || (add1 && remove2) || (remove1 && add2))						
+						/* check for double add, double remove, and remove one instance */
+						if ((add1 && add2) || (remove1 && remove2))						
 							if (!removeChildren.contains(child1))
 								removeChildren.add(child1);
+						
+						/* check for add and remove, remove and add and remove both instances */
+						if ((add1 && remove2) || (remove1 && add2))
+						{
+							if (!removeChildren.contains(child1))
+								removeChildren.add(child1);
+							if (!removeChildren.contains(child2))
+								removeChildren.add(child2);
+						}
 					}
 				}
 			}
