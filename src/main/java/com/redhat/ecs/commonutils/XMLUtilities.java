@@ -597,7 +597,7 @@ public class XMLUtilities
 				/*
 				 * Allow for spaces between nodes. i.e. <literal>Test</literal> <literal>Test2</literal>
 				 */
-				else if (node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null)
+				else if (node.getNodeValue() != null && node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null)
 				{
 					return new String(" ");
 				}
