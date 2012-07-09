@@ -1,7 +1,5 @@
 package com.redhat.topicindex.rest.specimpl;
 
-import org.jboss.resteasy.util.Encode;
-
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.PathSegment;
 import java.util.ArrayList;
@@ -10,7 +8,8 @@ import java.util.List;
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * 
- * Copied here to provide an implementation that can be used with GWT
+ * Copied here to provide an implementation that can be used with GWT. Removed any references
+ * to org.jboss.resteasy.util.Encode.
  */
 public class PathSegmentImpl implements PathSegment
 {
@@ -22,7 +21,7 @@ public class PathSegmentImpl implements PathSegment
     * @param segment encoded path segment
     * @param decode whether or not to decode values
     */
-   public PathSegmentImpl(String segment, boolean decode)
+   public PathSegmentImpl(String segment)
    {
       this.original = segment;
       this.path = segment;
@@ -39,18 +38,15 @@ public class PathSegmentImpl implements PathSegment
             if (namevalue != null && namevalue.length > 0)
             {
                String name = namevalue[0];
-               if (decode) name = Encode.decodePath(name);
                String value = "";
                if (namevalue.length > 1)
                {
                   value = namevalue[1];
                }
-               if (decode) value = Encode.decodePath(value);
                matrixParameters.add(name, value);
             }
          }
       }
-      if (decode) this.path = Encode.decodePath(this.path);
    }
 
    public String getOriginal()
@@ -92,7 +88,7 @@ public String toString()
     * @param decode whether or not to decode each segment
     * @return
     */
-   public static List<PathSegment> parseSegments(String path, boolean decode)
+   public static List<PathSegment> parseSegments(String path)
    {
       List<PathSegment> pathSegments = new ArrayList<PathSegment>();
 
@@ -100,9 +96,8 @@ public String toString()
       String[] paths = path.split("/");
       for (String p : paths)
       {
-         pathSegments.add(new PathSegmentImpl(p, decode));
+         pathSegments.add(new PathSegmentImpl(p));
       }
       return pathSegments;
    }
-
 }
