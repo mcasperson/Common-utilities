@@ -45,6 +45,8 @@ abstract public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T, U>, U e
 
 				if ((add1 && remove1) || (!add1 && !remove1))
 				{
+					System.out.println("Removed redundant add/remove child with ID " + child1.getId());
+					
 					if (!removeChildren.contains(child1))
 						removeChildren.add(child1);
 				}
@@ -95,6 +97,8 @@ abstract public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T, U>, U e
 						/* check for add and remove, remove and add and remove both instances */
 						if ((add1 && remove2) || (remove1 && add2))
 						{
+							System.out.println("Removed redundant pair of add/remove children with ID " + child1.getId());
+							
 							if (!removeChildren.contains(child1))
 								removeChildren.add(child1);
 							if (!removeChildren.contains(child2))
@@ -105,7 +109,9 @@ abstract public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T, U>, U e
 			}
 			
 			for (final T removeChild : removeChildren)
+			{				
 				this.getItems().remove(removeChild);
+			}
 		}
 	}
 
