@@ -94,6 +94,9 @@ abstract public class BaseRestCollectionV1<T extends RESTBaseEntityV1<T, U>, U e
 					}
 				}
 			}
+			
+			for (final T removeChild : removeChildren)
+				this.getItems().remove(removeChild);
 		}
 	}
 
