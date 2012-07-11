@@ -15,7 +15,6 @@ import com.redhat.contentspec.entities.InjectionOptions;
 import com.redhat.contentspec.enums.LevelType;
 import com.redhat.ecs.commonutils.DocBookUtilities;
 import com.redhat.ecs.commonutils.HashUtilities;
-import com.redhat.ecs.commonutils.StringUtilities;
 
 public class ContentSpec extends Node
 {
@@ -1263,7 +1262,7 @@ public class ContentSpec extends Node
 		{
 			output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id + "\n" + output) + "\n" + "ID = " + id + "\n");
 		}
-		return output.roString();
+		return output.toString();
 	}
 
 	@Override
