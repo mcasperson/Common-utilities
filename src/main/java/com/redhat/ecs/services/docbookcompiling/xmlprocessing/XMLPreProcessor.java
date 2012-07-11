@@ -21,6 +21,7 @@ import org.w3c.dom.Text;
 
 import com.redhat.contentspec.Level;
 import com.redhat.contentspec.SpecTopic;
+import com.redhat.contentspec.entities.BugzillaOptions;
 import com.redhat.contentspec.entities.TargetRelationship;
 import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.ecs.commonstructures.Pair;
@@ -164,10 +165,10 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	 */
 	protected static final String NO_INJECT_ROLE = "noinject";
 
-	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{
 		/* SIMPLESECT TO HOLD OTHER LINKS */
-		final Element bugzillaSection = document.createElement("simplesect");
+		final Element bugzillaSection = document.createElement("formalpara");
 		document.getDocumentElement().appendChild(bugzillaSection);
 
 		final Element bugzillaSectionTitle = document.createElement("title");
@@ -236,8 +237,38 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			/* build the bugzilla url options */
 			String bugzillaURLComponents = "";
 
-			/* we need at least a product */
-			if (bugzillaProduct != null)
+			bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+			bugzillaURLComponents += "cf_environment=" + bugzillaEnvironment;
+
+			bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+			bugzillaURLComponents += "cf_build_id=" + bugzillaBuildID;
+			
+			/* check the content spec options first */
+			if (bzOptions != null && bzOptions.getProduct() != null)
+			{
+				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+				bugzillaURLComponents += "product=" + URLEncoder.encode(bzOptions.getProduct(), "UTF-8");
+
+				if (bzOptions.getComponent() != null)
+				{
+					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+					bugzillaURLComponents += "component=" + URLEncoder.encode(bzOptions.getComponent(), "UTF-8");
+				}
+
+				if (bzOptions.getVersion() != null)
+				{
+					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+					bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), "UTF-8");
+				}
+
+				if (bugzillaAssignedTo != null)
+				{
+					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+					bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
+				}
+			}
+			/* we need at least a product*/
+			else if (bugzillaProduct != null)
 			{
 				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
 				bugzillaURLComponents += "product=" + bugzillaProduct;
@@ -265,18 +296,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
 					bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
 				}
-
-				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-				bugzillaURLComponents += "cf_environment=" + bugzillaEnvironment;
-
-				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-				bugzillaURLComponents += "cf_build_id=" + bugzillaBuildID;
 			}
 
 			/* build the bugzilla url with the base components */
-			String bugZillaUrl = "https://bugzilla.redhat.com/enter_bug.cgi" + bugzillaURLComponents;
+			String bugzillaUrl = "https://bugzilla.redhat.com/enter_bug.cgi" + bugzillaURLComponents;
 
-			bugzillaULink.setAttribute("url", bugZillaUrl);
+			bugzillaULink.setAttribute("url", bugzillaUrl);
 
 			/*
 			 * only add the elements to the XML DOM if there was no exception (not that there should be one
@@ -294,7 +319,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	 * Adds some debug information and links to the end of the topic
 	 */
 	@SuppressWarnings("unchecked")
-	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName,
+	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions, final DocbookBuildingOptions docbookBuildingOptions, final String buildName,
 			final String searchTagsUrl, final Date buildDate, final ZanataDetails zanataDetails)
 	{
 		final T topic = (T) specTopic.getTopic();
@@ -302,7 +327,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions.getInsertEditorLinks())) || searchTagsUrl != null)
 		{
 			/* SIMPLESECT TO HOLD OTHER LINKS */
-			final Element bugzillaSection = document.createElement("simplesect");
+			final Element bugzillaSection = document.createElement("formalpara");
 			document.getDocumentElement().appendChild(bugzillaSection);
 	
 			final Element bugzillaSectionTitle = document.createElement("title");
@@ -387,7 +412,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		// BUGZILLA LINK
 		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks())
 		{
-			processTopicBugzillaLink(specTopic, document, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
+			processTopicBugzillaLink(specTopic, document, bzOptions, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
 		}
 	}
 
