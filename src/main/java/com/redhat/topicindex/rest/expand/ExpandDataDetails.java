@@ -12,6 +12,8 @@ public class ExpandDataDetails
 	private Integer start;
 	/** The ending index - can be negative to indicate a starting point from the end of the collection */
 	private Integer end;
+	/** Whether or not the size should be shown in the output */
+	private Boolean showSize = false;
 
 	public String getName()
 	{
@@ -41,6 +43,16 @@ public class ExpandDataDetails
 	public void setEnd(final Integer end)
 	{
 		this.end = end;
+	}
+	
+	public Boolean isShowSize()
+	{
+		return showSize;
+	}
+
+	public void setShowSize(final Boolean showSize)
+	{
+		this.showSize = showSize;
 	}
 
 	public ExpandDataDetails()

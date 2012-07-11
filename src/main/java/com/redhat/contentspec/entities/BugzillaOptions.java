@@ -14,57 +14,66 @@ public class BugzillaOptions {
 	/**
 	 * @return the product
 	 */
-	public String getProduct() {
+	public String getProduct()
+	{
 		return product;
 	}
 
 	/**
 	 * @param product the product to set
 	 */
-	public void setProduct(String product) {
+	public void setProduct(final String product)
+	{
 		this.product = product;
 	}
 
 	/**
 	 * @return the component
 	 */
-	public String getComponent() {
+	public String getComponent()
+	{
 		return component;
 	}
 
 	/**
 	 * @param component the component to set
 	 */
-	public void setComponent(String component) {
+	public void setComponent(final String component)
+	{
 		this.component = component;
 	}
 
 	/**
 	 * @return the version
 	 */
-	public String getVersion() {
+	public String getVersion()
+	{
 		return version;
 	}
 
 	/**
 	 * @param version the version to set
 	 */
-	public void setVersion(String version) {
+	public void setVersion(final String version)
+	{
 		this.version = version;
 	}
 	
-	public boolean isBugzillaLinksEnabled() {
+	public boolean isBugzillaLinksEnabled()
+	{
 		return injectLinks;
 	}
 	
 	/**
 	 * @param enabled Whether bug links should be injected
 	 */
-	public void setBugzillaLinksEnabled(boolean enabled) {
+	public void setBugzillaLinksEnabled(final boolean enabled)
+	{
 		this.injectLinks = enabled;
 	}
 	
-	public String createBugzillUrl(String bugzillaUrl) {
+	public String createBugzillUrl(final String bugzillaUrl)
+	{
 		try {
 			return bugzillaUrl + (bugzillaUrl.endsWith("/") ? "" : "/") + "enter_bug.cgi?product=" + URLEncoder.encode(product, "UTF-8") + "&amp;component=" + URLEncoder.encode(component, "UTF-8") + (version == null ? "" : ("&amp;version=" + URLEncoder.encode(version, "UTF-8")));
 		} catch (UnsupportedEncodingException e) {

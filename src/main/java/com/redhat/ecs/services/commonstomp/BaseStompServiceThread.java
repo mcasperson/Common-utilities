@@ -129,6 +129,8 @@ abstract public class BaseStompServiceThread extends BaseServiceThread implement
 		 * Notify the queued threads that a shutdown has been requested. These
 		 * threads should check to see if a shutdown has been requested before
 		 * they start any processing.
+		 * 
+		 * TODO: Should probably just use the Thread.interrupted() flag here.
 		 */
 		final LinkedList<BaseStompRunnable> queuedThreads = StompWorkQueue.getInstance().getQueueCopy();
 		for (final BaseStompRunnable queuedThread : queuedThreads)

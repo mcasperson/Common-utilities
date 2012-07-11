@@ -2,11 +2,11 @@ package com.redhat.topicindex.rest.sort;
 
 import java.util.Comparator;
 
-import com.redhat.topicindex.rest.entities.TagV1;
+import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
 
-public class TagV1NameComparator implements Comparator<TagV1>
+public class TagV1NameComparator implements Comparator<RESTTagV1>
 {
-	public int compare(final TagV1 o1, final TagV1 o2) 
+	public int compare(final RESTTagV1 o1, final RESTTagV1 o2) 
 	{
 		if (o1 == null && o2 == null)
 			return 0;

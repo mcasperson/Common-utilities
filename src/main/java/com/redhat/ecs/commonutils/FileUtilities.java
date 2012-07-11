@@ -105,6 +105,20 @@ public class FileUtilities
 		return null;
 	}
 	
+	public static String getFileExtension(final String fileName)
+	{
+		if (fileName == null)
+			return null;
+		
+		final int lastPeriodIndex = fileName.lastIndexOf(".");
+		/* make sure there is an extension, and that the filename doesn't end with a period */
+		if (lastPeriodIndex != -1 && lastPeriodIndex < fileName.length() - 1)
+		{
+			final String extension = fileName.substring(lastPeriodIndex + 1);
+			return extension;
+		}
 
+		return null;
+	}
 	
 }

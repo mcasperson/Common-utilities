@@ -25,7 +25,7 @@ public class CommonConstants
 	public final static Integer BUGZILLA_PROFILE_PROPERTY = 5;
 	
 	/** The Regular Expression the defines the search format for a property tag */
-	public static String PROPERTY_TAG_SEARCH_RE = "(?<PropertyTagID>\\d+) (?<PropertyTagValue>.*)";		
+	public static String PROPERTY_TAG_SEARCH_RE = "propertyTag(?<PropertyTagID>\\d+)";		
 	/** The regular expression that matches the Build ID field, without the prefixed topic id */
 	public static String BUGZILLA_BUILD_ID_RE = "-[0-9]+ [0-9]{2} [A-Za-z]{3} [0-9]{4} [0-9]{2}:[0-9]{2}";
 	/** The regular expression that matches the Build ID field, with the individual fields grouped and named */
@@ -140,4 +140,9 @@ public class CommonConstants
 	 * The default locale to be used on all new topics
 	 */
 	public static final String DEFAULT_LOCALE = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY) == null ? "en-US" : System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+
+	/**
+	 * The regular expression string used to check if an email is valid.
+	 */
+	public static final String EMAIL_REGEX = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
 }

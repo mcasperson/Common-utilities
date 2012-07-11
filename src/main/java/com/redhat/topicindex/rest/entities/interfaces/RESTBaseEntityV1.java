@@ -1,23 +1,18 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
 
-/**
- * The base class for all entities used by the REST interface.
- */
-public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
+public abstract class RESTBaseEntityV1<T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
 	public static final String REVISIONS_NAME = "revisions";
 	
 	/** The id of the entity */
-	private Integer id;
+	private Integer id = null;
 	/** The revision of the entity */
-	private Number revision;
+	private Integer revision = null;
 	/**
 	 * Maintains a list of the database fields that have been specifically set
 	 * on this object. This allows us to distinguish them from those that are
@@ -33,32 +28,29 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 	/** true if the database entity this REST entity represents should be added to the collection */ 
 	private boolean addItem = false;
 	/** true if the database entity this REST entity represents should be removed from the collection */
-	private boolean removeItem = false;
-	/** A list of the Envers revision numbers */
-	private BaseRestCollectionV1<T> revisions = null;
-	
-	public void cloneInto(final BaseRESTEntityV1<T> clone, final boolean deepCopy)
-	{
-		clone.id = new Integer(this.id);
-		clone.revision = this.revision;
-		clone.selfLink = this.selfLink;
-		clone.editLink = this.editLink;
-		clone.deleteLink = this.deleteLink;
-		clone.addItem = this.addItem;
-		clone.expand = this.expand;
-		clone.addItem = this.addItem;
-		clone.removeItem = this.removeItem;
+	private boolean removeItem = false;	
+
+	abstract public U getRevisions();
+
+	abstract public void setRevisions(U revisions);
 		
-		if (deepCopy)
-		{
-			clone.revisions = this.revisions == null ? null : this.revisions.clone(deepCopy);
-		}
-		else
-		{
-			clone.revisions = this.revisions;
-		}
+	public void cloneInto(final RESTBaseEntityV1<T, U> clone, final boolean deepCopy)
+	{
+		clone.setId(this.id == null ? null : new Integer(this.id));
+		clone.setRevision(this.revision);
+		clone.setSelfLink(this.selfLink);
+		clone.setEditLink(this.editLink);
+		clone.setDeleteLink(this.deleteLink);
+		clone.setAddItem(this.addItem);
+		clone.setExpand(this.expand);
+		clone.setAddItem(this.addItem);
+		clone.setRemoveItem(this.removeItem);
 	}
 	
+	/**
+	 * @param deepCopy true if referenced objects should be copied, false if the referenced themselves should be copied
+	 * @return A clone of this object
+	 */
 	public abstract T clone(final boolean deepCopy);
 	
 	/**
@@ -73,7 +65,7 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 			configuredParameters.add(paramater);
 	}
 	
-	public boolean isParameterSet(final String parameter)
+	public boolean hasParameterSet(final String parameter)
 	{
 		return getConfiguredParameters() != null && getConfiguredParameters().contains(parameter);
 	}
@@ -85,8 +77,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.setAddLink(baseUrl + "/1/" + restBasePath + "/post/" + dataType + "/" + id);
 		this.setEditLink(baseUrl + "/1/" + restBasePath + "/put/" + dataType + "/" + id);
 	}
-
-	@XmlElement
 	public String getSelfLink()
 	{
 		return selfLink;
@@ -96,8 +86,7 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 	{
 		this.selfLink = selfLink;
 	}
-
-	@XmlElement
+	
 	public String getEditLink()
 	{
 		return editLink;
@@ -108,7 +97,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.editLink = editLink;
 	}
 
-	@XmlElement
 	public String getDeleteLink()
 	{
 		return deleteLink;
@@ -119,7 +107,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.deleteLink = deleteLink;
 	}
 
-	@XmlElement
 	public String getAddLink()
 	{
 		return addLink;
@@ -130,7 +117,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.addLink = addLink;
 	}
 
-	@XmlElement
 	public List<String> getExpand()
 	{
 		return expand;
@@ -141,7 +127,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.expand = expand;
 	}
 
-	@XmlElement
 	public boolean getAddItem()
 	{
 		return addItem;
@@ -152,7 +137,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.addItem = addItem;
 	}
 
-	@XmlElement
 	public boolean getRemoveItem()
 	{
 		return removeItem;
@@ -163,7 +147,6 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.removeItem = removeItem;
 	}
 
-	@XmlElement
 	public List<String> getConfiguredParameters()
 	{
 		return configuredParameters;
@@ -184,25 +167,13 @@ public abstract class BaseRESTEntityV1<T extends BaseRESTEntityV1<T>>
 		this.id = id;
 	}
 
-	public Number getRevision()
+	public Integer getRevision()
 	{
 		return revision;
 	}
 
-	public void setRevision(Number revision)
+	public void setRevision(final Integer revision)
 	{
 		this.revision = revision;
 	}
-
-	public BaseRestCollectionV1<T> getRevisions()
-	{
-		return revisions;
-	}
-
-	public void setRevisions(BaseRestCollectionV1<T> revisions)
-	{
-		this.revisions = revisions;
-	}
-
-
 }

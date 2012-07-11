@@ -1,11 +1,9 @@
-package com.redhat.topicindex.rest.entities;
+package com.redhat.topicindex.rest.entities.interfaces;
 
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 
-/**
- * A REST representation of the Category database entity
- */
-public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
+public class RESTCategoryV1 extends RESTBaseEntityV1<RESTCategoryV1, RESTCategoryCollectionV1>
 {
 	public static final String NAME_NAME = "name";
 	public static final String DESCRIPTION_NAME = "description";
@@ -17,27 +15,52 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 	private String description = null;
 	private boolean mutuallyExclusive = false;
 	private Integer sort = null;
-	private BaseRestCollectionV1<TagV1> tags = null;
+	private RESTTagCollectionV1 tags = null;
+	/** A list of the Envers revision numbers */
+	private RESTCategoryCollectionV1 revisions = null;
 	
 	@Override
-	public CategoryV1 clone(boolean deepCopy)
+	public RESTCategoryCollectionV1 getRevisions()
 	{
-		final CategoryV1 retValue = new CategoryV1();
+		return revisions;
+	}
+
+	@Override
+	public void setRevisions(final RESTCategoryCollectionV1 revisions)
+	{
+		this.revisions = revisions;
+	}
+	
+	@Override
+	public RESTCategoryV1 clone(boolean deepCopy)
+	{
+		final RESTCategoryV1 retValue = new RESTCategoryV1();
 		
 		this.cloneInto(retValue, deepCopy);
 		
 		retValue.name = this.name;
 		retValue.description = description;
 		retValue.mutuallyExclusive = this.mutuallyExclusive;
-		retValue.sort = new Integer(this.sort);
+		retValue.sort = this.sort == null ? null : new Integer(this.sort);
 		
 		if (deepCopy)
 		{
-			retValue.tags = this.tags == null ? null : this.tags.clone(deepCopy);
+			if (this.tags != null)
+			{
+				retValue.tags = new RESTTagCollectionV1();
+				this.tags.cloneInto(retValue.tags, deepCopy);
+			}
+			
+			if (this.getRevisions() != null)
+			{
+				retValue.revisions = new RESTCategoryCollectionV1();
+				this.revisions.cloneInto(retValue.revisions, deepCopy);
+			}			
 		}
 		else
 		{
 			retValue.tags = this.tags;
+			retValue.revisions = this.revisions;
 		}
 		
 		return retValue;
@@ -53,7 +76,7 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 		this.name = name;
 	}
 	
-	public void setNameExplicit(final String name)
+	public void explicitSetName(final String name)
 	{
 		this.name = name;
 		this.setParamaterToConfigured(NAME_NAME);
@@ -69,13 +92,13 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 		this.description = description;
 	}
 	
-	public void setDescriptionExplicit(final String description)
+	public void explicitSetDescription(final String description)
 	{
 		this.description = description;
 		this.setParamaterToConfigured(DESCRIPTION_NAME);
 	}
 
-	public boolean isMutuallyExclusive()
+	public boolean getMutuallyExclusive()
 	{
 		return mutuallyExclusive;
 	}
@@ -85,7 +108,7 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 		this.mutuallyExclusive = mutuallyExclusive;
 	}
 	
-	public void setMutuallyExclusiveExplicit(final boolean mutuallyExclusive)
+	public void explicitSetMutuallyExclusive(final boolean mutuallyExclusive)
 	{
 		this.mutuallyExclusive = mutuallyExclusive;
 		this.setParamaterToConfigured(MUTUALLYEXCLUSIVE_NAME);
@@ -107,20 +130,19 @@ public class CategoryV1 extends BaseRESTEntityV1<CategoryV1>
 		this.setParamaterToConfigured(SORT_NAME);
 	}
 
-	public BaseRestCollectionV1<TagV1> getTags()
+	public RESTTagCollectionV1 getTags()
 	{
 		return tags;
 	}
 
-	public void setTags(final BaseRestCollectionV1<TagV1> tags)
+	public void setTags(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 	}
 	
-	public void setTagsExplicit(final BaseRestCollectionV1<TagV1> tags)
+	public void setTagsExplicit(final RESTTagCollectionV1 tags)
 	{
 		this.tags = tags;
 		this.setParamaterToConfigured(TAGS_NAME);
 	}
-
 }

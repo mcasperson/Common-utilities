@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="TopicIndex/WebContent/WEB-INF/lib/redhatcommonutils.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Commonutilities/topicindex-jar-export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <file path="/Commonutilities/docbookbuildercomponent-jar-export.jardesc"/>
+        <file path="/Commonutilities/pom.xml"/>
+        <file path="/Commonutilities/.project"/>
+        <file path="/Commonutilities/topicindexextras-jar-export.jardesc"/>
+        <file path="/Commonutilities/topicindex-jar-export.jardesc"/>
+        <file path="/Commonutilities/.classpath"/>
+        <folder path="/Commonutilities/target"/>
+        <javaElement handleIdentifier="=Commonutilities/src\/main\/java"/>
+        <folder path="/Commonutilities/src"/>
+        <file path="/Commonutilities/automationportal-jar-export.jardesc"/>
+    </selectedElements>
+</jardesc>

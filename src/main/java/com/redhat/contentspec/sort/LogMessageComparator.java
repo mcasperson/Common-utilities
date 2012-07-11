@@ -8,15 +8,17 @@ import com.redhat.contentspec.utils.logging.LogMessage;
 /**
  * Used to compare if two LogMessages are different based on their timestamps.
  */
-@SuppressWarnings("rawtypes")
-public class LogMessageComparator implements Comparator {
+public class LogMessageComparator implements Comparator<LogMessage>
+{
 
-	public int compare(Object arg1, Object arg2) {
-		LogMessage msg1 = (LogMessage)arg1;
-		LogMessage msg2 = (LogMessage)arg2;
-		if (msg1.getTimestamp() < msg2.getTimestamp()) {
+	public int compare(final LogMessage msg1, final LogMessage msg2)
+	{
+		if (msg1.getTimestamp() < msg2.getTimestamp())
+		{
 			return -1;
-		} else if (msg1.getTimestamp() > msg2.getTimestamp()) {
+		}
+		else if (msg1.getTimestamp() > msg2.getTimestamp())
+		{
 			return 1;
 		}
 		return 0;

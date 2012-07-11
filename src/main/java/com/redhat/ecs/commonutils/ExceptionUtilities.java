@@ -22,9 +22,10 @@ public class ExceptionUtilities
 	 * @param ex The thrown exception
 	 * @return The stack trace from the exception
 	 */
-	public static String getStackTrace(final Exception ex) {
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw, true);
+	public static String getStackTrace(final Exception ex)
+	{
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw, true);
 		ex.printStackTrace(pw);
 		pw.flush();
 		sw.flush();

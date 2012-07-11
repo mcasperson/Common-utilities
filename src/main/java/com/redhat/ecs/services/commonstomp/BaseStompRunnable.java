@@ -16,7 +16,9 @@ public abstract class BaseStompRunnable implements Runnable
 	private final Map<String, String> headers;
 	/**
 	 * true if a shutdown has been initialised. This variable should be checked
-	 * at regular intervals in long running processes
+	 * at regular intervals in long running processes.
+	 * 
+	 * TODO: Should use Thread.interrupted() here instead.
 	 */
 	private AtomicBoolean shutdownRequested = new AtomicBoolean(false);
 	/** a reference to the STOMP client */

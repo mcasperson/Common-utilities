@@ -4,65 +4,84 @@ import java.util.ArrayList;
 
 import com.redhat.ecs.commonutils.StringUtilities;
 
-public class InjectionOptions {
-
+public class InjectionOptions
+{
 	private UserType clientType = UserType.NONE;
 	private UserType contentSpecType = UserType.NONE;
-	private ArrayList<String> strictTopicTypes = new ArrayList<String>();
+	private final ArrayList<String> strictTopicTypes = new ArrayList<String>();
 	public static enum UserType {NONE, OFF, STRICT, ON};
 	
-	public InjectionOptions() {
+	public InjectionOptions()
+	{
 	}
 	
-	public InjectionOptions(UserType clientSetting) {
+	public InjectionOptions(UserType clientSetting)
+	{
 		clientType = clientSetting;
 	}
 	
-	public boolean isInjectionAllowed() {
+	public boolean isInjectionAllowed()
+	{
 		if ((contentSpecType == UserType.OFF || contentSpecType == UserType.NONE) 
 				&& (clientType == UserType.OFF || clientType == UserType.NONE)) return false;
 		return true;
 	}
 	
-	public boolean isInjectionAllowedForType(String typeName) {
-		if (isInjectionAllowed()) {
-			if (clientType == UserType.STRICT || contentSpecType == UserType.STRICT) {
+	public boolean isInjectionAllowedForType(final String typeName)
+	{
+		if (isInjectionAllowed())
+		{
+			if (clientType == UserType.STRICT || contentSpecType == UserType.STRICT)
+			{
 				boolean found = false;
-				for (String type: strictTopicTypes) {
-					if (type.equals(typeName)) {
+				for (String type: strictTopicTypes)
+				{
+					if (type.equals(typeName))
+					{
 						found = true;
 						break;
 					}
 				}
 				return found;
-			} else {
+			}
+			else
+			{
 				return true;
 			}
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 	}
 
-	public UserType getClientType() {
+	public UserType getClientType()
+	{
 		return clientType;
 	}
 
-	public void setClientType(UserType clientType) {
+	public void setClientType(final UserType clientType)
+	{
 		this.clientType = clientType;
 	}
 
-	public UserType getContentSpecType() {
+	public UserType getContentSpecType()
+	{
 		return contentSpecType;
 	}
 
-	public void setContentSpecType(UserType contentSpecType) {
+	public void setContentSpecType(final UserType contentSpecType)
+	{
 		this.contentSpecType = contentSpecType;
 	}
 	
-	public void addStrictTopicType(String typeName) {
+	public void addStrictTopicType(final String typeName)
+	{
 		boolean found = false;
-		for (String type: strictTopicTypes) {
-			if (type.equals(typeName)) {
+		for (String type: strictTopicTypes)
+		{
+			if (type.equals(typeName))
+			{
 				found = true;
 				break;
 			}
@@ -70,14 +89,17 @@ public class InjectionOptions {
 		if (!found) strictTopicTypes.add(typeName);
 	}
 	
-	public void addStrictTopicTypes(ArrayList<String> types) {
+	public void addStrictTopicTypes(final ArrayList<String> types)
+	{
 		if (types == null) return;
-		for (String type: types) {
+		for (String type: types)
+		{
 			addStrictTopicType(type);
 		}
 	}
 	
-	public ArrayList<String> getStrictTopicTypes() {
+	public ArrayList<String> getStrictTopicTypes()
+	{
 		return strictTopicTypes;
 	}
 	
