@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.redhat.contentspec.ContentSpec;
+import com.redhat.contentspec.KeyValueNode;
 import com.redhat.contentspec.Level;
 import com.redhat.contentspec.Node;
 import com.redhat.ecs.commonstructures.StringToCSNodeCollection;
@@ -11,6 +12,9 @@ import com.redhat.ecs.commonutils.CollectionUtilities;
 
 public class ContentSpecUtilities
 {
+	private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(new String[]
+			{ "title", "product", "subtitle", "abstract" });
+	
 	/**
 	 * Generates a random target it in the form of T<Line Number>0<Random Number><count>.
 	 * I.e. The topic is on line 50 and the target to be created for is topic 4 in a process, the 
@@ -44,11 +48,17 @@ public class ContentSpecUtilities
 
 		final List<StringToCSNodeCollection> retValue = new ArrayList<StringToCSNodeCollection>();
 
-		/*retValue.add(contentSpec.getTitle());
-		retValue.add(contentSpec.getAbstract());
-		retValue.add(contentSpec.getProduct());
-		retValue.add(contentSpec.getVersion());
-		retValue.add(contentSpec.getSubtitle());*/
+		final List<Node> contentSpecNodes = contentSpec.getNodes();
+		for (final Node node : contentSpecNodes)
+		{
+			if (node instanceof KeyValueNode)
+			{
+				if (translatableMetaData.contains(((KeyValueNode<?>) node).getKey()))
+				{
+					
+				}
+			}
+		}
 		
 		final List<Level> levels = contentSpec.getBaseLevel().getChildLevels();
 		for (final Level level : levels)

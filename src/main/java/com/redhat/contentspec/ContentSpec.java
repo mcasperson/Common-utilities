@@ -1017,6 +1017,11 @@ public class ContentSpec extends Node
 		}
 		return specTopics;
 	}
+	
+	public List<Node> getNodes()
+	{
+		return nodes;
+	}
 
 	public String getBugzillaProduct()
 	{
@@ -1054,11 +1059,21 @@ public class ContentSpec extends Node
 		}
 	}
 
+	/**
+	 * Get the Bugzilla Version to be applied during building.
+	 * 
+	 * @return The version of the product in bugzilla.
+	 */
 	public String getBugzillaVersion()
 	{
 		return bugzillaVersion == null ? null : bugzillaVersion.getValue().toString();
 	}
 
+	/**
+	 * Set the Bugzilla Version to be applied during building.
+	 * 
+	 * @param bugzillaVersion The version of the product in bugzilla.
+	 */
 	public void setBugzillaVersion(final String bugzillaVersion)
 	{
 		if (this.bugzillaVersion == null)
