@@ -132,6 +132,19 @@ public class XMLUtilities
 
 		return null;
 	}
+	
+	/**
+     * Removes all of the child nodes from a parent node.
+     */
+    public static void emptyNode(final Node parent)
+    {
+    	final NodeList childNodes = parent.getChildNodes();
+		for (int i = childNodes.getLength() - 1; i >= 0; i--)
+		{
+			final Node childNode = childNodes.item(i);
+			childNode.getParentNode().removeChild(childNode);
+		}
+    }
 
 	/**
 	 * This function will return a map that contains entity names as keys, and random integer strings as values. The values are guaranteed not to have appeared
@@ -323,7 +336,6 @@ public class XMLUtilities
 				/* finally, remove the existing text node */
 				parentNode.removeChild(node);
 			}
-
 		}
 
 		// TODO: deal with entities in attributes
@@ -597,7 +609,7 @@ public class XMLUtilities
 				/*
 				 * Allow for spaces between nodes. i.e. <literal>Test</literal> <literal>Test2</literal>
 				 */
-				else if (node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null)
+				else if (node.getNodeValue() != null && node.getNodeValue().matches("^[ ]+$") && node.getNextSibling() != null)
 				{
 					return new String(" ");
 				}

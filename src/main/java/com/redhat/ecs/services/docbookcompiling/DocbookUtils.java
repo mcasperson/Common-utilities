@@ -107,10 +107,20 @@ public class DocbookUtils
 	
 	public static List<Element> buildXRef(final Document xmlDoc, final String xref)
 	{
+		return buildXRef(xmlDoc, xref, null);
+	}
+	
+	public static List<Element> buildXRef(final Document xmlDoc, final String xref, final String xrefStyle)
+	{
 		final List<Element> retValue = new ArrayList<Element>();
 		
 		final Element xrefItem = xmlDoc.createElement("xref");
 		xrefItem.setAttribute("linkend", xref);
+		
+		if (xrefStyle != null && !xrefStyle.isEmpty())
+		{
+			xrefItem.setAttribute("xrefstyle", xrefStyle);
+		}
 		
 		retValue.add(xrefItem);
 		
