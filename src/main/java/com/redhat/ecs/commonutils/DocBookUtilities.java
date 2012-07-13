@@ -72,6 +72,6 @@ public class DocBookUtilities
 	 * @return The escaped title string.
 	 */
 	public static String escapeTitle(final String title) {
-		return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9\\._-]", "");
+		return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9\\.\\+_-]", "");
 	}
 }
