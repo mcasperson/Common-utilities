@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -20,8 +21,10 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.redhat.contentspec.Level;
+import com.redhat.contentspec.SpecNode;
 import com.redhat.contentspec.SpecTopic;
 import com.redhat.contentspec.entities.BugzillaOptions;
+import com.redhat.contentspec.entities.Relationship;
 import com.redhat.contentspec.entities.TargetRelationship;
 import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.ecs.commonstructures.Pair;
@@ -1167,31 +1170,36 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final Element formalParaTitleEle = doc.createElement("title");
 			formalParaTitleEle.setTextContent("Prerequisites:");
 			formalParaEle.appendChild(formalParaTitleEle);
-			final List<List<Element>> list = new ArrayList<List<Element>>();
+			final List<List<Element>> list = new LinkedList<List<Element>>();
 			
-			// Add the Topic Prerequisites
-			for (final TopicRelationship prereq: topic.getPrerequisiteTopicRelationships())
+			// Add the Relationships
+			for (final Relationship prereq: topic.getPrerequisiteRelationships())
 			{
-				final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "prereq"));
-			}
-			
-			// Add the Level Prerequisites
-			for (final TargetRelationship prereq: topic.getPrerequisiteLevelRelationships())
-			{
-				final Level relatedLevel = (Level) prereq.getSecondaryElement();
-				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "prereq"));
+				if (prereq instanceof TopicRelationship)
+				{
+					final SpecTopic relatedTopic = ((TopicRelationship) prereq).getSecondaryRelationship();
+					
+					list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "prereq"));
+				}
+				else
+				{
+					final SpecNode specNode = ((TargetRelationship) prereq).getSecondaryElement();
+					
+					list.add(DocbookUtils.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), "prereq"));
+				}
 			}
 			
 			// Wrap the items into an itemized list
 			final List<Element> items = DocbookUtils.wrapItemizedListItemsInPara(doc, list);
-			for (final Element ele: items) {
+			for (final Element ele: items)
+			{
 				formalParaEle.appendChild(ele);
 			}
 			
 			// Add the paragraph and list after the title node
 			Node nextNode = titleEle.getNextSibling();
-			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null) {
+			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null)
+			{
 				nextNode = nextNode.getNextSibling();
 			}
 			
@@ -1213,25 +1221,27 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		// Create the paragraph and list of prerequisites.
 		if (topic.getRelatedRelationships().isEmpty()) return;
 		final Element formalParaEle = doc.createElement("formalpara");
-		formalParaEle.setAttribute("role", "refer-to-list");
+		formalParaEle.setAttribute("role", "see-also-list");
 		final Element formalParaTitleEle = doc.createElement("title");
 		formalParaTitleEle.setTextContent("See Also:");
 		formalParaEle.appendChild(formalParaTitleEle);
-		final List<List<Element>> list = new ArrayList<List<Element>>();
+		final List<List<Element>> list = new LinkedList<List<Element>>();
 		
-		// Add the Topic Relationships
-		for (final TopicRelationship prereq: topic.getRelatedTopicRelationships())
+		// Add the Relationships
+		for (final Relationship seeAlso: topic.getRelatedRelationships())
 		{
-			final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-			
-			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "see-also"));
-		}
-		
-		// Add the Level Relationships
-		for (final TargetRelationship prereq: topic.getRelatedLevelRelationships())
-		{
-			final Level relatedLevel = (Level) prereq.getSecondaryElement();
-			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "see-also"));
+			if (seeAlso instanceof TopicRelationship)
+			{
+				final SpecTopic relatedTopic = ((TopicRelationship) seeAlso).getSecondaryRelationship();
+				
+				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "see-also"));
+			}
+			else
+			{
+				final SpecNode specNode = ((TargetRelationship) seeAlso).getSecondaryElement();
+				
+				list.add(DocbookUtils.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), "see-also"));
+			}
 		}
 		
 		// Wrap the items into an itemized list
@@ -1262,21 +1272,23 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		final Element formalParaTitleEle = doc.createElement("title");
 		formalParaTitleEle.setTextContent("");
 		formalParaEle.appendChild(formalParaTitleEle);
-		final List<List<Element>> list = new ArrayList<List<Element>>();
+		final List<List<Element>> list = new LinkedList<List<Element>>();
 		
-		// Add the Topic Relationships
-		for (final TopicRelationship prereq: topic.getLinkListTopicRelationships())
+		// Add the Relationships
+		for (final Relationship linkList: topic.getLinkListRelationships())
 		{
-			final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-			
-			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "link-list"));
-		}
-		
-		// Add the Level Relationships
-		for (final TargetRelationship prereq: topic.getLinkListLevelRelationships())
-		{
-			final Level relatedLevel = (Level) prereq.getSecondaryElement();
-			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "link-list"));
+			if (linkList instanceof TopicRelationship)
+			{
+				final SpecTopic relatedTopic = ((TopicRelationship) linkList).getSecondaryRelationship();
+				
+				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "link-list"));
+			}
+			else
+			{
+				final SpecNode specNode = ((TargetRelationship) linkList).getSecondaryElement();
+				
+				list.add(DocbookUtils.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), "link-list"));
+			}
 		}
 		
 		// Wrap the items into an itemized list
