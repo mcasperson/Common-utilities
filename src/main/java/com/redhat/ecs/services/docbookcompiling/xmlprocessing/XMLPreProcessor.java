@@ -21,6 +21,7 @@ import org.w3c.dom.Text;
 
 import com.redhat.contentspec.Level;
 import com.redhat.contentspec.SpecTopic;
+import com.redhat.contentspec.entities.BugzillaOptions;
 import com.redhat.contentspec.entities.TargetRelationship;
 import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.ecs.commonstructures.Pair;
@@ -164,7 +165,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	 */
 	protected static final String NO_INJECT_ROLE = "noinject";
 
-	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
+	public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions, final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final String searchTagsUrl, final Date buildDate)
 	{
 		/* SIMPLESECT TO HOLD OTHER LINKS */
 		final Element bugzillaSection = document.createElement("simplesect");
@@ -236,8 +237,38 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			/* build the bugzilla url options */
 			String bugzillaURLComponents = "";
 
-			/* we need at least a product */
-			if (bugzillaProduct != null)
+			bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+			bugzillaURLComponents += "cf_environment=" + bugzillaEnvironment;
+
+			bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+			bugzillaURLComponents += "cf_build_id=" + bugzillaBuildID;
+			
+			if (bugzillaAssignedTo != null)
+			{
+				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+				bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
+			}
+			
+			/* check the content spec options first */
+			if (bzOptions != null && bzOptions.getProduct() != null)
+			{
+				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+				bugzillaURLComponents += "product=" + URLEncoder.encode(bzOptions.getProduct(), "UTF-8");
+
+				if (bzOptions.getComponent() != null)
+				{
+					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+					bugzillaURLComponents += "component=" + URLEncoder.encode(bzOptions.getComponent(), "UTF-8");
+				}
+
+				if (bzOptions.getVersion() != null)
+				{
+					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+					bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), "UTF-8");
+				}
+			}
+			/* we need at least a product*/
+			else if (bugzillaProduct != null)
 			{
 				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
 				bugzillaURLComponents += "product=" + bugzillaProduct;
@@ -259,24 +290,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
 					bugzillaURLComponents += "keywords=" + bugzillaKeywords;
 				}
-
-				if (bugzillaAssignedTo != null)
-				{
-					bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-					bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
-				}
-
-				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-				bugzillaURLComponents += "cf_environment=" + bugzillaEnvironment;
-
-				bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-				bugzillaURLComponents += "cf_build_id=" + bugzillaBuildID;
 			}
 
 			/* build the bugzilla url with the base components */
-			String bugZillaUrl = "https://bugzilla.redhat.com/enter_bug.cgi" + bugzillaURLComponents;
+			String bugzillaUrl = "https://bugzilla.redhat.com/enter_bug.cgi" + bugzillaURLComponents;
 
-			bugzillaULink.setAttribute("url", bugZillaUrl);
+			bugzillaULink.setAttribute("url", bugzillaUrl);
 
 			/*
 			 * only add the elements to the XML DOM if there was no exception (not that there should be one
@@ -294,7 +313,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	 * Adds some debug information and links to the end of the topic
 	 */
 	@SuppressWarnings("unchecked")
-	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final DocbookBuildingOptions docbookBuildingOptions, final String buildName,
+	public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions, final DocbookBuildingOptions docbookBuildingOptions, final String buildName,
 			final String searchTagsUrl, final Date buildDate, final ZanataDetails zanataDetails)
 	{
 		final T topic = (T) specTopic.getTopic();
@@ -387,7 +406,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		// BUGZILLA LINK
 		if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks())
 		{
-			processTopicBugzillaLink(specTopic, document, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
+			processTopicBugzillaLink(specTopic, document, bzOptions, docbookBuildingOptions, buildName, searchTagsUrl, buildDate);
 		}
 	}
 
@@ -1154,14 +1173,14 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			for (final TopicRelationship prereq: topic.getPrerequisiteTopicRelationships())
 			{
 				final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
+				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "prereq"));
 			}
 			
 			// Add the Level Prerequisites
 			for (final TargetRelationship prereq: topic.getPrerequisiteLevelRelationships())
 			{
 				final Level relatedLevel = (Level) prereq.getSecondaryElement();
-				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
+				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "prereq"));
 			}
 			
 			// Wrap the items into an itemized list
@@ -1192,7 +1211,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
 	{
 		// Create the paragraph and list of prerequisites.
-		if (topic.getLinkListRelationships().isEmpty()) return;
+		if (topic.getRelatedRelationships().isEmpty()) return;
 		final Element formalParaEle = doc.createElement("formalpara");
 		formalParaEle.setAttribute("role", "refer-to-list");
 		final Element formalParaTitleEle = doc.createElement("title");
@@ -1205,14 +1224,14 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		{
 			final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
 			
-			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
+			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "see-also"));
 		}
 		
 		// Add the Level Relationships
 		for (final TargetRelationship prereq: topic.getRelatedLevelRelationships())
 		{
 			final Level relatedLevel = (Level) prereq.getSecondaryElement();
-			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
+			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "see-also"));
 		}
 		
 		// Wrap the items into an itemized list
@@ -1237,7 +1256,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 	public void processLinkListRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls)
 	{
 		// Create the paragraph and list of prerequisites.
-		if (topic.getRelatedRelationships().isEmpty()) return;
+		if (topic.getLinkListRelationships().isEmpty()) return;
 		final Element formalParaEle = doc.createElement("formalpara");
 		formalParaEle.setAttribute("role", "link-list");
 		final Element formalParaTitleEle = doc.createElement("title");
@@ -1250,14 +1269,14 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		{
 			final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
 			
-			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls)));
+			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "link-list"));
 		}
 		
 		// Add the Level Relationships
 		for (final TargetRelationship prereq: topic.getLinkListLevelRelationships())
 		{
 			final Level relatedLevel = (Level) prereq.getSecondaryElement();
-			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls)));
+			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "link-list"));
 		}
 		
 		// Wrap the items into an itemized list

@@ -458,25 +458,18 @@ public class Level extends SpecNode
 	@Override
 	public String getText()
 	{
-		if (text == null)
-		{
-			final String options = getOptionsString();
-			final String output = type != LevelType.BASE ? 
-					(type.getTitle() + ": " + title
-					// Add the target id if one exists
-					+ (targetId == null ? "" : (" [" + targetId + "]"))
-					// Add the external target id if one exists
-					+ (externalTargetId == null ? "" : (" [" + externalTargetId + "]"))
-					// Add any options
-					+ (options.equals("") ? "" : (" [" + options + "]")))
-					: "";
-			setText(output);
-			return output;
-		}
-		else
-		{
-			return text;
-		}
+		final String options = getOptionsString();
+		String output = type != LevelType.BASE ? 
+				(type.getTitle() + ": " + title
+				// Add the target id if one exists
+				+ (targetId == null ? "" : (" [" + targetId + "]"))
+				// Add the external target id if one exists
+				+ (externalTargetId == null ? "" : (" [" + externalTargetId + "]")))
+				: "";
+		// Add any options
+		output += options.equals("") ? "" : (" [" + options + "]");
+		setText(output);
+		return output;
 	}
 
 	/**

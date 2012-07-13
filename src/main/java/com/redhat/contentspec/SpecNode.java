@@ -11,8 +11,8 @@ import com.redhat.ecs.commonutils.StringUtilities;
  * @author lnewson
  *
  */
-public abstract class SpecNode extends Node {
-
+public abstract class SpecNode extends Node
+{
 	protected List<String> tags = new ArrayList<String>();
 	protected List<String> removeTags = new ArrayList<String>();
 	protected List<String> sourceUrls = new ArrayList<String>();
@@ -20,15 +20,18 @@ public abstract class SpecNode extends Node {
 	protected String assignedWriter = null;
 	
 	
-	public SpecNode(int lineNumber, String text) {
+	public SpecNode(final int lineNumber, final String text)
+	{
 		super(lineNumber, text);
 	}
 	
-	public SpecNode(String text) {
+	public SpecNode(final String text)
+	{
 		super(text);
 	}
 	
-	public SpecNode() {
+	public SpecNode()
+	{
 		super();
 	}
 	
@@ -38,7 +41,8 @@ public abstract class SpecNode extends Node {
 	 * @return The Line Number for the node.
 	 */
 	@Override
-	public int getLineNumber() {
+	public int getLineNumber()
+	{
 		return lineNumber;
 	}
 	
@@ -48,7 +52,8 @@ public abstract class SpecNode extends Node {
 	 * @return The line of text for the node.
 	 */
 	@Override
-	public String getText() {
+	public String getText()
+	{
 		return text;
 	}
 	
@@ -58,7 +63,8 @@ public abstract class SpecNode extends Node {
 	 * @param text The nodes text.
 	 */
 	@Override
-	protected void setText(String text) {
+	protected void setText(final String text)
+	{
 		this.text = text;
 	}
 	
@@ -76,7 +82,8 @@ public abstract class SpecNode extends Node {
 	 * @return The column the node starts at.
 	 */
 	@Override
-	public Integer getColumn() {
+	public Integer getColumn()
+	{
 		return parent == null ? 0 : (parent.getColumn() + 1);
 	}
 	
@@ -86,7 +93,8 @@ public abstract class SpecNode extends Node {
 	 * @return The nodes parent.
 	 */
 	@Override
-	public SpecNode getParent() {
+	public SpecNode getParent()
+	{
 		return (SpecNode) parent;
 	}
 	
@@ -95,7 +103,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param parent The parent node.
 	 */
-	protected void setParent(SpecNode parent) {
+	protected void setParent(final SpecNode parent)
+	{
 		super.setParent(parent);
 	}	
 	
@@ -104,7 +113,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param desc The description.
 	 */
-	public void setDescription(String desc) {
+	public void setDescription(final String desc)
+	{
 		this.description = desc;
 	}
 	
@@ -114,7 +124,8 @@ public abstract class SpecNode extends Node {
 	 * @param useInherited If the function should check for an inherited description
 	 * @return The description as a String
 	 */
-	public String getDescription(boolean useInherited) {
+	public String getDescription(final boolean useInherited)
+	{
 		if  (description == null && parent != null && useInherited)
 			return getParent().getDescription(true);
 		return description;
@@ -125,7 +136,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param writer The writers name that matches to the assigned writer tag in the database
 	 */
-	public void setAssignedWriter(String writer) {
+	public void setAssignedWriter(final String writer)
+	{
 		this.assignedWriter = writer;
 	}
 	
@@ -135,7 +147,8 @@ public abstract class SpecNode extends Node {
 	 * @param useInherited If the function should check for an inherited writer
 	 * @return The Assigned Writers name as a String
 	 */
-	public String getAssignedWriter(boolean useInherited) {
+	public String getAssignedWriter(final boolean useInherited)
+	{
 		if  (assignedWriter == null && parent != null && useInherited)
 			return getParent().getAssignedWriter(true);
 		return assignedWriter;
@@ -146,7 +159,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param tags A HashMap of tags. The key in the map is the tags category name and the value is an ArrayList of tags for each category.
 	 */
-	public void setTags(List<String> tags) {
+	public void setTags(final List<String> tags)
+	{
 		this.tags = tags;
 	}
 	
@@ -157,37 +171,50 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param useInherited If the function should check for inherited tags
 	 */
-	public List<String> getTags(boolean useInherited) {
-		List<String> temp = tags;
+	public List<String> getTags(final boolean useInherited)
+	{
+		List<String> temp = new ArrayList<String>(tags);
 		// Get the inherited tags
-		if (useInherited) {
-			if  (tags == null && parent != null) {
+		if (useInherited)
+		{
+			if  (tags == null && parent != null)
+			{
 				return getParent().getTags(true);
-			} else if (parent != null) {
-				for (String tagName: getParent().getTags(true)) {
+			}
+			else if (parent != null)
+			{
+				for (final String tagName: getParent().getTags(true))
+				{
 					boolean found = false;
-					for (String tempTagName : temp) {
-						if (tagName.equals(tempTagName)) {
+					for (final String tempTagName : temp)
+					{
+						if (tagName.equals(tempTagName))
+						{
 							found = true;
 						}	
 					}
-					if (!found) {
+					if (!found)
+					{
 						temp.add(tagName);
 					}
 				}
 			}
 		}
 		// Remove the tags that are set to be removed
-		List<String> newTags = new ArrayList<String>();
-		for (String tagName: tags) {
-			List<String> temptags = getRemoveTags(useInherited);
+		final List<String> newTags = new ArrayList<String>();
+		for (final String tagName: tags)
+		{
+			final List<String> temptags = getRemoveTags(useInherited);
 			boolean found = false;
-			for (String removeTagName: temptags) {
-				if (removeTagName.equals(tagName)) {
+			for (final String removeTagName: temptags)
+			{
+				if (removeTagName.equals(tagName))
+				{
 					found = true;
 				}
 			}
-			if (!found) {
+			if (!found)
+			{
 				newTags.add(tagName);
 			}
 		}
@@ -200,7 +227,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param tags An ArrayList of tags to be removed
 	 */
-	public void setRemoveTags(List<String> tags) {
+	public void setRemoveTags(final List<String> tags)
+	{
 		this.removeTags = tags;
 	}
 	
@@ -210,22 +238,31 @@ public abstract class SpecNode extends Node {
 	 * @param useInherited If the function should check for inherited removable tags
 	 * @return An ArrayList of tags
 	 */
-	public List<String> getRemoveTags(boolean useInherited) {
-		List<String> temp = removeTags;
-		if (useInherited) {
-			if  (removeTags == null && parent != null) {
+	public List<String> getRemoveTags(final boolean useInherited)
+	{
+		List<String> temp = new ArrayList<String>(removeTags);
+		if (useInherited)
+		{
+			if  (removeTags == null && parent != null)
+			{
 				return getParent().getRemoveTags(true);
-			} else if (parent != null) {
+			}
+			else if (parent != null)
+			{
 				// Add all of the inherited tags that don't already exist
-				List<String> inheritedTags = getParent().getRemoveTags(true);
-				for (String tagName: inheritedTags) {
+				final List<String> inheritedTags = getParent().getRemoveTags(true);
+				for (final String tagName: inheritedTags)
+				{
 					boolean found = false;
-					for (String tempTagName : temp) {
-						if (tagName.equals(tempTagName)) {
+					for (final String tempTagName : temp)
+					{
+						if (tagName.equals(tempTagName))
+						{
 							found = true;
 						}	
 					}
-					if (!found) {
+					if (!found)
+					{
 						temp.add(tagName);
 					}
 				}
@@ -239,7 +276,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param sourceUrls An ArrayList of urls
 	 */
-	public void setSourceUrls(List<String> sourceUrls) {
+	public void setSourceUrls(final List<String> sourceUrls)
+	{
 		this.sourceUrls = sourceUrls;
 	}
 	
@@ -248,13 +286,19 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @return A List of Strings that represent the source urls
 	 */
-	public List<String> getSourceUrls() {
-		List<String> temp = sourceUrls;
-		if  (sourceUrls == null && parent != null) {
+	public List<String> getSourceUrls()
+	{
+		final List<String> temp = new ArrayList<String>(sourceUrls);
+		if  (sourceUrls == null && parent != null)
+		{
 			return getParent().getSourceUrls();
-		} else if (parent != null) {
-			for (String url: getParent().getSourceUrls()) {
-				if (!temp.contains(url)) {
+		}
+		else if (parent != null)
+		{
+			for (final String url: getParent().getSourceUrls())
+			{
+				if (!temp.contains(url))
+				{
 					temp.add(url);
 				}
 			}
@@ -269,24 +313,35 @@ public abstract class SpecNode extends Node {
 	 * @param tagName The name of the Tag to be added.
 	 * @return True if the tag was added successfully otherwise false.
 	 */
-	public boolean addTag(String tagName) {
+	public boolean addTag(final String tagName)
+	{
 		String name = StringUtilities.replaceEscapeChars(tagName);
 		// Remove the + or - from the tag temporarily to get the tag from the database
-		if (tagName.startsWith("-") || tagName.startsWith("+")) {
+		if (tagName.startsWith("-") || tagName.startsWith("+"))
+		{
 			name = name.substring(1).trim();
 		}
 		
 		// Check to see which set of tags to add to. The removeTags or additional tags.
-		if (tagName.startsWith("-")) {
-			if (removeTags.contains(name)) {
+		if (tagName.startsWith("-"))
+		{
+			if (removeTags.contains(name))
+			{
 				return false;
-			} else {
+			}
+			else
+			{
 				removeTags.add(name);
 			}
-		} else {
-			if (tags.contains(name)) {
+		}
+		else
+		{
+			if (tags.contains(name))
+			{
 				return false;
-			} else {
+			}
+			else
+			{
 				tags.add(name);
 			}
 		}
@@ -299,8 +354,10 @@ public abstract class SpecNode extends Node {
 	 * @param tagArray A list of tags by name that are to be added.
 	 * @return True if all the tags were added successfully otherwise false.
 	 */
-	public boolean addTags(List<String> tagArray) {
-		for (String t: tagArray) {
+	public boolean addTags(final List<String> tagArray)
+	{
+		for (final String t: tagArray)
+		{
 			return addTag(t);
 		}
 		return true;
@@ -311,7 +368,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param url The URL to be added
 	 */
-	public void addSourceUrl(String url) {
+	public void addSourceUrl(final String url)
+	{
 		if (sourceUrls.contains(url)) return;
 		sourceUrls.add(url);
 	}
@@ -321,7 +379,8 @@ public abstract class SpecNode extends Node {
 	 * 
 	 * @param url The URL to be removed.
 	 */
-	public void removeSourceUrl(String url) {
+	public void removeSourceUrl(final String url)
+	{
 		sourceUrls.remove(url);
 	}
 	
@@ -333,23 +392,34 @@ public abstract class SpecNode extends Node {
 	protected String getOptionsString()
 	{
 		final ArrayList<String> vars = new ArrayList<String>();
-		if (!tags.isEmpty()) {
+		if (!tags.isEmpty())
+		{
 			vars.addAll(tags);
 		}
-		if (!removeTags.isEmpty()) {
-			for (String removeTag: removeTags) {
+		
+		if (!removeTags.isEmpty())
+		{
+			for (final String removeTag: removeTags)
+			{
 				vars.add("-" + removeTag);
 			}
 		}
-		if (!sourceUrls.isEmpty()) {
-			for (String url: sourceUrls) {
+		
+		if (!sourceUrls.isEmpty())
+		{
+			for (final String url: sourceUrls)
+			{
 				vars.add("URL=" +url);
 			}
 		}
-		if (assignedWriter != null) {
+		
+		if (assignedWriter != null)
+		{
 			vars.add("Writer = " + assignedWriter);
 		}
-		if (description != null) {
+		
+		if (description != null)
+		{
 			vars.add("Description = " + description);
 		}
 		return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
