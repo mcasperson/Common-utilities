@@ -8,6 +8,7 @@ package com.redhat.contentspec;
  */
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Document;
@@ -31,9 +32,10 @@ public class SpecTopic extends SpecNode
 	private String id;
 	private int DBId = 0;
 	private String type;
-	private ArrayList<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
-	private ArrayList<TargetRelationship> topicTargetRelationships = new ArrayList<TargetRelationship>();
-	private ArrayList<TargetRelationship> levelRelationships = new ArrayList<TargetRelationship>();
+	private List<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
+	private List<TargetRelationship> topicTargetRelationships = new ArrayList<TargetRelationship>();
+	private List<TargetRelationship> levelRelationships = new ArrayList<TargetRelationship>();
+	private List<Relationship> relationships = new LinkedList<Relationship>();
 	private String targetId = null;
 	private String title = null;
 	private String duplicateId = null;
@@ -287,7 +289,9 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type)
 	{
-		topicRelationships.add(new TopicRelationship(this, topic, type));
+		final TopicRelationship relationship = new TopicRelationship(this, topic, type);
+		topicRelationships.add(relationship);
+		relationships.add(relationship);
 	}
 	
 	/**
@@ -299,7 +303,9 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type, final String title)
 	{
-		topicRelationships.add(new TopicRelationship(this, topic, type, title));
+		final TopicRelationship relationship = new TopicRelationship(this, topic, type, title);
+		topicRelationships.add(relationship);
+		relationships.add(relationship);
 	}
 
 	/**
@@ -310,7 +316,9 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTarget(final SpecTopic topic, final RelationshipType type)
 	{
-		topicTargetRelationships.add(new TargetRelationship(this, topic, type));
+		final TargetRelationship relationship = new TargetRelationship(this, topic, type);
+		topicTargetRelationships.add(relationship);
+		relationships.add(relationship);
 	}
 	
 	/**
@@ -322,7 +330,9 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTarget(final SpecTopic topic, final RelationshipType type, final String title)
 	{
-		topicTargetRelationships.add(new TargetRelationship(this, topic, type, title));
+		final TargetRelationship relationship = new TargetRelationship(this, topic, type, title);
+		topicTargetRelationships.add(relationship);
+		relationships.add(relationship);
 	}
 
 	/**
@@ -333,7 +343,9 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTarget(final Level level, final RelationshipType type)
 	{
-		levelRelationships.add(new TargetRelationship(this, level, type));
+		final TargetRelationship relationship = new TargetRelationship(this, level, type);
+		levelRelationships.add(relationship);
+		relationships.add(relationship);
 	}
 	
 	/**
@@ -345,7 +357,9 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTarget(final Level level, final RelationshipType type, final String title)
 	{
-		levelRelationships.add(new TargetRelationship(this, level, type, title));
+		final TargetRelationship relationship = new TargetRelationship(this, level, type, title);
+		levelRelationships.add(relationship);
+		relationships.add(relationship);
 	}
 
 	// End of the basic getter/setter methods for this Topic.
@@ -355,15 +369,8 @@ public class SpecTopic extends SpecNode
 	 */
 	public List<Relationship> getPreviousRelationship()
 	{
-		ArrayList<Relationship> prevRelationships = new ArrayList<Relationship>();
-		for (Relationship r : topicRelationships)
-		{
-			if (r.getType() == RelationshipType.PREVIOUS)
-			{
-				prevRelationships.add(r);
-			}
-		}
-		for (Relationship r : topicTargetRelationships)
+		final List<Relationship> prevRelationships = new LinkedList<Relationship>();
+		for (final Relationship r : relationships)
 		{
 			if (r.getType() == RelationshipType.PREVIOUS)
 			{
@@ -378,15 +385,8 @@ public class SpecTopic extends SpecNode
 	 */
 	public List<Relationship> getNextRelationships()
 	{
-		ArrayList<Relationship> nextRelationships = new ArrayList<Relationship>();
-		for (Relationship r : topicRelationships)
-		{
-			if (r.getType() == RelationshipType.NEXT)
-			{
-				nextRelationships.add(r);
-			}
-		}
-		for (Relationship r : topicTargetRelationships)
+		final List<Relationship> nextRelationships = new LinkedList<Relationship>();
+		for (final Relationship r : relationships)
 		{
 			if (r.getType() == RelationshipType.NEXT)
 			{
@@ -401,22 +401,8 @@ public class SpecTopic extends SpecNode
 	 */
 	public List<Relationship> getPrerequisiteRelationships()
 	{
-		ArrayList<Relationship> prerequisiteRelationships = new ArrayList<Relationship>();
-		for (Relationship r : topicRelationships)
-		{
-			if (r.getType() == RelationshipType.PREREQUISITE)
-			{
-				prerequisiteRelationships.add(r);
-			}
-		}
-		for (Relationship r : topicTargetRelationships)
-		{
-			if (r.getType() == RelationshipType.PREREQUISITE)
-			{
-				prerequisiteRelationships.add(r);
-			}
-		}
-		for (Relationship r : levelRelationships)
+		final List<Relationship> prerequisiteRelationships = new LinkedList<Relationship>();
+		for (final Relationship r : relationships)
 		{
 			if (r.getType() == RelationshipType.PREREQUISITE)
 			{
@@ -431,22 +417,8 @@ public class SpecTopic extends SpecNode
 	 */
 	public List<Relationship> getRelatedRelationships()
 	{
-		ArrayList<Relationship> relatedRelationships = new ArrayList<Relationship>();
-		for (Relationship r : topicRelationships)
-		{
-			if (r.getType() == RelationshipType.RELATED)
-			{
-				relatedRelationships.add(r);
-			}
-		}
-		for (Relationship r : topicTargetRelationships)
-		{
-			if (r.getType() == RelationshipType.RELATED)
-			{
-				relatedRelationships.add(r);
-			}
-		}
-		for (Relationship r : levelRelationships)
+		final List<Relationship> relatedRelationships = new LinkedList<Relationship>();
+		for (final Relationship r : relationships)
 		{
 			if (r.getType() == RelationshipType.RELATED)
 			{
@@ -461,22 +433,8 @@ public class SpecTopic extends SpecNode
 	 */
 	public List<Relationship> getLinkListRelationships()
 	{
-		final ArrayList<Relationship> linkListRelationships = new ArrayList<Relationship>();
-		for (final Relationship r : topicRelationships)
-		{
-			if (r.getType() == RelationshipType.LINKLIST)
-			{
-				linkListRelationships.add(r);
-			}
-		}
-		for (final Relationship r : topicTargetRelationships)
-		{
-			if (r.getType() == RelationshipType.LINKLIST)
-			{
-				linkListRelationships.add(r);
-			}
-		}
-		for (final Relationship r : levelRelationships)
+		final List<Relationship> linkListRelationships = new LinkedList<Relationship>();
+		for (final Relationship r : relationships)
 		{
 			if (r.getType() == RelationshipType.LINKLIST)
 			{
