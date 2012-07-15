@@ -201,6 +201,7 @@ public class Level extends SpecNode
 			topics.remove(child);
 		}
 		nodes.remove(child);
+		child.setParent(null);
 	}
 
 	/**
@@ -307,22 +308,19 @@ public class Level extends SpecNode
 	 * 
 	 * @return A String that represents an External Target ID if one exists otherwise null.
 	 */
-	public String getExternalTargetId()
-	{
+	public String getExternalTargetId() {
 		return externalTargetId;
 	}
 
 	/**
 	 * Set the External Target ID for the level.
 	 * 
-	 * @param externalTargetId
-	 *            The External Target ID to associate with the level.
+	 * @param externalTargetId The External Target ID to associate with the level.
 	 */
-	public void setExternalTargetId(final String externalTargetId)
-	{
+	public void setExternalTargetId(final String externalTargetId) {
 		this.externalTargetId = externalTargetId;
 	}
-
+	
 	/**
 	 * Appends a Comment node to the Level.
 	 * 
@@ -334,7 +332,7 @@ public class Level extends SpecNode
 		nodes.add(comment);
 		if (comment.getParent() != null)
 		{
-			comment.getParent().removeComment(comment);
+			comment.removeParent();
 		}
 		comment.setParent(this);
 	}
@@ -359,6 +357,7 @@ public class Level extends SpecNode
 	public void removeComment(final Comment comment)
 	{
 		nodes.remove(comment);
+		comment.removeParent();
 	}
 
 	/**

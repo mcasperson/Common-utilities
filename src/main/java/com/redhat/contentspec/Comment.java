@@ -36,40 +36,42 @@ public class Comment extends Node
 	@Override
 	public Integer getStep()
 	{
-		if (getParent() == null)
+		final Node parent = getParent();
+		if (parent == null)
 			return null;
 		Integer previousNode = 0;
-
-		// Get the position of the level in its parents nodes
-		Integer nodePos = getParent().getChildNodes().indexOf(this);
-
-		// If the level isn't the first node then get the previous nodes step
-		if (nodePos > 0)
-		{
-			Node node = getParent().getChildNodes().get(nodePos - 1);
-			previousNode = node.getStep();
-			// If the add node is a level then add the number of nodes it contains
-			if (node instanceof Level)
+		
+		if (parent instanceof Level)
+		{			
+			// Get the position of the level in its parents nodes
+			final Integer nodePos = ((Level) parent).getChildNodes().indexOf(this);
+			
+			// If the level isn't the first node then get the previous nodes step
+			if (nodePos > 0)
 			{
-				previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
-			}
+				final Node node = ((Level) parent).getChildNodes().get(nodePos - 1);
+				previousNode = node.getStep();
+				// If the add node is a level then add the number of nodes it contains
+				if (node instanceof Level)
+				{
+					previousNode = (previousNode == null ? 0 : previousNode) + ((Level)node).getTotalNumberOfChildren();
+				}
 			// The node is the first item so use the parent levels step
+			}
+			else
+			{
+				previousNode = getParent().getStep();
+			}
+			// Make sure the previous nodes step isn't 0
+			previousNode = previousNode == null ? 0 : previousNode;
+			
+			// Add one since we got the previous nodes step
+			return previousNode + 1;
 		}
 		else
 		{
-			previousNode = getParent().getStep();
+			return null;
 		}
-		// Make sure the previous nodes step isn't 0
-		previousNode = previousNode == null ? 0 : previousNode;
-
-		// Add one since we got the previous nodes step
-		return previousNode + 1;
-	}
-
-	@Override
-	public Level getParent()
-	{
-		return (Level) parent;
 	}
 
 	/**
@@ -78,14 +80,23 @@ public class Comment extends Node
 	 * @param parent
 	 *            The parent node for the comment.
 	 */
-	protected void setParent(Level parent)
+	protected void setParent(final Level parent)
 	{
 		super.setParent(parent);
 	}
-
-	@Override
-	public String getText()
+	
+	/**
+	 * Sets the Parent node for the Comment.
+	 * 
+	 * @param parent The parent node for the comment.
+	 */
+	protected void setParent(final ContentSpec parent)
 	{
+		super.setParent(parent);
+	}
+	
+	@Override
+	public String getText() {
 		return text;
 	}
 
@@ -98,8 +109,19 @@ public class Comment extends Node
 		{
 			output.append("  ");
 		}
-		output.append(text + "\n");
+		output.append(getText() + "\n");
 		return output.toString();
+	}
+	
+	@Override
+	protected void removeParent()
+	{
+		final Node parent = getParent();
+		if (parent instanceof Level)
+			((Level) parent).removeComment(this);
+		else
+			((ContentSpec) parent).removeComment(this);
+		super.setParent(null);
 	}
 
 }

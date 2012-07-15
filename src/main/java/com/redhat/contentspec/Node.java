@@ -98,4 +98,9 @@ public abstract class Node
 	{
 		return parent == null ? 0 : (parent.getColumn() + 1);
 	}
+	
+	/**
+	 * Removes the node from its parent.
+	 */
+	protected abstract void removeParent();
 }

@@ -155,7 +155,7 @@ public class SpecTopic extends SpecNode
 	{
 		return id;
 	}
-
+	
 	/**
 	 * Gets the Content Specification Unique ID for the topic.
 	 * 

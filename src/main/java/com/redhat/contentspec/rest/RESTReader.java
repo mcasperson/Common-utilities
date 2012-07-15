@@ -343,7 +343,7 @@ public class RESTReader
 				expandDetails.setEnd(0);
 				final ExpandDataTrunk topicsExpandSize = new ExpandDataTrunk(expandDetails);
 				final ExpandDataTrunk expandSize = new ExpandDataTrunk();
-				
+
 				expandSize.setBranches(CollectionUtilities.toArrayList(topicsExpandSize));
 				
 				final String expandDetailsString = mapper.writeValueAsString(expandSize);
