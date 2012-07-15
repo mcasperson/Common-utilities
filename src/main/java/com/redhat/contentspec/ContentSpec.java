@@ -45,7 +45,7 @@ public class ContentSpec
 	private boolean injectBugLinks = true;
 	private boolean injectSurveyLinks = false;
 	private String locale = null;
-	private String outputStyle = CSConstants.CSP_OUTOUT_FORMAT;
+	private String outputStyle = CSConstants.CSP_OUTPUT_FORMAT;
 	private Boolean allowDuplicateTopics = true;
 	private Boolean allowEmptyLevels = false;
 
@@ -987,7 +987,7 @@ public class ContentSpec
 				+ (pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n"))
 				+ (description == null ? "" : ("Abstract = " + description + "\n"))
 				+ (allowDetails.isEmpty() ? "" : allowDetails)
-				+ (outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTOUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n"))
+				+ (outputStyle == null || outputStyle.equals(CSConstants.CSP_OUTPUT_FORMAT) ? "" : ("Output Style = " + outputStyle + "\n"))
 				+ (locale == null ? "" : ("Translation Locale = " + locale + "\n"))
 				+ "\n" + bugzillaDetails + (injectSurveyLinks ? "Survey Links = On\n" : "") + (publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n")));
 
