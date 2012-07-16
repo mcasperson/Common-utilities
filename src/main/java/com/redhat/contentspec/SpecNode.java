@@ -409,7 +409,7 @@ public abstract class SpecNode extends Node
 		{
 			for (final String url: sourceUrls)
 			{
-				vars.add("URL=" +url);
+				vars.add("URL = " +url);
 			}
 		}
 		

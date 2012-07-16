@@ -4,12 +4,14 @@ public class KeyValueNode<T> extends Node
 {
 	private final String key;
 	private T value = null;
+	private final char separator;
 	
 	public KeyValueNode(final String key, final T value, final char separator)
 	{
 		super(key + " " + separator + " " + value);
 		this.key = key;
 		this.setValue(value);
+		this.separator = separator;
 	}
 	
 	public KeyValueNode(final String key, final T value)
@@ -61,4 +63,14 @@ public class KeyValueNode<T> extends Node
 		super.setParent(parent);
 	}
 	
+	public String getText()
+	{
+		return key + " " + separator + " " + value.toString();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return getText() + "\n";
+	}
 }

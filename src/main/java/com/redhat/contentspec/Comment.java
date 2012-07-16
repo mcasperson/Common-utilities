@@ -17,9 +17,9 @@ public class Comment extends Node
 	 * @param comment
 	 *            The line of text that represents a comment.
 	 */
-	public Comment(int lineNumber, String comment)
+	public Comment(final int lineNumber, final String comment)
 	{
-		super(lineNumber, comment.startsWith("#") ? comment : ("# " + comment));
+		super(lineNumber, comment.trim().startsWith("#") ? comment : ("# " + comment));
 	}
 
 	/**
@@ -28,9 +28,9 @@ public class Comment extends Node
 	 * @param comment
 	 *            The line of text that represents a comment.
 	 */
-	public Comment(String comment)
+	public Comment(final String comment)
 	{
-		super(comment.startsWith("#") ? comment : ("# " + comment));
+		super(comment.trim().startsWith("#") ? comment : ("# " + comment));
 	}
 
 	@Override
@@ -96,21 +96,15 @@ public class Comment extends Node
 	}
 	
 	@Override
-	public String getText() {
+	public String getText()
+	{
 		return text;
 	}
 
 	@Override
 	public String toString()
 	{
-		final StringBuilder output = new StringBuilder();
-		final int indentationSize = parent != null ? getColumn() : 0;
-		for (int i = 1; i < indentationSize; i++)
-		{
-			output.append("  ");
-		}
-		output.append(getText() + "\n");
-		return output.toString();
+		return getText() + "\n";
 	}
 	
 	@Override

@@ -773,8 +773,8 @@ public class SpecTopic extends SpecNode
 		
 		if (!getRelatedRelationships().isEmpty())
 		{
-			ArrayList<String> relatedIds = new ArrayList<String>();
-			for (Relationship related : getRelatedRelationships())
+			final List<String> relatedIds = new ArrayList<String>();
+			for (final Relationship related : getRelatedRelationships())
 			{
 				relatedIds.add(related.getSecondaryRelationshipTopicId());
 			}
@@ -783,8 +783,8 @@ public class SpecTopic extends SpecNode
 		
 		if (!getPrerequisiteRelationships().isEmpty())
 		{
-			ArrayList<String> relatedIds = new ArrayList<String>();
-			for (Relationship related : getPrerequisiteRelationships())
+			final List<String> relatedIds = new ArrayList<String>();
+			for (final Relationship related : getPrerequisiteRelationships())
 			{
 				relatedIds.add(related.getSecondaryRelationshipTopicId());
 			}

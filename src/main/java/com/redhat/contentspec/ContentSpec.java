@@ -1171,7 +1171,7 @@ public class ContentSpec extends Node
 	 * 
 	 * @param childLevel A Child Level to be added to the Level.
 	 */
-	protected void appendChild(final Node child)
+	public void appendChild(final Node child)
 	{
 		nodes.add(child);
 		if (child.getParent() != null)
@@ -1186,7 +1186,7 @@ public class ContentSpec extends Node
 	 * 
 	 * @param child The Child Node to be removed from the Content Spec.
 	 */
-	protected void removeChild(final Node child)
+	public void removeChild(final Node child)
 	{
 		nodes.remove(child);
 		child.setParent(null);
@@ -1205,62 +1205,16 @@ public class ContentSpec extends Node
 			if (node instanceof KeyValueNode)
 			{
 				final KeyValueNode keyValueNode = (KeyValueNode) node;
-				if (!keyValueNode.getKey().equals("CHECKSUM"))
+				if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID"))
 				{
-					output.append(node.toString() + "\n");
+					output.append(node.toString());
 				}
 			}
 			else
 			{
-				output.append(node.toString() + "\n");
+				output.append(node.toString());
 			}
 		}
-		
-		/*for (Comment baseComment: baseComments) {
-			output += baseComment.toString();
-		}
-		String bugzillaDetails = "Bug Links = " + (injectBugLinks ? "On" : "Off") + "\n";
-		bugzillaDetails += (bugzillaProduct == null ? "" : ("BZPRODUCT = " + bugzillaProduct + "\n")) +
-				(bugzillaComponent == null ? "" : ("BZCOMPONENT = " + bugzillaComponent + "\n")) +
-				(bugzillaVersion == null ? "" : ("BZVERSION = " + bugzillaVersion + "\n")) +
-				(bugzillaURL == null ? "" : ("BZURL = " + bugzillaURL + "\n"));
-		
-		String allowDetails = (allowDuplicateTopics == null || allowDuplicateTopics ? "" : ("Duplicate Topics = Off\n")) +
-				(allowEmptyLevels == null  || !allowEmptyLevels ? "" : ("Allow Empty Levels = " + allowEmptyLevels.toString() + "\n"));
-		
-		output += "Title = " + (title == null ? "" : title) + "\n" + 
-				"Product = " + (product == null ? "" : product) + "\n" + 
-				"Version = " + (version == null ? "" : version) + "\n" + 
-				"Copyright Holder = " + (copyrightHolder == null ? "" : copyrightHolder) + "\n" +
-				"DTD = " + (dtd == null ? "" : dtd) + "\n" +
-				(subtitle == null ? "" : ("Subtitle = " + subtitle + "\n")) +
-				(edition == null ? "" : ("Edition = " + edition + "\n")) +
-				(brand == null ? "" : ("Brand = " + brand + "\n")) +
-				(pubsNumber == null ? "" : ("Pubsnumber = " + pubsNumber + "\n")) +
-				(description == null ? "" : ("Abstract = " + description + "\n")) +
-				(allowDetails.isEmpty() ? "" : allowDetails) +
-				(outputStyle == null ? "" : ("Output Style = " + outputStyle + "\n")) +
-				(locale == null ? "" : ("Translation Locale = " + locale + "\n")) +
-				"\n" + bugzillaDetails +
-				(injectSurveyLinks ? "Survey Links = On\n" : "") + 
-				(publicanCfg == null ? "" : ("\npublican.cfg = [" + publicanCfg + "]\n"));
-		
-		// Add the injection options if they exist
-		if (injectionOptions != null && injectionOptions.getStrictTopicTypes() != null 
-				&& !injectionOptions.getStrictTopicTypes().isEmpty() && injectionOptions.getContentSpecType() != null) {
-			output += "Inline Injection = ";
-			if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.STRICT) {
-				output += "on [" + StringUtilities.buildString(injectionOptions.getStrictTopicTypes().toArray(new String[0]), ", ") + "]";
-			} else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.ON) {
-				output += "on";
-			} else if (injectionOptions.getContentSpecType() == InjectionOptions.UserType.OFF) {
-				output += "off";
-			}
-			output += "\n";
-		}*/
-		
-		// Append a new line to separate the metadata from content
-		output.append("\n");
 
 		// Add any global options
 		String options = level.getOptionsString();
@@ -1275,7 +1229,7 @@ public class ContentSpec extends Node
 		// If the id isn't null then add the id and checksum
 		if (getId() != 0)
 		{
-			output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id + "\n" + output) + "\n" + "ID = " + id + "\n");
+			output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id.getValue() + "\n" + output) + "\n" + "ID = " + id.getValue() + "\n");
 		}
 		return output.toString();
 	}
