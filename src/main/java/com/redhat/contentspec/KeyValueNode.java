@@ -65,7 +65,14 @@ public class KeyValueNode<T> extends Node
 	
 	public String getText()
 	{
-		return key + " " + separator + " " + value.toString();
+		if (key.equals("publican.cfg"))
+		{
+			return key + " " + separator + " [" + value.toString() + "]";
+		}
+		else
+		{
+			return key + " " + separator + " " + value.toString();
+		}
 	}
 	
 	@Override
