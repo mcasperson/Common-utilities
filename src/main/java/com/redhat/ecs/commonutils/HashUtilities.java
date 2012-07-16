@@ -4,8 +4,8 @@ import java.security.MessageDigest;
 
 import org.jboss.resteasy.util.Hex;
 
-public class HashUtilities {
-	
+public class HashUtilities
+{
 	/**
 	 * Generates a MD5 Hash for a specific string
 	 * 
@@ -22,7 +22,7 @@ public class HashUtilities {
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			ExceptionUtilities.handleException(e);
 			return null;
 		}
 	}
