@@ -14,7 +14,7 @@ import com.redhat.ecs.commonutils.StringUtilities;
 public class ContentSpecUtilities
 {
 	private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(new String[]
-			{ "Title", "Product", "Subtitle", "Abstract" });
+			{ "Title", "Product", "Subtitle", "Abstract", "Copyright Holder", "Version", "Edition" });
 	
 	/**
 	 * Generates a random target it in the form of T<Line Number>0<Random Number><count>.
