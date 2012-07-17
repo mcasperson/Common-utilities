@@ -82,7 +82,7 @@ public class DocBookUtilities
 	 */
 	public static String escapeTitle(final String title)
 	{
-		return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9\\.\\+_-]", "");
+		return title.replaceAll(" ", "_").replaceAll("^[^A-Za-z0-9]*", "").replaceAll("[^A-Za-z0-9\\._-]", "");
 	}
 	
 	public static void setSectionTitle(final String titleValue, final Document doc)

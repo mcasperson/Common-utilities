@@ -131,7 +131,7 @@ public class ZanataInterface
 		return null;
 	}
 
-	public void createFile(final Resource resource)
+	public boolean createFile(final Resource resource)
 	{
 		try
 		{
@@ -145,6 +145,8 @@ public class ZanataInterface
 				final String entity = response.getEntity();
 				if (entity.trim().length() != 0)
 					System.out.println(entity);
+				
+				return true;
 			}
 			else
 			{
@@ -156,6 +158,8 @@ public class ZanataInterface
 		{
 			ExceptionUtilities.handleException(ex);
 		}
+		
+		return false;
 	}
 
 	public boolean getTranslationsExists(final String id, final LocaleId locale)
