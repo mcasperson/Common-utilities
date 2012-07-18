@@ -670,18 +670,19 @@ public class RESTReader
 	/*
 	 * Gets a translated topic based on a topic id and locale
 	 */
-	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final String locale)
+	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale)
 	{
-		try
+		if (locale == null) return null;
+		final RESTTopicV1 topic = getTopicById(id, rev, true);
+		if (topic == null)
+			return null;
+		
+		for (final RESTTranslatedTopicV1 translatedTopic : topic.getTranslatedTopics_OTM().getItems())
 		{
-			final RESTTranslatedTopicCollectionV1 topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
+			if (translatedTopic.getLocale().equals(locale))
+				return translatedTopic;
+		}
 
-			return topics != null && topics.getItems() != null && topics.getItems().size() == 1 ? topics.getItems().get(0) : null;
-		}
-		catch (Exception e)
-		{
-			log.error(ExceptionUtilities.getStackTrace(e));
-		}
 		return null;
 	}
 

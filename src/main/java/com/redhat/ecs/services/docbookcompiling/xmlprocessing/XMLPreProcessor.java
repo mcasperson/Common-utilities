@@ -1041,6 +1041,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final List<TopicRelationship> prevList = topic.getPrevTopicRelationships();
 			// Create the paragraph/itemizedlist and list of previous relationships.
 			final Element rootEle = doc.createElement("itemizedlist");
+			rootEle.setAttribute("role", "process-previous-itemizedlist");
 			
 			// Create the title
 			final Element linkTitleEle = doc.createElement("title");
@@ -1053,9 +1054,11 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 				linkTitleEle.setTextContent("Previous Step in ");
 			}
 			
+			// Create the title link
 			final Element titleXrefItem = doc.createElement("link");
 			titleXrefItem.setTextContent(topic.getParent().getTitle());
 			titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+			titleXrefItem.setAttribute("xrefstyle", "process-previous-title-link");
 			linkTitleEle.appendChild(titleXrefItem);
 			rootEle.appendChild(linkTitleEle);
 			
@@ -1063,13 +1066,16 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			{
 				final Element prevEle = doc.createElement("para");
 				final SpecTopic prevTopic = prev.getSecondaryRelationship();
-				prevEle.setAttribute("role", "process-previous-link");
+				
 				// Add the previous element to either the list or paragraph
 				// Create the link element
 				final Element xrefItem = doc.createElement("xref");
 				xrefItem.setAttribute("linkend", prevTopic.getUniqueLinkId(useFixedUrls));
+				xrefItem.setAttribute("xrefstyle", "process-previous-link");
 				prevEle.appendChild(xrefItem);
+				
 				final Element listitemEle = doc.createElement("listitem");
+				listitemEle.setAttribute("role", "process-previous-listitem");
 				listitemEle.appendChild(prevEle);
 				rootEle.appendChild(listitemEle);
 			}
@@ -1099,7 +1105,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		// Attempt to get the previous topic and process it
 		final List<TopicRelationship> nextList = topic.getNextTopicRelationships();
 		// Create the paragraph/itemizedlist and list of next relationships.
-		Element rootEle = doc.createElement("itemizedlist");
+		final Element rootEle = doc.createElement("itemizedlist");
+		rootEle.setAttribute("role", "process-next-itemizedlist");
 		
 		// Create the title
 		final Element linkTitleEle = doc.createElement("title");
@@ -1112,9 +1119,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		{
 			linkTitleEle.setTextContent("Next Step in ");
 		}
+		
+		// Create the title link
 		final Element titleXrefItem = doc.createElement("link");
 		titleXrefItem.setTextContent(topic.getParent().getTitle());
 		titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+		titleXrefItem.setAttribute("xrefstyle", "process-next-title-link");
 		linkTitleEle.appendChild(titleXrefItem);
 		rootEle.appendChild(linkTitleEle);
 
@@ -1122,13 +1132,16 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		{
 			final Element nextEle = doc.createElement("para");
 			final SpecTopic nextTopic = next.getSecondaryRelationship();
-			nextEle.setAttribute("role", "process-next-link");
+			
 			// Add the next element to either the list or paragraph
 			// Create the link element
 			final Element xrefItem = doc.createElement("xref");
 			xrefItem.setAttribute("linkend", nextTopic.getUniqueLinkId(useFixedUrls));
+			xrefItem.setAttribute("xrefstyle", "process-next-link");
 			nextEle.appendChild(xrefItem);
+			
 			final Element listitemEle = doc.createElement("listitem");
+			listitemEle.setAttribute("role", "process-next-listitem");
 			listitemEle.appendChild(nextEle);
 			rootEle.appendChild(listitemEle);
 		}
