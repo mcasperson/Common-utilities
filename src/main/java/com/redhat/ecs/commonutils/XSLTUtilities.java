@@ -40,8 +40,8 @@ public class XSLTUtilities
 
 		try
 		{
-			final ByteArrayInputStream xmlStream = new ByteArrayInputStream(xml.getBytes());
-			final ByteArrayInputStream xslStream = new ByteArrayInputStream(xsl.getBytes());
+			final ByteArrayInputStream xmlStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+			final ByteArrayInputStream xslStream = new ByteArrayInputStream(xsl.getBytes("UTF-8"));
 			final ByteArrayOutputStream retValueStream = new ByteArrayOutputStream();
 
 			/* http://xml.apache.org/xalan-j/usagepatterns.html#basic */

@@ -17,7 +17,7 @@ public class HashUtilities
 		{
 			final MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 			messageDigest.reset();
-			byte[] digest = messageDigest.digest(input.getBytes());
+			byte[] digest = messageDigest.digest(input.getBytes("UTF-8"));
 			return Hex.encodeHex(digest);
 		}
 		catch (Exception e)
