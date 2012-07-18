@@ -23,6 +23,8 @@ public class CommonConstants
 	public static final Integer BUGZILLA_KEYWORDS_PROP_TAG_ID = 24;
 	/** The Bugzilla Profile Property Tag */
 	public final static Integer BUGZILLA_PROFILE_PROPERTY = 5;
+	/** The Content Specification tag ID */
+	public static final Integer CONTENT_SPEC_TAG_ID = 268;
 	
 	/** The Regular Expression the defines the search format for a property tag */
 	public static String PROPERTY_TAG_SEARCH_RE = "propertyTag(?<PropertyTagID>\\d+)";		

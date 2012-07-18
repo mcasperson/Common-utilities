@@ -36,10 +36,4 @@ public abstract class RESTBaseEntityWithPropertiesV1<T extends RESTBaseEntityV1<
 	{
 		this.properties = properties;
 	}
-
-	public void explicitSetProperties(final RESTPropertyTagCollectionV1 properties)
-	{
-		this.properties = properties;
-		setParamaterToConfigured(PROPERTIES_NAME);
-	}
 }
