@@ -144,7 +144,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		else if (hasBeenPushedForTranslation(source))
 			return "TranslatedTopicID" + returnPushedTranslationTopicId(source);
 		else
-			return ComponentTopicV1.returnErrorXRefID(source.getTopic());
+			return ComponentTopicV1.returnXRefID(source.getTopic());
 	}
 
 	@Override
@@ -157,8 +157,6 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	{
 		return DocbookBuilderConstants.ERROR_XREF_ID_PREFIX + returnZanataId(source);
 	}
-
-
 
 	public Integer returnPushedTranslationTopicId()
 	{
