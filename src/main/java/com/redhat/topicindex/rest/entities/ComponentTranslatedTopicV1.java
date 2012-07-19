@@ -288,13 +288,13 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 			if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
 			{
 				final String zanataId = returnZanataId(source);
-				return zanataServerUrl + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+				return zanataServerUrl + (zanataServerUrl.endsWith("/") ? "" : "/") + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 			}
 			else if (hasBeenPushedForTranslation(source))
 			{
 				final RESTTranslatedTopicV1 pushedTranslatedTopic = returnPushedTranslatedTopic(source);
 				final String zanataId = returnZanataId(pushedTranslatedTopic);
-				return zanataServerUrl + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+				return zanataServerUrl + (zanataServerUrl.endsWith("/") ? "" : "/") + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 			}
 			else
 			{
