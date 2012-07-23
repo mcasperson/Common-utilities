@@ -31,7 +31,7 @@ public class ComponentTopicV1 extends ComponentBaseTopicV1<RESTTopicV1, RESTTopi
 	
 	static public String returnSkynetURL(final RESTTopicV1 source)
 	{
-		return CommonConstants.SERVER_URL + "/TopicIndex/CustomSearchTopicList.seam?topicIds=" + source.getId();
+		return CommonConstants.SERVER_URL + "/TopicIndex/Topic.seam?topicTopicId=" + source.getId();
 	}
 
 	/**

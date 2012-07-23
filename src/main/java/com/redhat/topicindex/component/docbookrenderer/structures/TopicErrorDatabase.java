@@ -17,8 +17,9 @@ import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
  */
 public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {
-	public static final Integer ERROR = 1;
-	public static final Integer WARNING = 5;
+	public static enum ErrorLevel {ERROR, WARNING};
+	public static enum ErrorType {NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED, 
+		NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES}
 
 	private Map<String, List<TopicErrorData<T, U>>> errors = new HashMap<String, List<TopicErrorData<T, U>>>();
 
@@ -37,14 +38,24 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 		return errors.containsKey(locale) ? errors.get(locale).size() != 0 : false;
 	}
 
+	public void addError(final T topic, final ErrorType errorType, final String error)
+	{
+		addItem(topic, error, ErrorLevel.ERROR, errorType);
+	}
+
+	public void addWarning(final T topic, final ErrorType errorType, final String error)
+	{
+		addItem(topic, error, ErrorLevel.WARNING, errorType);
+	}
+	
 	public void addError(final T topic, final String error)
 	{
-		addItem(topic, error, ERROR);
+		addItem(topic, error, ErrorLevel.ERROR, null);
 	}
 
 	public void addWarning(final T topic, final String error)
 	{
-		addItem(topic, error, WARNING);
+		addItem(topic, error, ErrorLevel.WARNING, null);
 	}
 	
 	/**
@@ -52,22 +63,22 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 	 * @param topic
 	 * @param error
 	 */
-	public void addTocError(final T topic, final String error)
+	public void addTocError(final T topic, final ErrorType errorType, final String error)
 	{
-		addItem(topic, error, ERROR);
+		addItem(topic, error, ErrorLevel.ERROR, errorType);
 	}
 
-	public void addTocWarning(final T topic, final String error)
+	public void addTocWarning(final T topic, final ErrorType errorType, final String error)
 	{
-		addItem(topic, error, WARNING);
+		addItem(topic, error, ErrorLevel.WARNING, errorType);
 	}
 
-	private void addItem(final T topic, final String item, final Integer level)
+	private void addItem(final T topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
 	{
 		final TopicErrorData<T, U> topicErrorData = addOrGetTopicErrorData(topic);
 		/* don't add duplicates */
-		if (!(topicErrorData.getErrors().containsKey(level) && topicErrorData.getErrors().get(level).contains(item)))
-			topicErrorData.addError(item, level);
+		if (!(topicErrorData.getErrors().containsKey(errorLevel) && topicErrorData.getErrors().get(errorLevel).contains(item)))
+			topicErrorData.addError(item, errorLevel, errorType);
 	}
 
 	private TopicErrorData<T, U> getErrorData(final T topic)
@@ -114,6 +125,20 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 	public List<TopicErrorData<T, U>> getErrors(final String locale)
 	{
 		return errors.containsKey(locale) ? errors.get(locale) : null;
+	}
+	
+	public List<TopicErrorData<T, U>> getErrorsOfType(final String locale, final ErrorType errorType)
+	{
+		final List<TopicErrorData<T, U>> localeErrors = errors.containsKey(locale) ? errors.get(locale) : null;
+		
+		final List<TopicErrorData<T, U>> typeErrorDatas = new ArrayList<TopicErrorData<T, U>>();
+		for (final TopicErrorData<T, U> errorData : localeErrors)
+		{
+			if (errorData.hasErrorType(errorType))
+				typeErrorDatas.add(errorData);
+		}
+		
+		return typeErrorDatas;
 	}
 
 	public void setErrors(final String locale, final List<TopicErrorData<T, U>> errors)

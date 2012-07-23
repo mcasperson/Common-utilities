@@ -1205,7 +1205,7 @@ public class ContentSpec extends Node
 			if (node instanceof KeyValueNode)
 			{
 				final KeyValueNode keyValueNode = (KeyValueNode) node;
-				if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID"))
+				if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID") && !keyValueNode.getKey().equals("SpecRevison"))
 				{
 					output.append(node.toString());
 				}

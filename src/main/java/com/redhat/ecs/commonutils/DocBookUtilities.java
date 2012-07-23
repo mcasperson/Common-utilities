@@ -194,6 +194,16 @@ public class DocBookUtilities
 		return retValue;
 	}
 	
+	public static String buildXRef(final String xref)
+	{
+		return "<xref linkend=\"" + xref + "\" />";
+	}
+	
+	public static String buildXRef(final String xref, final String xrefStyle)
+	{
+		return "<xref linkend=\"" + xref + "\" xrefstyle=\"" + xrefStyle + "\" />";
+	}
+	
 	public static List<Element> buildULink(final Document xmlDoc, final String url, final String label)
 	{
 		final List<Element> retValue = new ArrayList<Element>();
@@ -207,6 +217,11 @@ public class DocBookUtilities
 		retValue.add(ulinkItem);
 		
 		return retValue;
+	}
+	
+	public static String buildULink(final String url, final String label)
+	{
+		return "<ulink url=\"" + url + "\">" + label + "</ulink>";
 	}
 	
 	public static String buildULinkListItem(final String url, final String label)
@@ -637,5 +652,69 @@ public class DocBookUtilities
 		{
 			return doc;
 		}
+	}
+	
+	/**
+	 * Wrap a list of Strings in a {@code<row>} element. Each string
+	 * is also wrapped in a {@code<entry>} element.
+	 * 
+	 * @param items The list of items to be set in the table row.
+	 * @return The strings wrapped in row and entry elements.
+	 */
+	public static String wrapInTableRow(final List<String> items)
+	{
+		final StringBuilder output = new StringBuilder("<row>");
+		for (final String entry : items)
+		{
+			output.append("<entry>" + entry + "</entry>");
+		}
+		
+		output.append("</row>");
+		return output.toString();
+	}
+	
+	public static String wrapInTable(final String title, final List<List<String>> rows)
+	{
+		return wrapInTable(title, null, null, rows);
+	}
+	
+	public static String wrapInTable(final String title, final List<String> headers, final List<List<String>> rows)
+	{
+		return wrapInTable(title, headers, null, rows);
+	}
+	
+	public static String wrapInTable(final String title, final List<String> headers, final List<String> footers, final List<List<String>> rows)
+	{
+		final StringBuilder output = new StringBuilder("<table>\n");
+		output.append("\t<title>" + title + "</title>\n");
+		
+		final int numColumns = headers == null ? (rows == null || rows.size() == 0 ? 0 : rows.get(0).size()) : Math.max(headers.size(), (rows == null || rows.size() == 0 ? 0 : rows.get(0).size()));
+		output.append("\t<tgroup cols=\"" + numColumns + "\">\n");
+		// Add the headers
+		if (headers != null && !headers.isEmpty())
+		{
+			output.append("\t\t<thead>\n");
+			output.append("\t\t\t" + wrapInTableRow(headers));
+			output.append("\t\t</thead>\n");
+		}
+		
+		// Add the footer
+		if (footers != null && !footers.isEmpty())
+		{
+			output.append("\t\t<tfoot>\n");
+			output.append("\t\t\t" + wrapInTableRow(footers));
+			output.append("\t\t</tfoot>\n");
+		}
+		
+		// Create the table body
+		output.append("\t\t<tbody>\n");
+		for (final List<String> row : rows)
+		{
+			output.append("\t\t\t" + wrapInTableRow(row));
+		}
+		output.append("\t\t</tbody>\n");
+		output.append("\t</tgroup>\n");
+		output.append("</table>\n");
+		return output.toString();
 	}
 }
