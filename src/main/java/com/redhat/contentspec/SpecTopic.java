@@ -756,17 +756,18 @@ public class SpecTopic extends SpecNode
 	public String getText()
 	{
 		final StringBuilder output = new StringBuilder();
-		if (DBId == 0)
+		if (this.isTopicANewTopic())
 		{
-			String options = getOptionsString();
-			output.append(title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
+			final String options = getOptionsString();
+			output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
 		}
 		else
 		{
-			output.append(title + " [" + id + (revision == null ? "" : (", rev: " + revision)) + "]");
+			final String options = getOptionsString();
+			output.append((title == null ? "" : title) + " [" + id + (revision == null ? "" : (", rev: " + revision)) + (options.equals("") ? "" : (", " + options)) + "]");
 		}
 		
-		if (targetId != null)
+		if (targetId != null && !((parent instanceof Process) && targetId.matches("^T" + this.getLineNumber() + "0[0-9]+$")))
 		{
 			output.append(" [" + targetId + "]");
 		}

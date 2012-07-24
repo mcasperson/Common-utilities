@@ -129,7 +129,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 	
 	public List<TopicErrorData<T, U>> getErrorsOfType(final String locale, final ErrorType errorType)
 	{
-		final List<TopicErrorData<T, U>> localeErrors = errors.containsKey(locale) ? errors.get(locale) : null;
+		final List<TopicErrorData<T, U>> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData<T, U>>();
 		
 		final List<TopicErrorData<T, U>> typeErrorDatas = new ArrayList<TopicErrorData<T, U>>();
 		for (final TopicErrorData<T, U> errorData : localeErrors)

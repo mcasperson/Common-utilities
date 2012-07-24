@@ -202,7 +202,7 @@ public abstract class SpecNode extends Node
 		}
 		// Remove the tags that are set to be removed
 		final List<String> newTags = new ArrayList<String>();
-		for (final String tagName: tags)
+		for (final String tagName: temp)
 		{
 			final List<String> temptags = getRemoveTags(useInherited);
 			boolean found = false;

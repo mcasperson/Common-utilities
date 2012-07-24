@@ -767,7 +767,15 @@ public class RESTReader
 	 */
 	public RESTTopicV1 getContentSpecById(final int id, final Integer rev)
 	{
-		final RESTTopicV1 cs = getTopicById(id, rev, false);
+		return getContentSpecById(id, rev, false);
+	}
+	
+	/*
+	 * Gets a ContentSpec tuple for a specified id.
+	 */
+	public RESTTopicV1 getContentSpecById(final int id, final Integer rev, final boolean expandTranslations)
+	{
+		final RESTTopicV1 cs = getTopicById(id, rev, expandTranslations);
 		if (cs == null)
 			return null;
 		
@@ -793,14 +801,17 @@ public class RESTReader
 			return null;
 		
 		final List<RESTTagV1> topicTypes = ComponentBaseTopicV1.returnTagsInCategoriesByID(cs, CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
-		for (final RESTTagV1 type : topicTypes)
+		if (cs.getTranslatedTopics_OTM() != null && cs.getTranslatedTopics_OTM().getItems() != null)
 		{
-			if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
+			for (final RESTTagV1 type : topicTypes)
 			{
-				for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
+				if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
 				{
-					if (topic.getLocale().equals(locale))
-						return topic;
+					for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
+					{
+						if (topic.getLocale().equals(locale))
+							return topic;
+					}
 				}
 			}
 		}

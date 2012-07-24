@@ -460,7 +460,7 @@ public class Level extends SpecNode
 	{
 		final String options = getOptionsString();
 		String output = type != LevelType.BASE ? 
-				(type.getTitle() + ": " + title
+				(type.getTitle() + ": " + (title == null ? "" : title)
 				// Add the target id if one exists
 				+ (targetId == null ? "" : (" [" + targetId + "]"))
 				// Add the external target id if one exists
