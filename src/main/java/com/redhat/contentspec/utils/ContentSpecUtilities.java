@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.redhat.contentspec.ContentSpec;
+import com.redhat.contentspec.KeyValueNode;
 import com.redhat.contentspec.Level;
 import com.redhat.contentspec.Node;
 import com.redhat.ecs.commonstructures.StringToCSNodeCollection;
 import com.redhat.ecs.commonutils.CollectionUtilities;
+import com.redhat.ecs.commonutils.StringUtilities;
 
 public class ContentSpecUtilities
 {
+	private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(new String[]
+			{ "Title", "Product", "Subtitle", "Abstract", "Copyright Holder", "Version", "Edition" });
+	
 	/**
 	 * Generates a random target it in the form of T<Line Number>0<Random Number><count>.
 	 * I.e. The topic is on line 50 and the target to be created for is topic 4 in a process, the 
@@ -44,11 +49,19 @@ public class ContentSpecUtilities
 
 		final List<StringToCSNodeCollection> retValue = new ArrayList<StringToCSNodeCollection>();
 
-		/*retValue.add(contentSpec.getTitle());
-		retValue.add(contentSpec.getAbstract());
-		retValue.add(contentSpec.getProduct());
-		retValue.add(contentSpec.getVersion());
-		retValue.add(contentSpec.getSubtitle());*/
+		final List<Node> contentSpecNodes = contentSpec.getNodes();
+		for (final Node node : contentSpecNodes)
+		{
+			if (node instanceof KeyValueNode)
+			{
+				if (translatableMetaData.contains(((KeyValueNode<?>) node).getKey()))
+				{
+					final KeyValueNode<?> keyValueNode = (KeyValueNode<?>) node;
+					
+					addTranslationToNodeDetailsToCollection(keyValueNode.getValue().toString(), keyValueNode, allowDuplicates, retValue);
+				}
+			}
+		}
 		
 		final List<Level> levels = contentSpec.getBaseLevel().getChildLevels();
 		for (final Level level : levels)
@@ -73,6 +86,7 @@ public class ContentSpecUtilities
 		}
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void replaceTranslatedStrings(final ContentSpec contentSpec, final Map<String, String> translations)
 	{
 		if (contentSpec == null || translations == null || translations.size() == 0)
@@ -97,19 +111,40 @@ public class ContentSpecUtilities
 
 			if (nodeCollections != null && nodeCollections.size() != 0)
 			{
-				if (translations.containsKey(originalString))
+				/* Zanata will change the format of the strings that it returns. Here we account for any trimming that was done. */
+				final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
+				if (fixedStringDetails.getFixedString() != null)
 				{
-					final String translation = translations.get(originalString);
-
-					for (final ArrayList<Node> nodes : nodeCollections)
+					if (translations.containsKey(fixedStringDetails.getFixedString()))
 					{
-						if (nodes != null && nodes.size() != 0)
+						final String translation = translations.get(fixedStringDetails.getFixedString());
+
+						/* Build up the padding that Zanata removed */
+						final StringBuilder leftTrimPadding = new StringBuilder();
+						final StringBuilder rightTrimPadding = new StringBuilder();
+
+						for (int i = 0; i < fixedStringDetails.getLeftTrimCount(); ++i)
+							leftTrimPadding.append(" ");
+
+						for (int i = 0; i < fixedStringDetails.getRightTrimCount(); ++i)
+							rightTrimPadding.append(" ");
+						
+						final String fixedTranslation = leftTrimPadding.toString() + translation + rightTrimPadding.toString();
+
+						for (final ArrayList<Node> nodes : nodeCollections)
 						{
-							for (final Node node : nodes)
+							if (nodes != null && nodes.size() != 0)
 							{
-								if (node instanceof Level)
+								for (final Node node : nodes)
 								{
-									((Level)node).setTitle(translation);
+									if (node instanceof Level)
+									{
+										((Level)node).setTitle(fixedTranslation);
+									}
+									else if (node instanceof KeyValueNode)
+									{
+										((KeyValueNode) node).setValue(fixedTranslation);
+									}
 								}
 							}
 						}
@@ -153,5 +188,78 @@ public class ContentSpecUtilities
 			else
 				stringToNodeCollection.addNodeCollection(nodes);
 		}
+	}
+}
+
+/** Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match it to the source XML. */
+class ZanataStringDetails
+{
+	/** The number of spaces that Zanata removed from the left */
+	private final int leftTrimCount;
+	/** The number of spaces that Zanata removed from the right */
+	private final int rightTrimCount;
+	/** The string that was matched to the one returned by Zanata. This will be null if there was no match. */
+	private final String fixedString;
+
+	ZanataStringDetails(final Map<String, String> translations, final String originalString)
+	{
+		/*
+		 * Here we account for any trimming that is done by Zanata.
+		 */
+		final String lTrimtString = StringUtilities.ltrim(originalString);
+		final String rTrimString = StringUtilities.rtrim(originalString);
+		final String trimString = originalString.trim();
+
+		final boolean containsExactMacth = translations.containsKey(originalString);
+		final boolean lTrimMatch = translations.containsKey(lTrimtString);
+		final boolean rTrimMatch = translations.containsKey(rTrimString);
+		final boolean trimMatch = translations.containsKey(trimString);
+
+		/* remember the details of the trimming, so we can add the padding back */
+		if (containsExactMacth)
+		{
+			this.leftTrimCount = 0;
+			this.rightTrimCount = 0;
+			this.fixedString = originalString;
+		}
+		else if (lTrimMatch)
+		{
+			this.leftTrimCount = originalString.length() - lTrimtString.length();
+			this.rightTrimCount = 0;
+			this.fixedString = lTrimtString;
+		}
+		else if (rTrimMatch)
+		{
+			this.leftTrimCount = 0;
+			this.rightTrimCount = originalString.length() - rTrimString.length();
+			this.fixedString = rTrimString;
+		}
+		else if (trimMatch)
+		{
+			this.leftTrimCount = StringUtilities.ltrimCount(originalString);
+			this.rightTrimCount = StringUtilities.rtrimCount(originalString);
+			this.fixedString = trimString;
+		}
+		else
+		{
+			this.leftTrimCount = 0;
+			this.rightTrimCount = 0;
+			this.fixedString = null;
+		}
+	}
+
+	public int getLeftTrimCount()
+	{
+		return leftTrimCount;
+	}
+
+	public int getRightTrimCount()
+	{
+		return rightTrimCount;
+	}
+
+	public String getFixedString()
+	{
+		return fixedString;
 	}
 }

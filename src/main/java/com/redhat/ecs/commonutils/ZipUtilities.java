@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -56,7 +57,14 @@ public class ZipUtilities
 					final String absolutePath = file.getAbsolutePath();
 					final String relativePath = absolutePath.replace(absolutePathPrefix, "");
 
-					fileMap.put(relativePath, FileUtilities.readFileContents(file).getBytes());
+					try
+					{
+						fileMap.put(relativePath, FileUtilities.readFileContents(file).getBytes("UTF-8"));
+					}
+					catch (UnsupportedEncodingException e)
+					{
+						/* UTF-8 is a valid format so this should exception should never get thrown */
+					}
 				}
 			}
 		}

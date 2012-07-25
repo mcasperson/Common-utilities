@@ -161,12 +161,12 @@ public class Level extends SpecNode
 	}
 
 	/**
-	 * Adds a Child Level to the Level. If the Child Level already has a parent, then it is removed from that parent and added to this level.
+	 * Adds a Child Element to the Level. If the Child Element already has a parent, then it is removed from that parent and added to this level.
 	 * 
-	 * @param childLevel
-	 *            A Child Level to be added to the Level.
+	 * @param child
+	 *            A Child element to be added to the Level.
 	 */
-	public void appendChild(final SpecNode child)
+	public void appendChild(final Node child)
 	{
 		if (child instanceof Level)
 		{
@@ -185,12 +185,12 @@ public class Level extends SpecNode
 	}
 
 	/**
-	 * Removes a Child Level from the level and removes the level as the Child Levels parent.
+	 * Removes a Child element from the level and removes the level as the Child's parent.
 	 * 
 	 * @param childLevel
-	 *            The Child Level to be removed from the level.
+	 *            The Child element to be removed from the level.
 	 */
-	public void removeChild(final SpecNode child)
+	public void removeChild(final Node child)
 	{
 		if (child instanceof Level)
 		{
@@ -201,6 +201,7 @@ public class Level extends SpecNode
 			topics.remove(child);
 		}
 		nodes.remove(child);
+		child.setParent(null);
 	}
 
 	/**
@@ -307,22 +308,19 @@ public class Level extends SpecNode
 	 * 
 	 * @return A String that represents an External Target ID if one exists otherwise null.
 	 */
-	public String getExternalTargetId()
-	{
+	public String getExternalTargetId() {
 		return externalTargetId;
 	}
 
 	/**
 	 * Set the External Target ID for the level.
 	 * 
-	 * @param externalTargetId
-	 *            The External Target ID to associate with the level.
+	 * @param externalTargetId The External Target ID to associate with the level.
 	 */
-	public void setExternalTargetId(final String externalTargetId)
-	{
+	public void setExternalTargetId(final String externalTargetId) {
 		this.externalTargetId = externalTargetId;
 	}
-
+	
 	/**
 	 * Appends a Comment node to the Level.
 	 * 
@@ -334,7 +332,7 @@ public class Level extends SpecNode
 		nodes.add(comment);
 		if (comment.getParent() != null)
 		{
-			comment.getParent().removeComment(comment);
+			comment.removeParent();
 		}
 		comment.setParent(this);
 	}
@@ -359,6 +357,7 @@ public class Level extends SpecNode
 	public void removeComment(final Comment comment)
 	{
 		nodes.remove(comment);
+		comment.removeParent();
 	}
 
 	/**
@@ -461,7 +460,7 @@ public class Level extends SpecNode
 	{
 		final String options = getOptionsString();
 		String output = type != LevelType.BASE ? 
-				(type.getTitle() + ": " + title
+				(type.getTitle() + ": " + (title == null ? "" : title)
 				// Add the target id if one exists
 				+ (targetId == null ? "" : (" [" + targetId + "]"))
 				// Add the external target id if one exists
@@ -479,34 +478,34 @@ public class Level extends SpecNode
 	@Override
 	public String toString()
 	{
-		if (hasSpecTopics())
+		final StringBuilder output = new StringBuilder();
+		if (type != LevelType.BASE)
 		{
-			final StringBuilder output = new StringBuilder();
 			final int indentationSize = parent != null ? getColumn() : 0;
 			for (int i = 1; i < indentationSize; i++)
 			{
 				output.append("  ");
 			}
 			output.append(getText() + "\n");
-
+		}
+		
+		if (hasSpecTopics())
+		{
 			for (final Node node : nodes)
 			{
 				final String nodeOutput = node.toString();
 				output.append(nodeOutput);
 				if (node instanceof Level)
 				{
-					if (((Level) node).getType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) && !nodeOutput.isEmpty())
+					/*if (((Level) node).getType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) && !nodeOutput.isEmpty())
 					{
 						output.append("\n");
-					}
+					}*/
 				}
 			}
-			return output.toString();
 		}
-		else
-		{
-			return "";
-		}
+		
+		return output.toString();
 	}
 
 	@Override

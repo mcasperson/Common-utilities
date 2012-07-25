@@ -144,7 +144,7 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 		else if (hasBeenPushedForTranslation(source))
 			return "TranslatedTopicID" + returnPushedTranslationTopicId(source);
 		else
-			return ComponentTopicV1.returnErrorXRefID(source.getTopic());
+			return ComponentTopicV1.returnXRefID(source.getTopic());
 	}
 
 	@Override
@@ -157,8 +157,6 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 	{
 		return DocbookBuilderConstants.ERROR_XREF_ID_PREFIX + returnZanataId(source);
 	}
-
-
 
 	public Integer returnPushedTranslationTopicId()
 	{
@@ -290,13 +288,13 @@ public class ComponentTranslatedTopicV1 extends ComponentBaseTopicV1<RESTTransla
 			if (!ComponentBaseTopicV1.returnIsDummyTopic(source))
 			{
 				final String zanataId = returnZanataId(source);
-				return zanataServerUrl + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+				return zanataServerUrl + (zanataServerUrl.endsWith("/") ? "" : "/") + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 			}
 			else if (hasBeenPushedForTranslation(source))
 			{
 				final RESTTranslatedTopicV1 pushedTranslatedTopic = returnPushedTranslatedTopic(source);
 				final String zanataId = returnZanataId(pushedTranslatedTopic);
-				return zanataServerUrl + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
+				return zanataServerUrl + (zanataServerUrl.endsWith("/") ? "" : "/") + "webtrans/Application.html?project=" + zanataProject + "&amp;iteration=" + zanataVersion + "&amp;doc=" + zanataId + "&amp;localeId=" + source.getLocale() + "#view:doc;doc:" + zanataId;
 			}
 			else
 			{

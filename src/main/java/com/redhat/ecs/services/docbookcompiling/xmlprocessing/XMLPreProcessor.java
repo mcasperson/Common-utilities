@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -20,18 +21,20 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import com.redhat.contentspec.Level;
+import com.redhat.contentspec.SpecNode;
 import com.redhat.contentspec.SpecTopic;
 import com.redhat.contentspec.entities.BugzillaOptions;
+import com.redhat.contentspec.entities.Relationship;
 import com.redhat.contentspec.entities.TargetRelationship;
 import com.redhat.contentspec.entities.TopicRelationship;
 import com.redhat.ecs.commonstructures.Pair;
 import com.redhat.ecs.commonutils.CollectionUtilities;
+import com.redhat.ecs.commonutils.DocBookUtilities;
 import com.redhat.ecs.commonutils.ExceptionUtilities;
 import com.redhat.ecs.commonutils.XMLUtilities;
 import com.redhat.ecs.constants.CommonConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
 import com.redhat.ecs.services.docbookcompiling.DocbookBuildingOptions;
-import com.redhat.ecs.services.docbookcompiling.DocbookUtils;
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.GenericInjectionPoint;
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.GenericInjectionPointDatabase;
 import com.redhat.ecs.services.docbookcompiling.xmlprocessing.structures.InjectionListData;
@@ -478,7 +481,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			{
 				if (injectionListData.listType == ORDEREDLIST_INJECTION_POINT)
 				{
-					list = DocbookUtils.wrapOrderedListItemsInPara(xmlDocument, injectionListData.listItems);
+					list = DocBookUtilities.wrapOrderedListItemsInPara(xmlDocument, injectionListData.listItems);
 				}
 				else if (injectionListData.listType == XREF_INJECTION_POINT)
 				{
@@ -486,11 +489,11 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 				}
 				else if (injectionListData.listType == ITEMIZEDLIST_INJECTION_POINT)
 				{
-					list = DocbookUtils.wrapItemizedListItemsInPara(xmlDocument, injectionListData.listItems);
+					list = DocBookUtilities.wrapItemizedListItemsInPara(xmlDocument, injectionListData.listItems);
 				}
 				else if (injectionListData.listType == LIST_INJECTION_POINT)
 				{
-					list = DocbookUtils.wrapItemsInListItems(xmlDocument, injectionListData.listItems);
+					list = DocBookUtilities.wrapItemsInListItems(xmlDocument, injectionListData.listItems);
 				}
 			}
 
@@ -602,11 +605,11 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 								final String url = relatedTopic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.returnInternalURL((RESTTranslatedTopicV1) relatedTopic) : ComponentTopicV1.returnInternalURL((RESTTopicV1) relatedTopic);
 								if (sequenceID.optional)
 								{
-									list.add(DocbookUtils.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX, url, relatedTopic.getTitle()));
+									list.add(DocBookUtilities.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX, url, relatedTopic.getTitle()));
 								}
 								else
 								{
-									list.add(DocbookUtils.buildULink(xmlDocument, url, relatedTopic.getTitle()));
+									list.add(DocBookUtilities.buildULink(xmlDocument, url, relatedTopic.getTitle()));
 								}
 							}
 							else
@@ -624,11 +627,11 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 								final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
 								if (sequenceID.optional)
 								{
-									list.add(DocbookUtils.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
+									list.add(DocBookUtilities.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
 								}
 								else
 								{
-									list.add(DocbookUtils.buildXRef(xmlDocument, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
+									list.add(DocBookUtilities.buildXRef(xmlDocument, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
 								}
 							}
 
@@ -747,7 +750,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 					/* don't add an empty list */
 					if (relatedTopics.size() != 0)
 					{
-						final Node itemizedlist = DocbookUtils.createRelatedTopicItemizedList(xmlDoc, "Related " + genericInjectionPoint.getCategoryIDAndName().getSecond() + "s");
+						final Node itemizedlist = DocBookUtilities.createRelatedTopicItemizedList(xmlDoc, "Related " + genericInjectionPoint.getCategoryIDAndName().getSecond() + "s");
 
 						Collections.sort(relatedTopics, new BaseTopicV1TitleComparator<T, U>());
 
@@ -756,7 +759,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 							if (level == null)
 							{
 								final String internalURL = relatedTopic instanceof RESTTranslatedTopicV1 ? ComponentTranslatedTopicV1.returnInternalURL((RESTTranslatedTopicV1) relatedTopic) : ComponentTopicV1.returnInternalURL((RESTTopicV1) relatedTopic);
-								DocbookUtils.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(), itemizedlist);
+								DocBookUtilities.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(), itemizedlist);
 							}
 							else
 							{
@@ -771,7 +774,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 								}
 
 								final SpecTopic  closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
-								DocbookUtils.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls), itemizedlist);
+								DocBookUtilities.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls), itemizedlist);
 							}
 
 						}
@@ -1038,6 +1041,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final List<TopicRelationship> prevList = topic.getPrevTopicRelationships();
 			// Create the paragraph/itemizedlist and list of previous relationships.
 			final Element rootEle = doc.createElement("itemizedlist");
+			rootEle.setAttribute("role", "process-previous-itemizedlist");
 			
 			// Create the title
 			final Element linkTitleEle = doc.createElement("title");
@@ -1050,9 +1054,11 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 				linkTitleEle.setTextContent("Previous Step in ");
 			}
 			
+			// Create the title link
 			final Element titleXrefItem = doc.createElement("link");
 			titleXrefItem.setTextContent(topic.getParent().getTitle());
 			titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+			titleXrefItem.setAttribute("xrefstyle", "process-previous-title-link");
 			linkTitleEle.appendChild(titleXrefItem);
 			rootEle.appendChild(linkTitleEle);
 			
@@ -1060,13 +1066,16 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			{
 				final Element prevEle = doc.createElement("para");
 				final SpecTopic prevTopic = prev.getSecondaryRelationship();
-				prevEle.setAttribute("role", "process-previous-link");
+				
 				// Add the previous element to either the list or paragraph
 				// Create the link element
 				final Element xrefItem = doc.createElement("xref");
 				xrefItem.setAttribute("linkend", prevTopic.getUniqueLinkId(useFixedUrls));
+				xrefItem.setAttribute("xrefstyle", "process-previous-link");
 				prevEle.appendChild(xrefItem);
+				
 				final Element listitemEle = doc.createElement("listitem");
+				listitemEle.setAttribute("role", "process-previous-listitem");
 				listitemEle.appendChild(prevEle);
 				rootEle.appendChild(listitemEle);
 			}
@@ -1096,7 +1105,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		// Attempt to get the previous topic and process it
 		final List<TopicRelationship> nextList = topic.getNextTopicRelationships();
 		// Create the paragraph/itemizedlist and list of next relationships.
-		Element rootEle = doc.createElement("itemizedlist");
+		final Element rootEle = doc.createElement("itemizedlist");
+		rootEle.setAttribute("role", "process-next-itemizedlist");
 		
 		// Create the title
 		final Element linkTitleEle = doc.createElement("title");
@@ -1109,9 +1119,12 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		{
 			linkTitleEle.setTextContent("Next Step in ");
 		}
+		
+		// Create the title link
 		final Element titleXrefItem = doc.createElement("link");
 		titleXrefItem.setTextContent(topic.getParent().getTitle());
 		titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+		titleXrefItem.setAttribute("xrefstyle", "process-next-title-link");
 		linkTitleEle.appendChild(titleXrefItem);
 		rootEle.appendChild(linkTitleEle);
 
@@ -1119,13 +1132,16 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		{
 			final Element nextEle = doc.createElement("para");
 			final SpecTopic nextTopic = next.getSecondaryRelationship();
-			nextEle.setAttribute("role", "process-next-link");
+			
 			// Add the next element to either the list or paragraph
 			// Create the link element
 			final Element xrefItem = doc.createElement("xref");
 			xrefItem.setAttribute("linkend", nextTopic.getUniqueLinkId(useFixedUrls));
+			xrefItem.setAttribute("xrefstyle", "process-next-link");
 			nextEle.appendChild(xrefItem);
+			
 			final Element listitemEle = doc.createElement("listitem");
+			listitemEle.setAttribute("role", "process-next-listitem");
 			listitemEle.appendChild(nextEle);
 			rootEle.appendChild(listitemEle);
 		}
@@ -1167,31 +1183,36 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final Element formalParaTitleEle = doc.createElement("title");
 			formalParaTitleEle.setTextContent("Prerequisites:");
 			formalParaEle.appendChild(formalParaTitleEle);
-			final List<List<Element>> list = new ArrayList<List<Element>>();
+			final List<List<Element>> list = new LinkedList<List<Element>>();
 			
-			// Add the Topic Prerequisites
-			for (final TopicRelationship prereq: topic.getPrerequisiteTopicRelationships())
+			// Add the Relationships
+			for (final Relationship prereq: topic.getPrerequisiteRelationships())
 			{
-				final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-				list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "prereq"));
-			}
-			
-			// Add the Level Prerequisites
-			for (final TargetRelationship prereq: topic.getPrerequisiteLevelRelationships())
-			{
-				final Level relatedLevel = (Level) prereq.getSecondaryElement();
-				list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "prereq"));
+				if (prereq instanceof TopicRelationship)
+				{
+					final SpecTopic relatedTopic = ((TopicRelationship) prereq).getSecondaryRelationship();
+					
+					list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "prereq"));
+				}
+				else
+				{
+					final SpecNode specNode = ((TargetRelationship) prereq).getSecondaryElement();
+					
+					list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), "prereq"));
+				}
 			}
 			
 			// Wrap the items into an itemized list
-			final List<Element> items = DocbookUtils.wrapItemizedListItemsInPara(doc, list);
-			for (final Element ele: items) {
+			final List<Element> items = DocBookUtilities.wrapItemizedListItemsInPara(doc, list);
+			for (final Element ele: items)
+			{
 				formalParaEle.appendChild(ele);
 			}
 			
 			// Add the paragraph and list after the title node
 			Node nextNode = titleEle.getNextSibling();
-			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null) {
+			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null)
+			{
 				nextNode = nextNode.getNextSibling();
 			}
 			
@@ -1213,29 +1234,31 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		// Create the paragraph and list of prerequisites.
 		if (topic.getRelatedRelationships().isEmpty()) return;
 		final Element formalParaEle = doc.createElement("formalpara");
-		formalParaEle.setAttribute("role", "refer-to-list");
+		formalParaEle.setAttribute("role", "see-also-list");
 		final Element formalParaTitleEle = doc.createElement("title");
 		formalParaTitleEle.setTextContent("See Also:");
 		formalParaEle.appendChild(formalParaTitleEle);
-		final List<List<Element>> list = new ArrayList<List<Element>>();
+		final List<List<Element>> list = new LinkedList<List<Element>>();
 		
-		// Add the Topic Relationships
-		for (final TopicRelationship prereq: topic.getRelatedTopicRelationships())
+		// Add the Relationships
+		for (final Relationship seeAlso: topic.getRelatedRelationships())
 		{
-			final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-			
-			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "see-also"));
-		}
-		
-		// Add the Level Relationships
-		for (final TargetRelationship prereq: topic.getRelatedLevelRelationships())
-		{
-			final Level relatedLevel = (Level) prereq.getSecondaryElement();
-			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "see-also"));
+			if (seeAlso instanceof TopicRelationship)
+			{
+				final SpecTopic relatedTopic = ((TopicRelationship) seeAlso).getSecondaryRelationship();
+				
+				list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "see-also"));
+			}
+			else
+			{
+				final SpecNode specNode = ((TargetRelationship) seeAlso).getSecondaryElement();
+				
+				list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), "see-also"));
+			}
 		}
 		
 		// Wrap the items into an itemized list
-		final List<Element> items = DocbookUtils.wrapItemizedListItemsInPara(doc, list);
+		final List<Element> items = DocBookUtilities.wrapItemizedListItemsInPara(doc, list);
 		for (final Element ele: items)
 		{
 			formalParaEle.appendChild(ele);
@@ -1262,25 +1285,27 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 		final Element formalParaTitleEle = doc.createElement("title");
 		formalParaTitleEle.setTextContent("");
 		formalParaEle.appendChild(formalParaTitleEle);
-		final List<List<Element>> list = new ArrayList<List<Element>>();
+		final List<List<Element>> list = new LinkedList<List<Element>>();
 		
-		// Add the Topic Relationships
-		for (final TopicRelationship prereq: topic.getLinkListTopicRelationships())
+		// Add the Relationships
+		for (final Relationship linkList: topic.getLinkListRelationships())
 		{
-			final SpecTopic relatedTopic = prereq.getSecondaryRelationship();
-			
-			list.add(DocbookUtils.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "link-list"));
-		}
-		
-		// Add the Level Relationships
-		for (final TargetRelationship prereq: topic.getLinkListLevelRelationships())
-		{
-			final Level relatedLevel = (Level) prereq.getSecondaryElement();
-			list.add(DocbookUtils.buildXRef(doc, relatedLevel.getUniqueLinkId(useFixedUrls), "link-list"));
+			if (linkList instanceof TopicRelationship)
+			{
+				final SpecTopic relatedTopic = ((TopicRelationship) linkList).getSecondaryRelationship();
+				
+				list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), "link-list"));
+			}
+			else
+			{
+				final SpecNode specNode = ((TargetRelationship) linkList).getSecondaryElement();
+				
+				list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), "link-list"));
+			}
 		}
 		
 		// Wrap the items into an itemized list
-		final List<Element> items = DocbookUtils.wrapItemizedListItemsInPara(doc, list);
+		final List<Element> items = DocBookUtilities.wrapItemizedListItemsInPara(doc, list);
 		for (final Element ele: items)
 		{
 			formalParaEle.appendChild(ele);

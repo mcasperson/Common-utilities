@@ -25,7 +25,7 @@ public class CSConstants {
 
 	// Output format constants
 	public static final String SKYNET_OUTPUT_FORMAT = "Cloud";
-	public static final String CSP_OUTOUT_FORMAT = "Narrative";
+	public static final String CSP_OUTPUT_FORMAT = "Narrative";
 	
 	public static final Integer TYPE_CATEGORY_ID = 4;
 	public static final Integer TECHNOLOGY_CATEGORY_ID = 3;

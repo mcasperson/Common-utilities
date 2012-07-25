@@ -3,7 +3,10 @@ package com.redhat.topicindex.rest.entities.interfaces;
 import java.util.Date;
 
 import com.redhat.topicindex.rest.collections.RESTBugzillaBugCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTPropertyTagCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTTopicSourceUrlCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTranslatedTopicCollectionV1;
 
 public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1, RESTTopicCollectionV1>
@@ -87,6 +90,30 @@ public class RESTTopicV1 extends RESTBaseTopicV1<RESTTopicV1, RESTTopicCollectio
 		}
 		return retValue;
 		
+	}
+	
+	public void explicitSetTitle(final String title)
+	{
+		setTitle(title);
+		setParamaterToConfigured(TITLE_NAME);
+	}
+	
+	public void explicitSetTags(final RESTTagCollectionV1 tags)
+	{
+		setTags(tags);
+		setParamaterToConfigured(TAGS_NAME);
+	}
+	
+	public void explicitSetSourceUrls_OTM(final RESTTopicSourceUrlCollectionV1 sourceUrls)
+	{
+		setSourceUrls_OTM(sourceUrls);
+		setParamaterToConfigured(SOURCE_URLS_NAME);
+	}
+	
+	public void explicitSetProperties(final RESTPropertyTagCollectionV1 properties)
+	{
+		this.properties = properties;
+		setParamaterToConfigured(PROPERTIES_NAME);
 	}
 
 	public String getDescription()

@@ -155,7 +155,7 @@ public class SpecTopic extends SpecNode
 	{
 		return id;
 	}
-
+	
 	/**
 	 * Gets the Content Specification Unique ID for the topic.
 	 * 
@@ -303,7 +303,7 @@ public class SpecTopic extends SpecNode
 	 */
 	public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type, final String title)
 	{
-		final TopicRelationship relationship = new TopicRelationship(this, topic, type, title);
+		final TopicRelationship relationship = new TopicRelationship(this, topic, type, title); 
 		topicRelationships.add(relationship);
 		relationships.add(relationship);
 	}
@@ -756,25 +756,26 @@ public class SpecTopic extends SpecNode
 	public String getText()
 	{
 		final StringBuilder output = new StringBuilder();
-		if (DBId == 0)
+		if (this.isTopicANewTopic())
 		{
-			String options = getOptionsString();
-			output.append(title + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
+			final String options = getOptionsString();
+			output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
 		}
 		else
 		{
-			output.append(title + " [" + id + (revision == null ? "" : (", rev: " + revision)) + "]");
+			final String options = getOptionsString();
+			output.append((title == null ? "" : title) + " [" + id + (revision == null ? "" : (", rev: " + revision)) + (options.equals("") ? "" : (", " + options)) + "]");
 		}
 		
-		if (targetId != null)
+		if (targetId != null && !((parent instanceof Process) && targetId.matches("^T" + this.getLineNumber() + "0[0-9]+$")))
 		{
 			output.append(" [" + targetId + "]");
 		}
 		
 		if (!getRelatedRelationships().isEmpty())
 		{
-			ArrayList<String> relatedIds = new ArrayList<String>();
-			for (Relationship related : getRelatedRelationships())
+			final List<String> relatedIds = new ArrayList<String>();
+			for (final Relationship related : getRelatedRelationships())
 			{
 				relatedIds.add(related.getSecondaryRelationshipTopicId());
 			}
@@ -783,8 +784,8 @@ public class SpecTopic extends SpecNode
 		
 		if (!getPrerequisiteRelationships().isEmpty())
 		{
-			ArrayList<String> relatedIds = new ArrayList<String>();
-			for (Relationship related : getPrerequisiteRelationships())
+			final List<String> relatedIds = new ArrayList<String>();
+			for (final Relationship related : getPrerequisiteRelationships())
 			{
 				relatedIds.add(related.getSecondaryRelationshipTopicId());
 			}

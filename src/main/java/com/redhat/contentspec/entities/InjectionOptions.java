@@ -2,6 +2,8 @@ package com.redhat.contentspec.entities;
 
 import java.util.ArrayList;
 
+import com.redhat.ecs.commonutils.StringUtilities;
+
 public class InjectionOptions
 {
 	private UserType clientType = UserType.NONE;
@@ -99,5 +101,24 @@ public class InjectionOptions
 	public ArrayList<String> getStrictTopicTypes()
 	{
 		return strictTopicTypes;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String output = "";
+		if (getContentSpecType() == InjectionOptions.UserType.STRICT)
+		{
+			output += "on [" + StringUtilities.buildString(getStrictTopicTypes().toArray(new String[0]), ", ") + "]";
+		}
+		else if (getContentSpecType() == InjectionOptions.UserType.ON)
+		{
+			output += "on";
+		}
+		else if (getContentSpecType() == InjectionOptions.UserType.OFF)
+		{
+			output += "off";
+		}
+		return output;
 	}
 }

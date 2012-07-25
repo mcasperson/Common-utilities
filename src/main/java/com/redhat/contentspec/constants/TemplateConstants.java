@@ -1,7 +1,7 @@
 package com.redhat.contentspec.constants;
 
-public class TemplateConstants {
-
+public class TemplateConstants
+{
 	public static final String FULLY_COMMENTED_TEMPLATE = "# Content spec written by\n" +
 			"# Generated on <date>\n" +
 			"\n" +
@@ -10,7 +10,7 @@ public class TemplateConstants {
 			"# The fields below are mandatory\n" +
 			"Title =\n" +
 			"Subtitle =\n" +
-			"Description=\n" +
+			"Abstract=\n" +
 			"Product =\n" +
 			"Version =\n" +
 			"Edition =\n" +
@@ -26,12 +26,12 @@ public class TemplateConstants {
 			"# Debug = [0|1|2]\n" +
 			"\n" +
 			"# Bug Links = On\n" +
-			"# BZProduct =\n"+
-			"# BZComponent =\n"+
-			"# BZVersion =\n"+
+			"# BZProduct =\n" +
+			"# BZComponent =\n" +
+			"# BZVersion =\n" +
+			"# BZURL =\n" +
 			"\n" +
 			"# Output Style =\n" +
-			"# Translation Locale =\n"+
 			"\n" +
 			"# Indentation is meaningful. Use 2 spaces.\n" +
 			"\n" +
@@ -154,7 +154,7 @@ public class TemplateConstants {
 			"# The fields below are mandatory\n" +
 			"Title =\n" +
 			"Subtitle =\n" +
-			"Description=\n" +
+			"Abstract=\n" +
 			"Product =\n" +
 			"Version =\n" +
 			"Edition =\n" +
@@ -170,12 +170,12 @@ public class TemplateConstants {
 			"# Debug = [0|1|2]\n" +
 			"\n" +
 			"# Bug Links = On\n" +
-			"# BZProduct =\n"+
-			"# BZComponent =\n"+
-			"# BZVersion =\n"+
+			"# BZProduct =\n" +
+			"# BZComponent =\n" +
+			"# BZVersion =\n" +
+			"# BZURL =\n" +
 			"\n" +
 			"# Output Style =\n" +
-			"# Translation Locale =\n"+
 			"\n" +
 			"# Indentation is meaningful. Use 2 spaces.\n";
 }

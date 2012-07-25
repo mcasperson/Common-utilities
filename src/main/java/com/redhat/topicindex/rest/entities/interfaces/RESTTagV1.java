@@ -2,6 +2,7 @@ package com.redhat.topicindex.rest.entities.interfaces;
 
 import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTProjectCollectionV1;
+import com.redhat.topicindex.rest.collections.RESTPropertyTagCollectionV1;
 import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
 
 public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1, RESTTagCollectionV1>
@@ -86,6 +87,12 @@ public class RESTTagV1 extends RESTBaseEntityWithPropertiesV1<RESTTagV1, RESTTag
 		}
 		
 		return retValue;
+	}
+	
+	public void explicitSetProperties(final RESTPropertyTagCollectionV1 properties)
+	{
+		this.properties = properties;
+		setParamaterToConfigured(PROPERTIES_NAME);
 	}
 
 	public String getName()

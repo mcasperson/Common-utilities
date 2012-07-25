@@ -85,12 +85,6 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends
 		this.title = title;
 	}
 	
-	public void explicitSetTitle(final String title)
-	{
-		setTitle(title);
-		setParamaterToConfigured(TITLE_NAME);
-	}
-	
 	public String getXml()
 	{
 		return xml;
@@ -135,12 +129,6 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends
 	{
 		return tags;
 	}
-	
-	public void explicitSetTags(final RESTTagCollectionV1 tags)
-	{
-		setTags(tags);
-		setParamaterToConfigured(TAGS_NAME);
-	}
 
 	public void setTags(final RESTTagCollectionV1 tags)
 	{
@@ -163,11 +151,5 @@ public abstract class RESTBaseTopicV1<T extends RESTBaseTopicV1<T, U>, U extends
 	public void setSourceUrls_OTM(final RESTTopicSourceUrlCollectionV1 sourceUrls)
 	{
 		this.sourceUrls_OTM = sourceUrls;		
-	}
-	
-	public void explicitSetSourceUrls_OTM(final RESTTopicSourceUrlCollectionV1 sourceUrls)
-	{
-		setSourceUrls_OTM(sourceUrls);
-		setParamaterToConfigured(SOURCE_URLS_NAME);
 	}
 }

@@ -343,7 +343,7 @@ public class RESTReader
 				expandDetails.setEnd(0);
 				final ExpandDataTrunk topicsExpandSize = new ExpandDataTrunk(expandDetails);
 				final ExpandDataTrunk expandSize = new ExpandDataTrunk();
-				
+
 				expandSize.setBranches(CollectionUtilities.toArrayList(topicsExpandSize));
 				
 				final String expandDetailsString = mapper.writeValueAsString(expandSize);
@@ -670,18 +670,19 @@ public class RESTReader
 	/*
 	 * Gets a translated topic based on a topic id and locale
 	 */
-	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final String locale)
+	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale)
 	{
-		try
+		if (locale == null) return null;
+		final RESTTopicV1 topic = getTopicById(id, rev, true);
+		if (topic == null)
+			return null;
+		
+		for (final RESTTranslatedTopicV1 translatedTopic : topic.getTranslatedTopics_OTM().getItems())
 		{
-			final RESTTranslatedTopicCollectionV1 topics = getTranslatedTopicsByTopicIds(CollectionUtilities.toArrayList(id), locale);
+			if (translatedTopic.getLocale().equals(locale))
+				return translatedTopic;
+		}
 
-			return topics != null && topics.getItems() != null && topics.getItems().size() == 1 ? topics.getItems().get(0) : null;
-		}
-		catch (Exception e)
-		{
-			log.error(ExceptionUtilities.getStackTrace(e));
-		}
 		return null;
 	}
 
@@ -766,7 +767,15 @@ public class RESTReader
 	 */
 	public RESTTopicV1 getContentSpecById(final int id, final Integer rev)
 	{
-		final RESTTopicV1 cs = getTopicById(id, rev, false);
+		return getContentSpecById(id, rev, false);
+	}
+	
+	/*
+	 * Gets a ContentSpec tuple for a specified id.
+	 */
+	public RESTTopicV1 getContentSpecById(final int id, final Integer rev, final boolean expandTranslations)
+	{
+		final RESTTopicV1 cs = getTopicById(id, rev, expandTranslations);
 		if (cs == null)
 			return null;
 		
@@ -792,14 +801,17 @@ public class RESTReader
 			return null;
 		
 		final List<RESTTagV1> topicTypes = ComponentBaseTopicV1.returnTagsInCategoriesByID(cs, CollectionUtilities.toArrayList(CSConstants.TYPE_CATEGORY_ID));
-		for (final RESTTagV1 type : topicTypes)
+		if (cs.getTranslatedTopics_OTM() != null && cs.getTranslatedTopics_OTM().getItems() != null)
 		{
-			if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
+			for (final RESTTagV1 type : topicTypes)
 			{
-				for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
+				if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
 				{
-					if (topic.getLocale().equals(locale))
-						return topic;
+					for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
+					{
+						if (topic.getLocale().equals(locale))
+							return topic;
+					}
 				}
 			}
 		}

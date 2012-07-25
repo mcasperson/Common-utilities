@@ -202,7 +202,7 @@ public abstract class SpecNode extends Node
 		}
 		// Remove the tags that are set to be removed
 		final List<String> newTags = new ArrayList<String>();
-		for (final String tagName: tags)
+		for (final String tagName: temp)
 		{
 			final List<String> temptags = getRemoveTags(useInherited);
 			boolean found = false;
@@ -409,7 +409,7 @@ public abstract class SpecNode extends Node
 		{
 			for (final String url: sourceUrls)
 			{
-				vars.add("URL=" +url);
+				vars.add("URL = " +url);
 			}
 		}
 		
@@ -424,11 +424,6 @@ public abstract class SpecNode extends Node
 		}
 		return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
 	}
-	
-	/**
-	 * Removes the node from its parent.
-	 */
-	protected abstract void removeParent();
 	
 	public abstract String getUniqueLinkId(final boolean useFixedUrls);
 }

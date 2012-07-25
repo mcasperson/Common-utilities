@@ -1,5 +1,6 @@
 package com.redhat.ecs.commonutils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -181,7 +182,16 @@ public class StringUtilities
 	 */
 	public static byte[] getStringBytes(final String input)
 	{
-	 	return input == null ? new byte[] { } : input.getBytes();
+	 	try
+	 	{
+			return input == null ? new byte[] { } : input.getBytes("UTF-8");
+		}
+	 	catch (UnsupportedEncodingException e)
+	 	{
+			/* UTF-8 is a valid format so this should exception should never get thrown */
+		}
+	 	
+	 	return new byte[] { };
 	}
 	
 	/**
